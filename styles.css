@@ -14,7 +14,7 @@
   --radius-md: 16px;
   --phone-width: min(100vw, 393px);
   --page-x: clamp(16px, 6.1vw, 24px);
-  --header-top: 40px;
+  --header-top: 16px;
   --bottom-safe: env(safe-area-inset-bottom, 0px);
   --tab-bottom: max(16px, calc(16px + var(--bottom-safe)));
   font-family: "DM Sans", system-ui, sans-serif;
@@ -56,27 +56,35 @@ button {
   top: calc(var(--header-top) + 43px);
   left: 50%;
   display: inline-flex;
-  gap: 2px;
-  padding: 0;
+  align-items: center;
+  gap: 0;
+  width: 116px;
+  height: 30px;
+  padding: 3px;
   border: 0;
   border-radius: 1000000px;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 18px rgba(101, 75, 162, 0.1);
+  backdrop-filter: blur(24px);
   transform: translateX(-50%);
 }
 
 .language-switcher button {
+  flex: 1;
   min-width: 0;
   height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
   border-radius: 1000000px;
-  padding: 4px 8px;
+  padding: 0 6px;
   color: #fff;
   background: transparent;
   font-size: 12px;
   font-weight: 400;
-  line-height: 1;
+  line-height: normal;
+  white-space: nowrap;
 }
 
 .language-switcher button.is-active {
@@ -622,7 +630,9 @@ button {
 .stage-seven-modal,
 .missed-modal,
 .app-note-modal,
-.admin-modal {
+.admin-modal,
+.profile-edit-modal,
+.delete-confirm-modal {
   position: absolute;
   z-index: 30;
   inset: 0;
@@ -644,7 +654,9 @@ button {
 .stage-seven-modal.is-open,
 .missed-modal.is-open,
 .app-note-modal.is-open,
-.admin-modal.is-open {
+.admin-modal.is-open,
+.profile-edit-modal.is-open,
+.delete-confirm-modal.is-open {
   pointer-events: auto;
   background: rgba(42, 58, 83, 0.4);
   opacity: 1;
@@ -660,7 +672,9 @@ button {
 .stage-seven-sheet,
 .missed-sheet,
 .app-note-sheet,
-.admin-sheet {
+.admin-sheet,
+.profile-edit-sheet,
+.delete-confirm-sheet {
   position: relative;
   width: 100%;
   max-width: var(--phone-width);
@@ -681,7 +695,9 @@ button {
 .stage-seven-modal.is-open .stage-seven-sheet,
 .missed-modal.is-open .missed-sheet,
 .app-note-modal.is-open .app-note-sheet,
-.admin-modal.is-open .admin-sheet {
+.admin-modal.is-open .admin-sheet,
+.profile-edit-modal.is-open .profile-edit-sheet,
+.delete-confirm-modal.is-open .delete-confirm-sheet {
   transform: translateY(0);
 }
 
@@ -776,7 +792,7 @@ button {
   width: min(80px, 100%);
   aspect-ratio: 1;
   height: auto;
-  border: 1px solid rgba(42, 58, 83, 0.1);
+  border: 0;
   border-radius: 16px;
   background-image: var(--moodlet-image);
   background-size: cover;
@@ -793,7 +809,7 @@ button {
 }
 
 .moodlet-option.is-selected .moodlet-swatch {
-  border: 2px solid #657cfa;
+  box-shadow: inset 0 0 14.5px #fff, 0 0 0 2px #657cfa;
 }
 
 .moodlet-option.is-disabled {
@@ -1202,6 +1218,80 @@ button {
   margin-top: 2px;
 }
 
+.profile-edit-sheet {
+  min-height: 318px;
+  display: grid;
+  gap: 20px;
+  padding: 32px var(--page-x) max(32px, calc(32px + var(--bottom-safe)));
+  color: #2a3a53;
+}
+
+.profile-edit-header {
+  display: grid;
+  gap: 8px;
+  text-align: center;
+}
+
+.profile-edit-header h2 {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.profile-edit-field {
+  align-self: start;
+}
+
+.profile-purpose-options {
+  align-self: start;
+}
+
+.profile-edit-actions {
+  display: grid;
+  gap: 10px;
+  align-self: end;
+}
+
+.delete-confirm-sheet {
+  min-height: 337px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 32px var(--page-x) max(53px, calc(53px + var(--bottom-safe)));
+  color: #2a3a53;
+  text-align: center;
+  overflow: hidden;
+}
+
+.delete-confirm-copy {
+  width: 100%;
+  display: grid;
+  gap: 12px;
+}
+
+.delete-confirm-copy h2 {
+  margin: 0;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.32px;
+}
+
+.delete-confirm-copy p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.delete-confirm-actions {
+  width: 100%;
+  display: grid;
+  gap: 12px;
+}
+
 .toast {
   position: absolute;
   z-index: 50;
@@ -1444,6 +1534,11 @@ button {
   color: #2a3a53;
 }
 
+.screen-register:not(.is-welcome-step) .language-switcher {
+  background: rgba(42, 58, 83, 0.04);
+  box-shadow: none;
+}
+
 .screen-register:not(.is-welcome-step) .language-switcher button.is-active {
   color: #2a3a53;
   background: rgba(42, 58, 83, 0.05);
@@ -1502,7 +1597,7 @@ button {
 
 .register-welcome-copy {
   position: absolute;
-  top: 274px;
+  top: 236px;
   left: var(--page-x);
   right: var(--page-x);
   display: grid;
@@ -1530,7 +1625,7 @@ button {
   position: absolute;
   left: var(--page-x);
   right: var(--page-x);
-  top: 256px;
+  top: 212px;
   bottom: max(45px, calc(45px + var(--bottom-safe)));
   display: flex;
   flex-direction: column;
@@ -1675,9 +1770,76 @@ button {
   position: static;
   margin-top: auto;
   width: 100%;
-  max-width: 345px;
   color: #fff;
   background: #575df6;
+}
+
+.register-login-step .register-panel {
+  gap: 16px;
+}
+
+@keyframes unfleur-entrance {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+    filter: blur(6px);
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+}
+
+.screen-register.is-welcome-entering .register-logo,
+.screen-register.is-welcome-entering .register-language-switcher,
+.screen-register.is-welcome-entering .register-welcome-copy,
+.screen-register.is-welcome-entering .register-button-stack,
+.view-home.is-home-entering .home-header-center,
+.view-home.is-home-entering .home-admin-button,
+.view-home.is-home-entering .home-welcome-copy,
+.view-home.is-home-entering .home-note-shell,
+.view-home.is-home-entering ~ .tab-bar {
+  animation: unfleur-entrance 620ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.screen-register.is-welcome-entering .register-logo,
+.view-home.is-home-entering .home-header-center {
+  animation-delay: 40ms;
+}
+
+.screen-register.is-welcome-entering .register-language-switcher,
+.view-home.is-home-entering .home-admin-button {
+  animation-delay: 150ms;
+}
+
+.screen-register.is-welcome-entering .register-welcome-copy,
+.view-home.is-home-entering .home-welcome-copy {
+  animation-delay: 260ms;
+}
+
+.screen-register.is-welcome-entering .register-button-stack,
+.view-home.is-home-entering .home-note-shell {
+  animation-delay: 390ms;
+}
+
+.view-home.is-home-entering ~ .tab-bar {
+  animation-delay: 520ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen-register.is-welcome-entering .register-logo,
+  .screen-register.is-welcome-entering .register-language-switcher,
+  .screen-register.is-welcome-entering .register-welcome-copy,
+  .screen-register.is-welcome-entering .register-button-stack,
+  .view-home.is-home-entering .home-header-center,
+  .view-home.is-home-entering .home-admin-button,
+  .view-home.is-home-entering .home-welcome-copy,
+  .view-home.is-home-entering .home-note-shell,
+  .view-home.is-home-entering ~ .tab-bar {
+    animation: none;
+  }
 }
 
 .view {
@@ -1782,7 +1944,7 @@ button {
 
 .home-welcome-copy {
   position: absolute;
-  top: 270px;
+  top: 236px;
   left: var(--page-x);
   right: var(--page-x);
   width: auto;
@@ -1947,8 +2109,8 @@ button {
 .plant-card {
   display: grid;
   place-items: center;
-  max-height: 192px;
-  padding-top: 32px;
+  max-height: 172px;
+  padding-top: 12px;
   overflow: hidden;
   opacity: 1;
   transform: translateY(0) scale(1);
@@ -2258,7 +2420,7 @@ button {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  margin: 12px 0 24px;
+  margin: 4px 0 20px;
   padding: 0 var(--page-x) 8px;
   background: #fff;
   overflow: visible;
@@ -2505,6 +2667,10 @@ button {
   background: var(--panel);
 }
 
+.past-empty-state {
+  opacity: 0.58;
+}
+
 .journal-copy {
   padding: 64px var(--page-x) 20px;
 }
@@ -2654,11 +2820,12 @@ textarea {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding: 4px;
   border: 0;
   border-radius: 100000px;
   background: rgba(42, 58, 83, 0.05);
+  transition: background 180ms ease;
 }
 
 .profile-toggle span {
@@ -2666,6 +2833,15 @@ textarea {
   height: 24px;
   border-radius: 50%;
   background: #244e90;
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.profile-toggle.is-on {
+  background: rgba(36, 78, 144, 0.12);
+}
+
+.profile-toggle.is-on span {
+  transform: translateX(24px);
 }
 
 .profile-account-actions {

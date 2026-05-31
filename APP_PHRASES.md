@@ -14,6 +14,7 @@ This document lists the user-facing phrases currently used in the app in English
 | Review body | Take a moment to review your note, then save it or make any necessary changes. | Переглянь нотатку й збережи її або внеси потрібні зміни. |
 | Primary CTA | Create account | Створити акаунт |
 | Secondary CTA | Log in | Увійти |
+| Login helper | Enter any credentials to continue for now. | Введи будь-які дані, щоб продовжити. |
 | Button | Continue | Продовжити |
 | Button | Save | Зберегти |
 | Button | Save Note | Зберегти нотатку |
@@ -43,6 +44,7 @@ This document lists the user-facing phrases currently used in the app in English
 | Registration placeholder | Enter your name | Введи своє ім’я |
 | Registration placeholder | you@example.com | you@example.com |
 | Registration placeholder | Create a password | Створи пароль |
+| Login placeholder | Password | Пароль |
 | Registration CTA | Enter Unfleur | Увійти в Unfleur |
 | Purpose option | Reflect on my days | Осмислювати свої дні |
 | Purpose option | Understand my emotions | Краще розуміти емоції |
@@ -88,11 +90,18 @@ This document lists the user-facing phrases currently used in the app in English
 | Journal missed body | Bloomy missed a note on this day. | Цього дня Блумі не отримав нотатку. |
 | Empty state | No entries yet | Записів ще немає |
 | Empty body | No notes for this day yet. | Для цього дня ще немає нотаток. |
+| Past empty state | Nothing’s here | Тут нічого немає |
+| Past empty body | You didn’t journal anything that day. | Того дня ти нічого не записала. |
 | Entry action | Edit entry | Редагувати запис |
 | Entry action | Delete entry | Видалити запис |
 | Entry action | Show more | Показати більше |
 | Entry action | Show less | Показати менше |
 | Toast | The note is saved | Нотатку збережено |
+| Delete confirmation title | Are you sure you want to delete this note? | Ти впевнена, що хочеш видалити цю нотатку? |
+| Delete confirmation body | This action can’t be undone. | Цю дію не можна скасувати. |
+| Delete confirmation button | Yes, Delete | Так, видалити |
+| Delete confirmation button | No, Cancel | Ні, скасувати |
+| Toast | The note is deleted | Нотатку видалено |
 | Moodlet modal title | Choose up to 3 Moodlets | Обери до 3 Moodlets |
 | Moodlet modal body | The Moodlets should reflect how you felt throughout the day. | Moodlets мають відображати, як ти почувався протягом дня. |
 | Pot modal title | Choose your pot | Обери горщик |

@@ -1,4 +1,6 @@
 const STORAGE_KEY = "unfleur-state";
+const NOTE_TOAST_DURATION = 850;
+const MILESTONE_MODAL_DELAY = 1100;
 const CHECKED_DAY_MARKER = "https://www.figma.com/api/mcp/asset/11dfd974-923e-4656-826b-aafd34554552";
 const MISSED_DAY_MARKER = "https://www.figma.com/api/mcp/asset/9bb56a09-d123-4371-b554-9208b045871c";
 const BLOOMY_IMAGES = {
@@ -56,6 +58,7 @@ const defaults = {
     name: "",
     purpose: "",
     email: "",
+    notificationsEnabled: true,
   },
   pot: "blue",
   entries: [],
@@ -69,6 +72,7 @@ let state = loadState();
 
 const screens = document.querySelectorAll("[data-screen]");
 const appScreen = document.querySelector(".screen-app");
+const homeView = document.querySelector(".view-home");
 const views = document.querySelectorAll("[data-view]");
 const tabs = document.querySelectorAll("[data-tab]");
 const title = document.querySelector("#view-title");
@@ -83,6 +87,16 @@ const profileSummary = document.querySelector("#profile-summary");
 const profileName = document.querySelector("#profile-name");
 const profileEmail = document.querySelector("#profile-email");
 const profilePurpose = document.querySelector("#profile-purpose");
+const profileNotifications = document.querySelector("#profile-notifications");
+const profileToggle = document.querySelector(".profile-toggle");
+const profileNameModal = document.querySelector("#profile-name-modal");
+const profileEmailModal = document.querySelector("#profile-email-modal");
+const profilePurposeModal = document.querySelector("#profile-purpose-modal");
+const profileNameInput = document.querySelector("#profile-name-input");
+const profileEmailInput = document.querySelector("#profile-email-input");
+const profilePurposeOptions = document.querySelector("#profile-purpose-options");
+const profileNameSave = document.querySelector("#profile-name-save");
+const profileEmailSave = document.querySelector("#profile-email-save");
 const welcomeNoteFlow = document.querySelector(".figma-note-flow");
 const welcomeNoteCard = document.querySelector("#welcome-note-card");
 const welcomeNote = document.querySelector("#welcome-note");
@@ -137,6 +151,10 @@ const appSelectedMoodletsBar = document.querySelector("#app-selected-moodlets-ba
 const appSelectedMoodletsNode = document.querySelector("#app-selected-moodlets");
 const appEditMoodlets = document.querySelector("#app-edit-moodlets");
 const noteToast = document.querySelector("#note-toast");
+const noteToastText = noteToast?.querySelector("span:last-child");
+const deleteConfirmModal = document.querySelector("#delete-confirm-modal");
+const deleteConfirmYes = document.querySelector("#delete-confirm-yes");
+const deleteConfirmNo = document.querySelector("#delete-confirm-no");
 const adminModal = document.querySelector("#admin-modal");
 const adminDayGrid = document.querySelector("#admin-day-grid");
 const adminSkipOptions = document.querySelector("#admin-skip-options");
@@ -148,6 +166,8 @@ const registerSteps = document.querySelectorAll("[data-register-step]");
 const registerName = document.querySelector("#register-name");
 const registerEmail = document.querySelector("#register-email");
 const registerPassword = document.querySelector("#register-password");
+const loginEmail = document.querySelector("#login-email");
+const loginPassword = document.querySelector("#login-password");
 const registerPurposeOptions = document.querySelector("#register-purpose-options");
 const languageButtons = document.querySelectorAll("[data-language]");
 
@@ -225,6 +245,11 @@ const copy = {
     reviewBody: "Take a moment to review your note, then save it or make any necessary changes.",
     startJournaling: "Create account",
     logIn: "Log in",
+    loginBody: "Enter any credentials to continue for now.",
+    editName: "Edit name",
+    editEmail: "Edit email",
+    editPurpose: "Edit purpose",
+    saveChanges: "Save changes",
     continue: "Continue",
     save: "Save",
     saveNote: "Save Note",
@@ -255,6 +280,7 @@ const copy = {
     emailPlaceholder: "you@example.com",
     passwordPlaceholder: "Create a password",
     enterUnfleur: "Enter Unfleur",
+    loginPasswordPlaceholder: "Password",
     purposeReflect: "Reflect on my days",
     purposeEmotions: "Understand my emotions",
     purposeHabit: "Build a daily habit",
@@ -273,7 +299,9 @@ const copy = {
     purpose: "Purpose",
     notifications: "Notifications",
     allowed: "Allowed",
+    off: "Off",
     notificationsAllowed: "Notifications allowed",
+    notificationsOff: "Notifications off",
     logOut: "Log out",
     deleteAccount: "Delete my account",
     mainNavigation: "Main navigation",
@@ -316,12 +344,19 @@ const copy = {
     skippedBody: "Bloomy missed a note on this day.",
     noEntriesTitle: "No entries yet",
     noEntriesBody: "No notes for this day yet.",
+    pastNoEntriesTitle: "Nothing’s here",
+    pastNoEntriesBody: "You didn’t journal anything that day.",
     editEntry: "Edit entry",
     deleteEntry: "Delete entry",
     showMore: "Show more",
     showLess: "Show less",
     profileSummary: "{stage} of 7 bloom stages grown. Keep the daily notes coming.",
     noteSaved: "The note is saved",
+    noteDeleted: "The note is deleted",
+    deleteConfirmTitle: "Are you sure you want to delete this note?",
+    deleteConfirmBody: "This action can’t be undone.",
+    yesDelete: "Yes, Delete",
+    noCancel: "No, Cancel",
     moodletTitle: "Choose up to 3 Moodlets",
     moodletBody: "The Moodlets should reflect how you felt throughout the day.",
     choosePot: "Choose your pot",
@@ -345,6 +380,11 @@ const copy = {
     reviewBody: "Переглянь нотатку й збережи її або внеси потрібні зміни.",
     startJournaling: "Створити акаунт",
     logIn: "Увійти",
+    loginBody: "Введи будь-які дані, щоб продовжити.",
+    editName: "Змінити ім’я",
+    editEmail: "Змінити email",
+    editPurpose: "Змінити ціль",
+    saveChanges: "Зберегти зміни",
     continue: "Продовжити",
     save: "Зберегти",
     saveNote: "Зберегти нотатку",
@@ -375,6 +415,7 @@ const copy = {
     emailPlaceholder: "you@example.com",
     passwordPlaceholder: "Створи пароль",
     enterUnfleur: "Увійти в Unfleur",
+    loginPasswordPlaceholder: "Пароль",
     purposeReflect: "Осмислювати свої дні",
     purposeEmotions: "Краще розуміти емоції",
     purposeHabit: "Сформувати щоденну звичку",
@@ -393,7 +434,9 @@ const copy = {
     purpose: "Мета",
     notifications: "Сповіщення",
     allowed: "Дозволено",
+    off: "Вимкнено",
     notificationsAllowed: "Сповіщення дозволено",
+    notificationsOff: "Сповіщення вимкнено",
     logOut: "Вийти",
     deleteAccount: "Видалити акаунт",
     mainNavigation: "Головна навігація",
@@ -436,12 +479,19 @@ const copy = {
     skippedBody: "Цього дня Блумі не отримав нотатку.",
     noEntriesTitle: "Записів ще немає",
     noEntriesBody: "Для цього дня ще немає нотаток.",
+    pastNoEntriesTitle: "Тут нічого немає",
+    pastNoEntriesBody: "Того дня ти нічого не записала.",
     editEntry: "Редагувати запис",
     deleteEntry: "Видалити запис",
     showMore: "Показати більше",
     showLess: "Показати менше",
     profileSummary: "{stage} із 7 етапів росту пройдено. Продовжуй щоденні нотатки.",
     noteSaved: "Нотатку збережено",
+    noteDeleted: "Нотатку видалено",
+    deleteConfirmTitle: "Ти впевнена, що хочеш видалити цю нотатку?",
+    deleteConfirmBody: "Цю дію не можна скасувати.",
+    yesDelete: "Так, видалити",
+    noCancel: "Ні, скасувати",
     moodletTitle: "Обери до 3 Moodlets",
     moodletBody: "Moodlets мають відображати, як ти почувався протягом дня.",
     choosePot: "Обери горщик",
@@ -474,6 +524,11 @@ let adminDraftVisitDay = state.adminVisitDay;
 let adminDraftSkippedDays = state.skippedJournalDays;
 let registerStepIndex = 0;
 let registerPurpose = state.profile?.purpose || "";
+let profilePurposeDraft = state.profile?.purpose || "";
+let pendingDeleteEntryId = "";
+let homeEntranceTimer = null;
+let welcomeEntranceTimer = null;
+let homeEntrancePlayed = false;
 
 function loadState() {
   try {
@@ -533,6 +588,7 @@ function ensureProfileState() {
     name: state.profile?.name || "",
     purpose: state.profile?.purpose || "",
     email: state.profile?.email || "",
+    notificationsEnabled: state.profile?.notificationsEnabled !== false,
   };
 }
 
@@ -709,15 +765,32 @@ function setScreen(name) {
   });
 }
 
+function playEntrance(element, className, timerName) {
+  if (!element) return null;
+  if (timerName === "home") window.clearTimeout(homeEntranceTimer);
+  if (timerName === "welcome") window.clearTimeout(welcomeEntranceTimer);
+  element.classList.remove(className);
+  void element.offsetWidth;
+  element.classList.add(className);
+  return window.setTimeout(() => {
+    element.classList.remove(className);
+  }, 1200);
+}
+
 function setRegisterStep(index) {
   registerStepIndex = Math.min(Math.max(index, 0), registerSteps.length - 1);
   registerScreen?.classList.toggle("is-welcome-step", registerStepIndex === 0);
+  registerScreen?.classList.toggle("is-login-step", registerStepIndex === 5);
   registerSteps.forEach((step) => {
     step.classList.toggle("is-active", Number(step.dataset.registerStep) === registerStepIndex);
   });
+  if (registerStepIndex === 0) {
+    welcomeEntranceTimer = playEntrance(registerScreen, "is-welcome-entering", "welcome");
+  }
   if (registerStepIndex === 1) window.setTimeout(() => registerName?.focus(), 120);
   if (registerStepIndex === 3) window.setTimeout(() => registerEmail?.focus(), 120);
   if (registerStepIndex === 4) window.setTimeout(() => registerPassword?.focus(), 120);
+  if (registerStepIndex === 5) window.setTimeout(() => loginEmail?.focus(), 120);
 }
 
 function renderRegisterPurpose() {
@@ -747,10 +820,12 @@ function applyLanguage() {
   setText('[data-register-step="2"] .register-copy h1', "questionPurpose");
   setText('[data-register-step="3"] .register-copy h1', "questionEmail");
   setText('[data-register-step="4"] .register-copy h1', "questionPassword");
+  setText('[data-register-step="5"] .register-copy h1', "logIn");
   setText('[data-register-step="1"] .register-copy p', "nameTagline");
   setText('[data-register-step="2"] .register-copy p', "purposeTagline");
   setText('[data-register-step="3"] .register-copy p', "emailTagline");
   setText('[data-register-step="4"] .register-copy p', "passwordTagline");
+  setText('[data-register-step="5"] .register-copy p', "loginBody");
   setAttr("[data-register-back]", "aria-label", "back");
   const nameLabel = registerName?.closest(".register-field")?.querySelector("span");
   const emailLabel = registerEmail?.closest(".register-field")?.querySelector("span");
@@ -761,8 +836,10 @@ function applyLanguage() {
   setAttr("#register-name", "placeholder", "namePlaceholder");
   setAttr("#register-email", "placeholder", "emailPlaceholder");
   setAttr("#register-password", "placeholder", "passwordPlaceholder");
+  setAttr("#login-email", "placeholder", "emailPlaceholder");
+  setAttr("#login-password", "placeholder", "loginPasswordPlaceholder");
   setText('[data-register-step="1"] [data-register-next], [data-register-step="2"] [data-register-next], [data-register-step="3"] [data-register-next]', "continue");
-  setText("[data-register-finish]", "enterUnfleur");
+  setText("[data-register-finish], [data-login-finish]", "enterUnfleur");
   setText('[data-purpose="Reflect on my days"]', "purposeReflect");
   setText('[data-purpose="Understand my emotions"]', "purposeEmotions");
   setText('[data-purpose="Build a daily habit"]', "purposeHabit");
@@ -778,17 +855,32 @@ function applyLanguage() {
   setAttr(".app-header .round-button[data-icon='calendar']", "aria-label", "openCalendar");
   setAttr(".plant-portrait", "aria-label", "bloomingPlant");
   setAttr(".profile-settings", "aria-label", "profileSettings");
-  setAttr(".profile-setting-item:nth-child(1) .profile-edit-button", "aria-label", "editPlan");
+  setAttr('.profile-edit-button[data-profile-edit="name"]', "aria-label", "editName");
+  setAttr('.profile-edit-button[data-profile-edit="email"]', "aria-label", "editEmail");
+  setAttr('.profile-edit-button[data-profile-edit="purpose"]', "aria-label", "editPurpose");
   setAttr(".profile-setting-item:nth-child(2) .profile-edit-button", "aria-label", "editEmail");
   setAttr(".profile-setting-item:nth-child(3) .profile-edit-button", "aria-label", "editPurpose");
-  setAttr(".profile-toggle", "aria-label", "notificationsAllowed");
   setAttr(".tab-bar", "aria-label", "mainNavigation");
 
   setText(".profile-setting-item:nth-child(1) .profile-setting-copy span", "name");
   setText(".profile-setting-item:nth-child(2) .profile-setting-copy span", "email");
   setText(".profile-setting-item:nth-child(3) .profile-setting-copy span", "purpose");
   setText(".profile-setting-item:nth-child(4) .profile-setting-copy span", "notifications");
-  setText(".profile-setting-item:nth-child(4) .profile-setting-copy strong", "allowed");
+  setText("#profile-name-title", "editName");
+  setText("#profile-email-title", "editEmail");
+  setText("#profile-purpose-title", "editPurpose");
+  const profileNameLabel = profileNameInput?.closest(".profile-edit-field")?.querySelector("span");
+  const profileEmailLabel = profileEmailInput?.closest(".profile-edit-field")?.querySelector("span");
+  if (profileNameLabel) profileNameLabel.textContent = t("name");
+  if (profileEmailLabel) profileEmailLabel.textContent = t("email");
+  setText("#profile-name-save, #profile-email-save", "saveChanges");
+  setText(".profile-edit-actions [data-profile-edit-close]", "cancel");
+  setAttr("#profile-name-input", "placeholder", "namePlaceholder");
+  setAttr("#profile-email-input", "placeholder", "emailPlaceholder");
+  setText('[data-profile-purpose="Reflect on my days"]', "purposeReflect");
+  setText('[data-profile-purpose="Understand my emotions"]', "purposeEmotions");
+  setText('[data-profile-purpose="Build a daily habit"]', "purposeHabit");
+  setText('[data-profile-purpose="Feel calmer"]', "purposeCalmer");
   setText('[data-action="logout"]', "logOut");
   setText('[data-action="delete-account"]', "deleteAccount");
   setText('[data-tab="home"] strong', "home");
@@ -823,7 +915,11 @@ function applyLanguage() {
   setText('[data-skip-days="2"]', "twoDays");
   setText("#admin-save", "apply");
   setText("#admin-clear", "clearMockData");
-  setText("#note-toast span:last-child", "noteSaved");
+  setText("#delete-confirm-title", "deleteConfirmTitle");
+  setText(".delete-confirm-copy p", "deleteConfirmBody");
+  setText("#delete-confirm-yes", "yesDelete");
+  setText("#delete-confirm-no", "noCancel");
+  if (noteToastText && !noteToast.classList.contains("is-visible")) noteToastText.textContent = t("noteSaved");
   setText("#moodlet-title", "moodletTitle");
   setText(".moodlet-header p", "moodletBody");
   setText("#moodlet-continue", "continue");
@@ -866,6 +962,17 @@ function finishRegistration() {
   render();
 }
 
+function finishLogin() {
+  state.registered = true;
+  state.onboarded = true;
+  ensureProfileState();
+  if (loginEmail?.value.trim()) state.profile.email = loginEmail.value.trim();
+  saveState();
+  setScreen("app");
+  setView("home");
+  render();
+}
+
 function setView(name) {
   appScreen?.classList.toggle("is-home-view", name === "home");
   appScreen?.classList.toggle("is-profile-view", name === "profile");
@@ -888,6 +995,12 @@ function setView(name) {
     focusJournalOnToday();
     updateJournalScrollState();
     showMissedJournalModal();
+  }
+  if (name === "home") {
+    if (!homeEntrancePlayed) {
+      homeEntranceTimer = playEntrance(homeView, "is-home-entering", "home");
+      homeEntrancePlayed = true;
+    }
   }
 }
 
@@ -937,6 +1050,69 @@ function renderProfile() {
   if (profileName) profileName.textContent = state.profile.name || t("placeholderName");
   if (profileEmail) profileEmail.textContent = state.profile.email || t("placeholderEmail");
   if (profilePurpose) profilePurpose.textContent = state.profile.purpose ? purposeLabel(state.profile.purpose) : t("placeholderPurpose");
+  if (profileNotifications) profileNotifications.textContent = state.profile.notificationsEnabled ? t("allowed") : t("off");
+  if (profileToggle) {
+    profileToggle.classList.toggle("is-on", state.profile.notificationsEnabled);
+    profileToggle.setAttribute("aria-pressed", String(state.profile.notificationsEnabled));
+    profileToggle.setAttribute("aria-label", state.profile.notificationsEnabled ? t("notificationsAllowed") : t("notificationsOff"));
+  }
+}
+
+function renderProfilePurposeOptions() {
+  profilePurposeOptions?.querySelectorAll("[data-profile-purpose]").forEach((button) => {
+    button.classList.toggle("is-selected", button.dataset.profilePurpose === profilePurposeDraft);
+  });
+}
+
+function closeProfileEditModals() {
+  [profileNameModal, profileEmailModal, profilePurposeModal].forEach((modal) => {
+    modal?.classList.remove("is-open");
+    modal?.setAttribute("aria-hidden", "true");
+  });
+}
+
+function openProfileEditModal(type) {
+  ensureProfileState();
+  closeProfileEditModals();
+  if (type === "name") {
+    if (profileNameInput) profileNameInput.value = state.profile.name || "";
+    profileNameModal?.classList.add("is-open");
+    profileNameModal?.setAttribute("aria-hidden", "false");
+    window.setTimeout(() => profileNameInput?.focus(), 220);
+  }
+  if (type === "email") {
+    if (profileEmailInput) profileEmailInput.value = state.profile.email || "";
+    profileEmailModal?.classList.add("is-open");
+    profileEmailModal?.setAttribute("aria-hidden", "false");
+    window.setTimeout(() => profileEmailInput?.focus(), 220);
+  }
+  if (type === "purpose") {
+    profilePurposeDraft = state.profile.purpose || "Reflect on my days";
+    renderProfilePurposeOptions();
+    profilePurposeModal?.classList.add("is-open");
+    profilePurposeModal?.setAttribute("aria-hidden", "false");
+  }
+}
+
+function saveProfileField(type) {
+  ensureProfileState();
+  if (type === "name") {
+    state.profile.name = profileNameInput?.value.trim() || "";
+  }
+  if (type === "email") {
+    state.profile.email = profileEmailInput?.value.trim() || "";
+  }
+  if (type === "purpose") {
+    state.profile.purpose = profilePurposeDraft;
+    registerPurpose = profilePurposeDraft;
+  }
+  saveState();
+  renderProfile();
+  renderRegisterPurpose();
+  closeProfileEditModals();
+  if (document.querySelector(".view-profile.is-active")) {
+    subtitle.textContent = `${t("hello")}, ${state.profile?.name || t("placeholderName")}!`;
+  }
 }
 
 function renderEntries() {
@@ -958,10 +1134,11 @@ function renderEntries() {
   }
 
   if (!entries.length) {
+    const isPastDay = selectedDayKey < dayKey(startOfToday());
     homeEntryList.innerHTML = `
-      <div class="empty-state">
-        <strong>${t("noEntriesTitle")}</strong>
-        <p>${t("noEntriesBody")}</p>
+      <div class="empty-state ${isPastDay ? "past-empty-state" : ""}">
+        <strong>${t(isPastDay ? "pastNoEntriesTitle" : "noEntriesTitle")}</strong>
+        <p>${t(isPastDay ? "pastNoEntriesBody" : "noEntriesBody")}</p>
       </div>
     `;
     return;
@@ -993,6 +1170,7 @@ function renderEntries() {
 
 function saveEntry(text, moodlets = []) {
   const hadTodayEntry = hasTodayEntry();
+  const skippedBeforeToday = skippedJournalDaysBeforeToday();
   state.entries.unshift({
     id: crypto.randomUUID(),
     date: new Date().toISOString(),
@@ -1005,7 +1183,13 @@ function saveEntry(text, moodlets = []) {
   renderEntries();
   renderPlant();
   return {
-    milestoneDay: hadTodayEntry ? 0 : state.mockDataEnabled ? mockGrowthDayAfterToday() : realGrowthDay(),
+    milestoneDay: hadTodayEntry
+      ? 0
+      : skippedBeforeToday >= 2
+        ? 1
+        : state.mockDataEnabled
+          ? mockGrowthDayAfterToday()
+          : streakCount(startOfToday()),
   };
 }
 
@@ -1110,6 +1294,7 @@ function render() {
   renderPotOptions();
   renderAdminModal();
   renderRegisterPurpose();
+  renderProfilePurposeOptions();
   renderProfile();
   applyLanguage();
 }
@@ -1133,6 +1318,8 @@ document.addEventListener("click", (event) => {
   const editButton = event.target.closest("[data-edit]");
   const potButton = event.target.closest("[data-pot]");
   const languageButton = event.target.closest("[data-language]");
+  const profileEditButton = event.target.closest("[data-profile-edit]");
+  const profileEditClose = event.target.closest("[data-profile-edit-close]");
 
   if (languageButton) {
     state.language = languageButton.dataset.language;
@@ -1179,11 +1366,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (deleteButton) {
-    state.entries = state.entries.filter((entry) => entry.id !== deleteButton.dataset.delete);
-    saveState();
-    renderWeeklyProgress();
-    renderEntries();
-    renderPlant();
+    openDeleteConfirmModal(deleteButton.dataset.delete);
   }
 
   if (editButton) {
@@ -1196,6 +1379,21 @@ document.addEventListener("click", (event) => {
     saveState();
     renderPlant();
     renderPotOptions();
+  }
+
+  if (profileEditButton) {
+    openProfileEditModal(profileEditButton.dataset.profileEdit);
+  }
+
+  if (profileEditClose) {
+    closeProfileEditModals();
+  }
+
+  if (event.target.closest(".profile-toggle")) {
+    ensureProfileState();
+    state.profile.notificationsEnabled = !state.profile.notificationsEnabled;
+    saveState();
+    renderProfile();
   }
 });
 
@@ -1319,13 +1517,37 @@ function updateAppNote() {
   appNoteCard.style.setProperty("--review-height", `${cardHeight}px`);
 }
 
-function showNoteToast() {
+function showNoteToast(messageKey = "noteSaved") {
   if (!noteToast) return;
   window.clearTimeout(toastTimer);
+  if (noteToastText) noteToastText.textContent = t(messageKey);
   noteToast.classList.add("is-visible");
   toastTimer = window.setTimeout(() => {
     noteToast.classList.remove("is-visible");
-  }, 2200);
+  }, NOTE_TOAST_DURATION);
+}
+
+function openDeleteConfirmModal(entryId) {
+  pendingDeleteEntryId = entryId;
+  deleteConfirmModal?.classList.add("is-open");
+  deleteConfirmModal?.setAttribute("aria-hidden", "false");
+}
+
+function closeDeleteConfirmModal() {
+  pendingDeleteEntryId = "";
+  deleteConfirmModal?.classList.remove("is-open");
+  deleteConfirmModal?.setAttribute("aria-hidden", "true");
+}
+
+function confirmDeleteEntry() {
+  if (!pendingDeleteEntryId) return;
+  state.entries = state.entries.filter((entry) => entry.id !== pendingDeleteEntryId);
+  saveState();
+  closeDeleteConfirmModal();
+  renderWeeklyProgress();
+  renderEntries();
+  renderPlant();
+  showNoteToast("noteDeleted");
 }
 
 function showCongratsAfterDelay(delay = 1000) {
@@ -1401,13 +1623,13 @@ function launchConfetti() {
 }
 
 function showGrowthMilestone(milestoneDay) {
-  if (milestoneDay === 1) showCongratsAfterDelay(1000);
-  if (milestoneDay === 2) showStageTwoAfterDelay(1000);
-  if (milestoneDay === 3) showStageThreeAfterDelay(1000);
-  if (milestoneDay === 4) showStageFourAfterDelay(1000);
-  if (milestoneDay === 5) showStageFiveAfterDelay(1000);
-  if (milestoneDay === 6) showStageSixAfterDelay(1000);
-  if (milestoneDay === 7) showStageSevenAfterDelay(1000);
+  if (milestoneDay === 1) showCongratsAfterDelay(MILESTONE_MODAL_DELAY);
+  if (milestoneDay === 2) showStageTwoAfterDelay(MILESTONE_MODAL_DELAY);
+  if (milestoneDay === 3) showStageThreeAfterDelay(MILESTONE_MODAL_DELAY);
+  if (milestoneDay === 4) showStageFourAfterDelay(MILESTONE_MODAL_DELAY);
+  if (milestoneDay === 5) showStageFiveAfterDelay(MILESTONE_MODAL_DELAY);
+  if (milestoneDay === 6) showStageSixAfterDelay(MILESTONE_MODAL_DELAY);
+  if (milestoneDay === 7) showStageSevenAfterDelay(MILESTONE_MODAL_DELAY);
 }
 
 function showMissedJournalModal() {
@@ -1450,7 +1672,6 @@ function handleMissedPrimaryAction() {
   renderEntries();
   renderPlant();
   renderAdminModal();
-  showCongratsAfterDelay(220);
 }
 
 function renderAdminModal() {
@@ -1518,6 +1739,8 @@ function logOut() {
   state.registered = false;
   saveState();
   closeAdminModal();
+  closeProfileEditModals();
+  closeDeleteConfirmModal();
   closeMissedJournalModal();
   congratsModal?.classList.remove("is-open");
   congratsModal?.setAttribute("aria-hidden", "true");
@@ -1553,6 +1776,8 @@ function deleteAccount() {
   if (registerEmail) registerEmail.value = "";
   if (registerPassword) registerPassword.value = "";
   closeAdminModal();
+  closeProfileEditModals();
+  closeDeleteConfirmModal();
   closeMissedJournalModal();
   congratsModal?.classList.remove("is-open");
   congratsModal?.setAttribute("aria-hidden", "true");
@@ -1705,27 +1930,30 @@ registerScreen?.addEventListener("click", (event) => {
   }
 
   if (event.target.closest("[data-register-back]")) {
-    setRegisterStep(registerStepIndex - 1);
+    setRegisterStep(registerStepIndex === 5 ? 0 : registerStepIndex - 1);
   }
 
   if (event.target.closest("[data-register-login]")) {
-    state.registered = true;
-    state.onboarded = true;
-    saveState();
-    setScreen("app");
-    setView("home");
-    render();
+    setRegisterStep(5);
   }
 
   if (event.target.closest("[data-register-finish]")) {
     finishRegistration();
   }
+
+  if (event.target.closest("[data-login-finish]")) {
+    finishLogin();
+  }
 });
 
-[registerName, registerEmail, registerPassword].forEach((input) => {
+[registerName, registerEmail, registerPassword, loginEmail, loginPassword].forEach((input) => {
   input?.addEventListener("keydown", (event) => {
     if (event.key !== "Enter") return;
     event.preventDefault();
+    if (input === loginEmail || input === loginPassword) {
+      finishLogin();
+      return;
+    }
     if (input === registerPassword) {
       finishRegistration();
     } else {
@@ -1812,6 +2040,37 @@ appEditMoodlets?.addEventListener("click", (event) => {
 homeEditMoodlets?.addEventListener("click", (event) => {
   event.preventDefault();
   openMoodletModal("home");
+});
+
+profilePurposeOptions?.addEventListener("click", (event) => {
+  const option = event.target.closest("[data-profile-purpose]");
+  if (!option) return;
+  profilePurposeDraft = option.dataset.profilePurpose;
+  renderProfilePurposeOptions();
+  saveProfileField("purpose");
+});
+
+profileNameSave?.addEventListener("click", () => saveProfileField("name"));
+profileEmailSave?.addEventListener("click", () => saveProfileField("email"));
+
+[profileNameInput, profileEmailInput].forEach((input) => {
+  input?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    saveProfileField(input === profileNameInput ? "name" : "email");
+  });
+});
+
+[profileNameModal, profileEmailModal, profilePurposeModal].forEach((modal) => {
+  modal?.addEventListener("click", (event) => {
+    if (event.target === modal) closeProfileEditModals();
+  });
+});
+
+deleteConfirmYes?.addEventListener("click", confirmDeleteEntry);
+deleteConfirmNo?.addEventListener("click", closeDeleteConfirmModal);
+deleteConfirmModal?.addEventListener("click", (event) => {
+  if (event.target === deleteConfirmModal) closeDeleteConfirmModal();
 });
 
 moodletModal?.addEventListener("click", (event) => {

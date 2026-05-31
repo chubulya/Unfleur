@@ -130,6 +130,24 @@
             <button class="register-primary-button" type="button" data-register-finish>Enter Unfleur</button>
           </div>
         </div>
+
+        <div class="register-step register-login-step" data-register-step="5">
+          <div class="register-panel">
+            <div class="register-copy">
+              <h1>Log in</h1>
+              <p>Enter any credentials to continue for now.</p>
+            </div>
+            <label class="register-field">
+              <span>Email</span>
+              <input id="login-email" type="email" autocomplete="email" placeholder="you@example.com" />
+            </label>
+            <label class="register-field">
+              <span>Password</span>
+              <input id="login-password" type="password" autocomplete="current-password" placeholder="Password" />
+            </label>
+            <button class="register-primary-button" type="button" data-login-finish>Enter Unfleur</button>
+          </div>
+        </div>
       </section>
 
       <section class="screen screen-app" data-screen="app">
@@ -200,26 +218,26 @@
                 <span>Name</span>
                 <strong id="profile-name">[Name]</strong>
               </div>
-              <button class="profile-edit-button" type="button" aria-label="Edit plan" data-icon="edit"></button>
+              <button class="profile-edit-button" type="button" aria-label="Edit name" data-profile-edit="name" data-icon="edit"></button>
             </div>
             <div class="profile-setting-item">
               <div class="profile-setting-copy">
                 <span>Email</span>
                 <strong id="profile-email">[email]</strong>
               </div>
-              <button class="profile-edit-button" type="button" aria-label="Edit email" data-icon="edit"></button>
+              <button class="profile-edit-button" type="button" aria-label="Edit email" data-profile-edit="email" data-icon="edit"></button>
             </div>
             <div class="profile-setting-item">
               <div class="profile-setting-copy">
                 <span>Purpose</span>
                 <strong id="profile-purpose">[purpose]</strong>
               </div>
-              <button class="profile-edit-button" type="button" aria-label="Edit purpose" data-icon="edit"></button>
+              <button class="profile-edit-button" type="button" aria-label="Edit purpose" data-profile-edit="purpose" data-icon="edit"></button>
             </div>
             <div class="profile-setting-item">
               <div class="profile-setting-copy">
                 <span>Notifications</span>
-                <strong>Allowed</strong>
+                <strong id="profile-notifications">Allowed</strong>
               </div>
               <button class="profile-toggle is-on" type="button" aria-label="Notifications allowed" aria-pressed="true">
                 <span></span>
@@ -431,6 +449,69 @@
             <div class="admin-actions">
               <button class="app-primary-button" id="admin-save" type="button">Apply</button>
               <button class="app-secondary-button" id="admin-clear" type="button">Clear mock data</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-edit-modal" id="profile-name-modal" aria-hidden="true">
+          <div class="profile-edit-sheet" role="dialog" aria-modal="true" aria-labelledby="profile-name-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <header class="profile-edit-header">
+              <h2 id="profile-name-title">Edit name</h2>
+            </header>
+            <label class="register-field profile-edit-field">
+              <span>Name</span>
+              <input id="profile-name-input" type="text" autocomplete="name" placeholder="Enter your name" />
+            </label>
+            <div class="profile-edit-actions">
+              <button class="app-primary-button" id="profile-name-save" type="button">Save</button>
+              <button class="app-secondary-button" type="button" data-profile-edit-close>Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-edit-modal" id="profile-email-modal" aria-hidden="true">
+          <div class="profile-edit-sheet" role="dialog" aria-modal="true" aria-labelledby="profile-email-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <header class="profile-edit-header">
+              <h2 id="profile-email-title">Edit email</h2>
+            </header>
+            <label class="register-field profile-edit-field">
+              <span>Email</span>
+              <input id="profile-email-input" type="email" autocomplete="email" placeholder="you@example.com" />
+            </label>
+            <div class="profile-edit-actions">
+              <button class="app-primary-button" id="profile-email-save" type="button">Save</button>
+              <button class="app-secondary-button" type="button" data-profile-edit-close>Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-edit-modal" id="profile-purpose-modal" aria-hidden="true">
+          <div class="profile-edit-sheet" role="dialog" aria-modal="true" aria-labelledby="profile-purpose-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <header class="profile-edit-header">
+              <h2 id="profile-purpose-title">Edit purpose</h2>
+            </header>
+            <div class="purpose-options profile-purpose-options" id="profile-purpose-options">
+              <button type="button" data-profile-purpose="Reflect on my days">Reflect on my days</button>
+              <button type="button" data-profile-purpose="Understand my emotions">Understand my emotions</button>
+              <button type="button" data-profile-purpose="Build a daily habit">Build a daily habit</button>
+              <button type="button" data-profile-purpose="Feel calmer">Feel calmer</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="delete-confirm-modal" id="delete-confirm-modal" aria-hidden="true">
+          <div class="delete-confirm-sheet" role="dialog" aria-modal="true" aria-labelledby="delete-confirm-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="delete-confirm-copy">
+              <h2 id="delete-confirm-title">Are you sure you want to delete this note?</h2>
+              <p>This action can’t be undone.</p>
+            </div>
+            <div class="delete-confirm-actions">
+              <button class="app-primary-button" id="delete-confirm-yes" type="button">Yes, Delete</button>
+              <button class="app-secondary-button" id="delete-confirm-no" type="button">No, Cancel</button>
             </div>
           </div>
         </div>
