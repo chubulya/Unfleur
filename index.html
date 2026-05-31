@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unfleur</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=language-switcher-1" />
+  </head>
+  <body>
+    <main class="phone-shell" aria-live="polite">
+      <section class="screen screen-intro is-active" data-screen="intro" data-node-id="4:168">
+        <div class="figma-bg" data-node-id="4:169" aria-hidden="true"></div>
+        <div class="figma-blue-fade" data-node-id="4:170" aria-hidden="true"></div>
+
+        <p class="figma-logo" data-node-id="4:174">UNFLEUR</p>
+
+        <div class="figma-welcome-copy" data-node-id="4:171">
+          <h1 data-node-id="4:172">Welcome to Unfleur</h1>
+          <p data-node-id="4:173">Your safe place to share<br />your thoughts that actually grow<br />something.</p>
+        </div>
+
+        <div class="figma-note-flow" data-node-id="9:154">
+          <div class="figma-textarea-card" id="welcome-note-card">
+            <span data-node-id="16:632">How was your day so far?</span>
+            <div class="selected-moodlets-bar" id="selected-moodlets-bar" hidden>
+              <div class="selected-moodlets" id="selected-moodlets"></div>
+              <button class="moodlets-edit-button" id="edit-moodlets" type="button" aria-label="Edit moodlets" data-icon="edit"></button>
+            </div>
+            <textarea id="welcome-note" maxlength="500" aria-label="How was your day so far?" placeholder="Type or say something about your day..."></textarea>
+            <div class="textarea-footer">
+              <small id="welcome-counter">0/500 symbols</small>
+              <button class="figma-mic" type="button" aria-label="Voice note">
+                <img src="assets/mic-light-4-168.svg" alt="" />
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="figma-continue-button" id="welcome-continue" type="button">Continue</button>
+
+      </section>
+
+      <section class="screen screen-register" data-screen="register">
+        <div class="register-flower-bg" aria-hidden="true"></div>
+        <div class="register-blue-fade" aria-hidden="true"></div>
+        <div class="language-switcher register-language-switcher" aria-label="Language">
+          <button type="button" data-language="en">EN</button>
+          <button type="button" data-language="ua">UA</button>
+        </div>
+        <p class="register-logo">UNFLEUR</p>
+
+        <div class="register-step register-welcome is-active" data-register-step="0">
+          <div class="register-welcome-copy">
+            <h1>Welcome to Unfleur</h1>
+            <p>Your safe place to plant your thoughts and actually grow something.</p>
+          </div>
+          <button class="register-primary-button" type="button" data-register-next>Start Journaling</button>
+        </div>
+
+        <div class="register-step" data-register-step="1">
+          <div class="register-panel">
+            <div class="register-copy">
+              <span>Step 1 of 4</span>
+              <h1>What is your name?</h1>
+            </div>
+            <label class="register-field">
+              <span>Name</span>
+              <input id="register-name" type="text" autocomplete="name" placeholder="Enter your name" />
+            </label>
+            <button class="register-primary-button" type="button" data-register-next>Continue</button>
+          </div>
+        </div>
+
+        <div class="register-step" data-register-step="2">
+          <div class="register-panel">
+            <div class="register-copy">
+              <span>Step 2 of 4</span>
+              <h1>What is your current purpose of journaling?</h1>
+            </div>
+            <div class="purpose-options" id="register-purpose-options">
+              <button type="button" data-purpose="Reflect on my days">Reflect on my days</button>
+              <button type="button" data-purpose="Understand my emotions">Understand my emotions</button>
+              <button type="button" data-purpose="Build a daily habit">Build a daily habit</button>
+              <button type="button" data-purpose="Feel calmer">Feel calmer</button>
+            </div>
+            <button class="register-primary-button" type="button" data-register-next>Continue</button>
+          </div>
+        </div>
+
+        <div class="register-step" data-register-step="3">
+          <div class="register-panel">
+            <div class="register-copy">
+              <span>Step 3 of 4</span>
+              <h1>Enter your email</h1>
+            </div>
+            <label class="register-field">
+              <span>Email</span>
+              <input id="register-email" type="email" autocomplete="email" placeholder="you@example.com" />
+            </label>
+            <button class="register-primary-button" type="button" data-register-next>Continue</button>
+          </div>
+        </div>
+
+        <div class="register-step" data-register-step="4">
+          <div class="register-panel">
+            <div class="register-copy">
+              <span>Step 4 of 4</span>
+              <h1>Create your password</h1>
+            </div>
+            <label class="register-field">
+              <span>Password</span>
+              <input id="register-password" type="password" autocomplete="new-password" placeholder="Create a password" />
+            </label>
+            <button class="register-primary-button" type="button" data-register-finish>Enter Unfleur</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen screen-app" data-screen="app">
+        <header class="app-header">
+          <button class="round-button" type="button" aria-label="Open calendar" data-icon="calendar"></button>
+          <div>
+            <h2 id="view-title">My Journal</h2>
+            <p id="view-subtitle">May 2026</p>
+          </div>
+          <button class="round-button" type="button" aria-label="Add entry" data-action="open-note-modal" data-icon="plus"></button>
+        </header>
+
+        <section class="view view-home is-active" data-view="home">
+          <div class="home-flower-bg" aria-hidden="true"></div>
+          <div class="home-blue-fade" aria-hidden="true"></div>
+          <div class="language-switcher home-language-switcher" aria-label="Language">
+            <button type="button" data-language="en">EN</button>
+            <button type="button" data-language="ua">UA</button>
+          </div>
+          <button class="round-button home-admin-button" type="button" aria-label="Open admin controls" data-action="open-admin-modal" data-icon="admin"></button>
+          <p class="home-logo">UNFLEUR</p>
+          <div class="home-welcome-copy">
+            <h1>Welcome to Unfleur</h1>
+            <p>Your safe place to plant your thoughts and actually grow something.</p>
+          </div>
+          <div class="home-note-shell" id="home-note-shell">
+            <div class="home-note-card" id="home-note-card">
+              <span>How was your day so far?</span>
+              <div class="selected-moodlets-bar home-selected-moodlets-bar" id="home-selected-moodlets-bar" hidden>
+                <div class="selected-moodlets" id="home-selected-moodlets"></div>
+                <button class="moodlets-edit-button" id="home-edit-moodlets" type="button" aria-label="Edit moodlets" data-icon="edit"></button>
+              </div>
+              <textarea id="home-note" maxlength="500" aria-label="How was your day so far?" placeholder="Type or say something about your day..."></textarea>
+              <div class="textarea-footer">
+                <small id="home-counter">0/500 symbols</small>
+                <button class="figma-mic home-mic" type="button" aria-label="Voice note">
+                  <img src="assets/mic-light-4-168.svg" alt="" />
+                </button>
+              </div>
+            </div>
+            <button class="home-continue-button" id="home-continue" type="button">Continue</button>
+          </div>
+        </section>
+
+        <section class="view view-journal" data-view="journal">
+          <div class="plant-card">
+            <div class="plant-portrait" aria-label="Your blooming plant">
+              <div class="figma-pot-frame" id="plant">
+                <img class="figma-pot-bg" src="assets/journal-main-image.png" alt="" />
+                <img class="figma-pot-image" src="assets/journal-pot-image.png" alt="" />
+              </div>
+            </div>
+          </div>
+
+          <div class="weekly-progress" id="weekly-progress"></div>
+
+          <div class="entry-list" id="home-entry-list"></div>
+        </section>
+
+        <section class="view view-profile" data-view="profile">
+          <div class="profile-settings" aria-label="Profile settings">
+            <div class="profile-setting-item">
+              <div class="profile-setting-copy">
+                <span>Name</span>
+                <strong id="profile-name">[Name]</strong>
+              </div>
+              <button class="profile-edit-button" type="button" aria-label="Edit plan" data-icon="edit"></button>
+            </div>
+            <div class="profile-setting-item">
+              <div class="profile-setting-copy">
+                <span>Email</span>
+                <strong id="profile-email">[email]</strong>
+              </div>
+              <button class="profile-edit-button" type="button" aria-label="Edit email" data-icon="edit"></button>
+            </div>
+            <div class="profile-setting-item">
+              <div class="profile-setting-copy">
+                <span>Purpose</span>
+                <strong id="profile-purpose">[purpose]</strong>
+              </div>
+              <button class="profile-edit-button" type="button" aria-label="Edit purpose" data-icon="edit"></button>
+            </div>
+            <div class="profile-setting-item">
+              <div class="profile-setting-copy">
+                <span>Notifications</span>
+                <strong>Allowed</strong>
+              </div>
+              <button class="profile-toggle is-on" type="button" aria-label="Notifications allowed" aria-pressed="true">
+                <span></span>
+              </button>
+            </div>
+            <div class="profile-account-actions">
+              <button class="profile-action-button" type="button" data-action="logout">Log out</button>
+              <button class="profile-action-button danger" type="button" data-action="delete-account">Delete my account</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="bottom-fade" aria-hidden="true"></div>
+        <nav class="tab-bar" aria-label="Main navigation">
+          <button type="button" class="is-active" data-tab="home">
+            <span data-icon="home"></span>
+            <strong>Home</strong>
+          </button>
+
+          <button type="button" data-tab="journal">
+            <span data-icon="journal"></span>
+            <strong>Journal</strong>
+          </button>
+
+          <button type="button" data-tab="profile">
+            <span data-icon="profile"></span>
+            <strong>Profile</strong>
+          </button>
+        </nav>
+
+        <div class="congrats-modal" id="congrats-modal" aria-hidden="true">
+          <div class="congrats-sheet">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="congrats-plant">
+              <div class="figma-pot-frame">
+                <img class="figma-pot-bg" src="assets/journal-main-image.png" alt="" />
+                <img class="figma-pot-image" src="assets/journal-pot-image.png" alt="" />
+              </div>
+            </div>
+            <h2>Congratulations!</h2>
+            <p>You’ve just planted your first flower—excited to see what blooms? Keep up with your journaling for a full week to help your plant thrive!</p>
+            <button class="moodlet-continue" id="close-congrats" type="button">Ok, Let’s GO!</button>
+          </div>
+        </div>
+
+        <div class="stage-two-modal" id="stage-two-modal" aria-hidden="true">
+          <div class="stage-two-sheet" role="dialog" aria-modal="true" aria-labelledby="stage-two-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="stage-two-plant">
+              <div class="figma-pot-frame is-stage-two">
+                <img class="figma-pot-bg" src="https://www.figma.com/api/mcp/asset/85f5d200-b3fa-4686-813c-8789bb140ae3" alt="" />
+                <img class="figma-pot-image" src="https://www.figma.com/api/mcp/asset/5806b550-934c-4b52-a183-5bc6f608a0ff" alt="" />
+              </div>
+            </div>
+            <div class="stage-two-copy">
+              <h2 id="stage-two-title">Well, hello Bloomy!</h2>
+              <p>You did a great job journaling your day yesterday, keep going to see the next stages of Bloomy’s growth!</p>
+            </div>
+            <button class="stage-two-primary-button" id="close-stage-two" type="button">Ok, thanks!</button>
+          </div>
+        </div>
+
+        <div class="stage-three-modal" id="stage-three-modal" aria-hidden="true">
+          <div class="stage-three-sheet" role="dialog" aria-modal="true" aria-labelledby="stage-three-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="stage-three-plant">
+              <div class="figma-pot-frame is-stage-three">
+                <img class="figma-pot-bg" src="https://www.figma.com/api/mcp/asset/5b916960-8803-4564-9d37-caff80f61246" alt="" />
+                <img class="figma-pot-image" src="https://www.figma.com/api/mcp/asset/3605d52c-0042-44a5-b4b8-64d9424ce2e0" alt="" />
+              </div>
+            </div>
+            <div class="stage-three-copy">
+              <h2 id="stage-three-title">Do you see what we see?</h2>
+              <p>Awesome work journaling three days straight! Bloomy is safe and sound, keep going.</p>
+            </div>
+            <button class="stage-three-primary-button" id="close-stage-three" type="button">Ok, thanks!</button>
+          </div>
+        </div>
+
+        <div class="stage-four-modal" id="stage-four-modal" aria-hidden="true">
+          <div class="stage-four-sheet" role="dialog" aria-modal="true" aria-labelledby="stage-four-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="stage-four-plant">
+              <div class="figma-pot-frame is-stage-four">
+                <img class="figma-pot-bg" src="https://www.figma.com/api/mcp/asset/0dd1c82c-8bac-4fdf-acfa-474bac12e468" alt="" />
+                <img class="figma-pot-image" src="https://www.figma.com/api/mcp/asset/3daa1b28-35c5-414e-aeb3-23133cd6a2ee" alt="" />
+              </div>
+            </div>
+            <div class="stage-four-copy">
+              <h2 id="stage-four-title">What a caring parent you are!</h2>
+              <p>Bloomy is in his teenage stage and is on the brink of adulthood. You did a fantastic job!</p>
+            </div>
+            <button class="stage-four-primary-button" id="close-stage-four" type="button">Ok, thanks!</button>
+          </div>
+        </div>
+
+        <div class="stage-five-modal" id="stage-five-modal" aria-hidden="true">
+          <div class="stage-five-sheet" role="dialog" aria-modal="true" aria-labelledby="stage-five-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="stage-five-plant">
+              <div class="figma-pot-frame is-stage-five">
+                <img class="figma-pot-bg" src="https://www.figma.com/api/mcp/asset/d593b05c-e1ad-4044-b0cf-1596b1b44c5e" alt="" />
+                <img class="figma-pot-image" src="https://www.figma.com/api/mcp/asset/1e502d37-edb6-4f67-a3c9-d01086a59652" alt="" />
+              </div>
+            </div>
+            <div class="stage-five-copy">
+              <h2 id="stage-five-title">You must be proud of yourself now</h2>
+              <p>Bloomy is in his teenage stage and is on the brink of adulthood. You did a fantastic job!</p>
+            </div>
+            <button class="stage-five-primary-button" id="close-stage-five" type="button">Ok, thanks!</button>
+          </div>
+        </div>
+
+        <div class="stage-six-modal" id="stage-six-modal" aria-hidden="true">
+          <div class="stage-six-sheet" role="dialog" aria-modal="true" aria-labelledby="stage-six-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="stage-six-plant">
+              <div class="figma-pot-frame is-stage-six">
+                <img class="figma-pot-bg" src="https://www.figma.com/api/mcp/asset/530b8841-b27e-4172-8958-e7c87d1bd172" alt="" />
+                <img class="figma-pot-image" src="https://www.figma.com/api/mcp/asset/c0ecef2c-f304-4f2c-b2c5-4cf3e1684bd2" alt="" />
+              </div>
+            </div>
+            <div class="stage-six-copy">
+              <h2 id="stage-six-title">Look! He’s about to bloom</h2>
+              <p>Thanks to your journaling, Bloomy has been thriving for nearly a week! Come back tomorrow to see Bloomy in all its glory!</p>
+            </div>
+            <button class="stage-six-primary-button" id="close-stage-six" type="button">Ok, thanks!</button>
+          </div>
+        </div>
+
+        <div class="stage-seven-modal" id="stage-seven-modal" aria-hidden="true">
+          <div class="stage-seven-sheet" role="dialog" aria-modal="true" aria-labelledby="stage-seven-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="stage-seven-plant">
+              <div class="figma-pot-frame is-stage-seven">
+                <img class="figma-pot-bg" src="https://www.figma.com/api/mcp/asset/094561e5-456d-4f38-8060-9203f8fcf501" alt="" />
+                <img class="figma-pot-image" src="https://www.figma.com/api/mcp/asset/daa2d209-f736-47b3-bfb3-a7a5278462ab" alt="" />
+              </div>
+            </div>
+            <div class="stage-seven-copy">
+              <h2 id="stage-seven-title">Unbelievable! You finished a 7-day streak</h2>
+              <p>Bloomy’s at his prime, but don’t stop journaling to keep Bloomy watered and cleaned.</p>
+            </div>
+            <button class="stage-seven-primary-button" id="close-stage-seven" type="button">Ok, thanks!</button>
+          </div>
+        </div>
+
+        <div class="missed-modal" id="missed-modal" aria-hidden="true">
+          <div class="missed-sheet" role="dialog" aria-modal="true" aria-labelledby="missed-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="missed-plant">
+              <div class="figma-pot-frame missed-modal-frame" id="missed-modal-frame">
+                <img class="figma-pot-bg" id="missed-modal-bg" src="assets/journal-main-image.png" alt="" />
+                <img class="figma-pot-image" id="missed-modal-pot" src="assets/journal-pot-image.png" alt="" />
+              </div>
+            </div>
+            <div class="missed-copy">
+              <h2 id="missed-title">Oh no!</h2>
+              <p id="missed-body">Looks like you missed journaling yesterday! No worries, just jot down a note about your day today, and we’ll take care of watering and cleaning Bloomy for you.</p>
+            </div>
+            <button class="missed-primary-button" id="close-missed" type="button">Ok, thanks!</button>
+          </div>
+        </div>
+
+        <div class="app-note-modal" id="app-note-modal" aria-hidden="true">
+          <div class="app-note-sheet" role="dialog" aria-modal="true" aria-labelledby="app-note-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <div class="app-note-card" id="app-note-card">
+              <span id="app-note-title">How was your day so far?</span>
+              <div class="selected-moodlets-bar app-selected-moodlets-bar" id="app-selected-moodlets-bar" hidden>
+                <div class="selected-moodlets" id="app-selected-moodlets"></div>
+                <button class="moodlets-edit-button" id="app-edit-moodlets" type="button" aria-label="Edit moodlets" data-icon="edit"></button>
+              </div>
+              <textarea id="app-note" maxlength="500" aria-label="How was your day so far?" placeholder="Type or say something about your day..."></textarea>
+              <div class="textarea-footer">
+                <small id="app-counter">0/500 symbols</small>
+                <button class="figma-mic app-mic" type="button" aria-label="Voice note">
+                  <img src="assets/mic-light-4-168.svg" alt="" />
+                </button>
+              </div>
+            </div>
+            <div class="app-note-actions">
+              <button class="app-primary-button" id="app-note-primary" type="button" disabled>Save</button>
+              <button class="app-secondary-button" id="app-note-cancel" type="button">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-modal" id="admin-modal" aria-hidden="true">
+          <div class="admin-sheet" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+            <div class="sheet-handle" aria-hidden="true"></div>
+            <header class="admin-header">
+              <h2 id="admin-title">Bloomy admin</h2>
+              <p>Set Bloomy’s current streak and recent skipped days.</p>
+            </header>
+            <div class="admin-field">
+              <span>Day in a row</span>
+              <div class="admin-day-grid" id="admin-day-grid"></div>
+            </div>
+            <div class="admin-field">
+              <span>Skipped before today</span>
+              <div class="admin-segmented" id="admin-skip-options">
+                <button type="button" data-skip-days="0">None</button>
+                <button type="button" data-skip-days="1">1 day</button>
+                <button type="button" data-skip-days="2">2 days</button>
+              </div>
+            </div>
+            <div class="admin-summary" id="admin-summary"></div>
+            <div class="admin-actions">
+              <button class="app-primary-button" id="admin-save" type="button">Apply</button>
+              <button class="app-secondary-button" id="admin-clear" type="button">Clear mock data</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toast" id="note-toast" role="status" aria-live="polite">
+          <span class="toast-check" aria-hidden="true"></span>
+          <span>The note is saved</span>
+        </div>
+      </section>
+
+      <div class="moodlet-modal" id="moodlet-modal" aria-hidden="true">
+        <div class="moodlet-sheet" role="dialog" aria-modal="true" aria-labelledby="moodlet-title">
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <header class="moodlet-header">
+            <h2 id="moodlet-title">Choose up to 3 Moodlets</h2>
+            <p>The Moodlets should reflect how you felt throughout the day.</p>
+          </header>
+          <div class="moodlet-grid" id="moodlet-grid"></div>
+          <div class="moodlet-bottom-fade" aria-hidden="true"></div>
+          <button class="moodlet-continue" id="moodlet-continue" type="button">Continue</button>
+        </div>
+      </div>
+
+      <dialog class="pot-sheet" id="pot-sheet">
+        <form method="dialog">
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <h2>Choose your pot</h2>
+          <p>The flower will keep growing with every daily note.</p>
+          <div class="pot-options">
+            <button type="button" data-pot="blue" class="is-selected"><span class="pot-preview blue"></span></button>
+            <button type="button" data-pot="rose"><span class="pot-preview rose"></span></button>
+            <button type="button" data-pot="clay"><span class="pot-preview clay"></span></button>
+          </div>
+          <button class="primary-button" value="close">Done</button>
+        </form>
+      </dialog>
+    </main>
+
+    <script src="app.js?v=language-switcher-1"></script>
+  </body>
+</html>
