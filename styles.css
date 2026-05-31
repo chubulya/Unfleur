@@ -14,7 +14,7 @@
   --radius-md: 16px;
   --phone-width: min(100vw, 393px);
   --page-x: clamp(16px, 6.1vw, 24px);
-  --header-top: 40px;
+  --header-top: 16px;
   --bottom-safe: env(safe-area-inset-bottom, 0px);
   --tab-bottom: max(16px, calc(16px + var(--bottom-safe)));
   font-family: "DM Sans", system-ui, sans-serif;
@@ -56,27 +56,35 @@ button {
   top: calc(var(--header-top) + 43px);
   left: 50%;
   display: inline-flex;
-  gap: 2px;
-  padding: 0;
+  align-items: center;
+  gap: 0;
+  width: 116px;
+  height: 30px;
+  padding: 3px;
   border: 0;
   border-radius: 1000000px;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 18px rgba(101, 75, 162, 0.1);
+  backdrop-filter: blur(24px);
   transform: translateX(-50%);
 }
 
 .language-switcher button {
+  flex: 1;
   min-width: 0;
   height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
   border-radius: 1000000px;
-  padding: 4px 8px;
+  padding: 0 6px;
   color: #fff;
   background: transparent;
   font-size: 12px;
   font-weight: 400;
-  line-height: 1;
+  line-height: normal;
+  white-space: nowrap;
 }
 
 .language-switcher button.is-active {
@@ -776,7 +784,7 @@ button {
   width: min(80px, 100%);
   aspect-ratio: 1;
   height: auto;
-  border: 1px solid rgba(42, 58, 83, 0.1);
+  border: 0;
   border-radius: 16px;
   background-image: var(--moodlet-image);
   background-size: cover;
@@ -793,7 +801,7 @@ button {
 }
 
 .moodlet-option.is-selected .moodlet-swatch {
-  border: 2px solid #657cfa;
+  box-shadow: inset 0 0 14.5px #fff, 0 0 0 2px #657cfa;
 }
 
 .moodlet-option.is-disabled {
@@ -1444,6 +1452,11 @@ button {
   color: #2a3a53;
 }
 
+.screen-register:not(.is-welcome-step) .language-switcher {
+  background: rgba(42, 58, 83, 0.04);
+  box-shadow: none;
+}
+
 .screen-register:not(.is-welcome-step) .language-switcher button.is-active {
   color: #2a3a53;
   background: rgba(42, 58, 83, 0.05);
@@ -1502,7 +1515,7 @@ button {
 
 .register-welcome-copy {
   position: absolute;
-  top: 274px;
+  top: 236px;
   left: var(--page-x);
   right: var(--page-x);
   display: grid;
@@ -1530,7 +1543,7 @@ button {
   position: absolute;
   left: var(--page-x);
   right: var(--page-x);
-  top: 256px;
+  top: 212px;
   bottom: max(45px, calc(45px + var(--bottom-safe)));
   display: flex;
   flex-direction: column;
@@ -1680,6 +1693,10 @@ button {
   background: #575df6;
 }
 
+.register-login-step .register-panel {
+  gap: 16px;
+}
+
 .view {
   position: absolute;
   inset: calc(var(--header-top) + 75px) 0 0;
@@ -1782,7 +1799,7 @@ button {
 
 .home-welcome-copy {
   position: absolute;
-  top: 270px;
+  top: 236px;
   left: var(--page-x);
   right: var(--page-x);
   width: auto;
@@ -1947,8 +1964,8 @@ button {
 .plant-card {
   display: grid;
   place-items: center;
-  max-height: 192px;
-  padding-top: 32px;
+  max-height: 172px;
+  padding-top: 12px;
   overflow: hidden;
   opacity: 1;
   transform: translateY(0) scale(1);
@@ -2258,7 +2275,7 @@ button {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  margin: 12px 0 24px;
+  margin: 4px 0 20px;
   padding: 0 var(--page-x) 8px;
   background: #fff;
   overflow: visible;

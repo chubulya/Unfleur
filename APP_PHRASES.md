@@ -14,6 +14,7 @@ This document lists the user-facing phrases currently used in the app in English
 | Review body | Take a moment to review your note, then save it or make any necessary changes. | Переглянь нотатку й збережи її або внеси потрібні зміни. |
 | Primary CTA | Create account | Створити акаунт |
 | Secondary CTA | Log in | Увійти |
+| Login helper | Enter any credentials to continue for now. | Введи будь-які дані, щоб продовжити. |
 | Button | Continue | Продовжити |
 | Button | Save | Зберегти |
 | Button | Save Note | Зберегти нотатку |
@@ -43,6 +44,7 @@ This document lists the user-facing phrases currently used in the app in English
 | Registration placeholder | Enter your name | Введи своє ім’я |
 | Registration placeholder | you@example.com | you@example.com |
 | Registration placeholder | Create a password | Створи пароль |
+| Login placeholder | Password | Пароль |
 | Registration CTA | Enter Unfleur | Увійти в Unfleur |
 | Purpose option | Reflect on my days | Осмислювати свої дні |
 | Purpose option | Understand my emotions | Краще розуміти емоції |

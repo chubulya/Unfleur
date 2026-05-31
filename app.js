@@ -148,6 +148,8 @@ const registerSteps = document.querySelectorAll("[data-register-step]");
 const registerName = document.querySelector("#register-name");
 const registerEmail = document.querySelector("#register-email");
 const registerPassword = document.querySelector("#register-password");
+const loginEmail = document.querySelector("#login-email");
+const loginPassword = document.querySelector("#login-password");
 const registerPurposeOptions = document.querySelector("#register-purpose-options");
 const languageButtons = document.querySelectorAll("[data-language]");
 
@@ -225,6 +227,7 @@ const copy = {
     reviewBody: "Take a moment to review your note, then save it or make any necessary changes.",
     startJournaling: "Create account",
     logIn: "Log in",
+    loginBody: "Enter any credentials to continue for now.",
     continue: "Continue",
     save: "Save",
     saveNote: "Save Note",
@@ -255,6 +258,7 @@ const copy = {
     emailPlaceholder: "you@example.com",
     passwordPlaceholder: "Create a password",
     enterUnfleur: "Enter Unfleur",
+    loginPasswordPlaceholder: "Password",
     purposeReflect: "Reflect on my days",
     purposeEmotions: "Understand my emotions",
     purposeHabit: "Build a daily habit",
@@ -345,6 +349,7 @@ const copy = {
     reviewBody: "Переглянь нотатку й збережи її або внеси потрібні зміни.",
     startJournaling: "Створити акаунт",
     logIn: "Увійти",
+    loginBody: "Введи будь-які дані, щоб продовжити.",
     continue: "Продовжити",
     save: "Зберегти",
     saveNote: "Зберегти нотатку",
@@ -375,6 +380,7 @@ const copy = {
     emailPlaceholder: "you@example.com",
     passwordPlaceholder: "Створи пароль",
     enterUnfleur: "Увійти в Unfleur",
+    loginPasswordPlaceholder: "Пароль",
     purposeReflect: "Осмислювати свої дні",
     purposeEmotions: "Краще розуміти емоції",
     purposeHabit: "Сформувати щоденну звичку",
@@ -712,12 +718,14 @@ function setScreen(name) {
 function setRegisterStep(index) {
   registerStepIndex = Math.min(Math.max(index, 0), registerSteps.length - 1);
   registerScreen?.classList.toggle("is-welcome-step", registerStepIndex === 0);
+  registerScreen?.classList.toggle("is-login-step", registerStepIndex === 5);
   registerSteps.forEach((step) => {
     step.classList.toggle("is-active", Number(step.dataset.registerStep) === registerStepIndex);
   });
   if (registerStepIndex === 1) window.setTimeout(() => registerName?.focus(), 120);
   if (registerStepIndex === 3) window.setTimeout(() => registerEmail?.focus(), 120);
   if (registerStepIndex === 4) window.setTimeout(() => registerPassword?.focus(), 120);
+  if (registerStepIndex === 5) window.setTimeout(() => loginEmail?.focus(), 120);
 }
 
 function renderRegisterPurpose() {
@@ -747,10 +755,12 @@ function applyLanguage() {
   setText('[data-register-step="2"] .register-copy h1', "questionPurpose");
   setText('[data-register-step="3"] .register-copy h1', "questionEmail");
   setText('[data-register-step="4"] .register-copy h1', "questionPassword");
+  setText('[data-register-step="5"] .register-copy h1', "logIn");
   setText('[data-register-step="1"] .register-copy p', "nameTagline");
   setText('[data-register-step="2"] .register-copy p', "purposeTagline");
   setText('[data-register-step="3"] .register-copy p', "emailTagline");
   setText('[data-register-step="4"] .register-copy p', "passwordTagline");
+  setText('[data-register-step="5"] .register-copy p', "loginBody");
   setAttr("[data-register-back]", "aria-label", "back");
   const nameLabel = registerName?.closest(".register-field")?.querySelector("span");
   const emailLabel = registerEmail?.closest(".register-field")?.querySelector("span");
@@ -761,8 +771,10 @@ function applyLanguage() {
   setAttr("#register-name", "placeholder", "namePlaceholder");
   setAttr("#register-email", "placeholder", "emailPlaceholder");
   setAttr("#register-password", "placeholder", "passwordPlaceholder");
+  setAttr("#login-email", "placeholder", "emailPlaceholder");
+  setAttr("#login-password", "placeholder", "loginPasswordPlaceholder");
   setText('[data-register-step="1"] [data-register-next], [data-register-step="2"] [data-register-next], [data-register-step="3"] [data-register-next]', "continue");
-  setText("[data-register-finish]", "enterUnfleur");
+  setText("[data-register-finish], [data-login-finish]", "enterUnfleur");
   setText('[data-purpose="Reflect on my days"]', "purposeReflect");
   setText('[data-purpose="Understand my emotions"]', "purposeEmotions");
   setText('[data-purpose="Build a daily habit"]', "purposeHabit");
@@ -860,6 +872,17 @@ function finishRegistration() {
   state.profile.email = registerEmail.value.trim();
   state.registered = true;
   state.onboarded = true;
+  saveState();
+  setScreen("app");
+  setView("home");
+  render();
+}
+
+function finishLogin() {
+  state.registered = true;
+  state.onboarded = true;
+  ensureProfileState();
+  if (loginEmail?.value.trim()) state.profile.email = loginEmail.value.trim();
   saveState();
   setScreen("app");
   setView("home");
@@ -1705,27 +1728,30 @@ registerScreen?.addEventListener("click", (event) => {
   }
 
   if (event.target.closest("[data-register-back]")) {
-    setRegisterStep(registerStepIndex - 1);
+    setRegisterStep(registerStepIndex === 5 ? 0 : registerStepIndex - 1);
   }
 
   if (event.target.closest("[data-register-login]")) {
-    state.registered = true;
-    state.onboarded = true;
-    saveState();
-    setScreen("app");
-    setView("home");
-    render();
+    setRegisterStep(5);
   }
 
   if (event.target.closest("[data-register-finish]")) {
     finishRegistration();
   }
+
+  if (event.target.closest("[data-login-finish]")) {
+    finishLogin();
+  }
 });
 
-[registerName, registerEmail, registerPassword].forEach((input) => {
+[registerName, registerEmail, registerPassword, loginEmail, loginPassword].forEach((input) => {
   input?.addEventListener("keydown", (event) => {
     if (event.key !== "Enter") return;
     event.preventDefault();
+    if (input === loginEmail || input === loginPassword) {
+      finishLogin();
+      return;
+    }
     if (input === registerPassword) {
       finishRegistration();
     } else {
