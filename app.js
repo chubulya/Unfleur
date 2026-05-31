@@ -176,7 +176,10 @@ const moodlets = [
   ["Soft", "Rectangle 5-22.png"],
   ["Free", "Rectangle 5-23.png"],
   ["Radiant", "Rectangle 5.png"],
-].map(([name, file]) => ({ name, image: `Moodlets/Moodlets(upd)/${file}` }));
+].map(([name, fileName]) => ({
+  name,
+  image: `assets/moodlets/${fileName}`,
+}));
 
 const mockJournalNotes = [
   {
@@ -213,12 +216,15 @@ const copy = {
   en: {
     appName: "UNFLEUR",
     welcomeTitle: "Welcome to Unfleur",
+    homeTitle: "Capture your life journey",
     introBody: "Your safe place to share<br />your thoughts that actually grow<br />something.",
     introBodyCompact: "Your safe place to share<br />your thoughts that actually grow something.",
-    homeBody: "Your safe place to plant your thoughts and actually grow something.",
+    homeBody: "Unfleur is your safe place to plant your thoughts that actually grow something.",
+    welcomeBody: "Your safe place to plant your thoughts and actually grow something.",
     reviewTitle: "Glad you’re having<br />a good day so far",
     reviewBody: "Take a moment to review your note, then save it or make any necessary changes.",
-    startJournaling: "Start Journaling",
+    startJournaling: "Create account",
+    logIn: "Log in",
     continue: "Continue",
     save: "Save",
     saveNote: "Save Note",
@@ -237,6 +243,11 @@ const copy = {
     questionPurpose: "What is your current purpose of journaling?",
     questionEmail: "Enter your email",
     questionPassword: "Create your password",
+    nameTagline: "Type your name below.",
+    purposeTagline: "Choose what feels most true today.",
+    emailTagline: "We’ll use it to keep your account safe.",
+    passwordTagline: "Make it something only you know.",
+    back: "Back",
     name: "Name",
     email: "Email",
     password: "Password",
@@ -325,12 +336,15 @@ const copy = {
   ua: {
     appName: "UNFLEUR",
     welcomeTitle: "Вітаємо в Unfleur",
+    homeTitle: "Закарбовуй свій життєвий шлях",
     introBody: "Твій безпечний простір, щоб ділитися<br />думками, з яких справді<br />щось виростає.",
     introBodyCompact: "Твій безпечний простір, щоб ділитися<br />думками, з яких справді щось виростає.",
-    homeBody: "Твій безпечний простір, щоб садити думки й справді вирощувати щось живе.",
+    homeBody: "Unfleur — твій безпечний простір, щоб садити думки, з яких справді виростає щось живе.",
+    welcomeBody: "Твій безпечний простір, щоб садити думки й справді вирощувати щось живе.",
     reviewTitle: "Раді, що твій день<br />поки складається добре",
     reviewBody: "Переглянь нотатку й збережи її або внеси потрібні зміни.",
-    startJournaling: "Почати щоденник",
+    startJournaling: "Створити акаунт",
+    logIn: "Увійти",
     continue: "Продовжити",
     save: "Зберегти",
     saveNote: "Зберегти нотатку",
@@ -349,6 +363,11 @@ const copy = {
     questionPurpose: "Яка твоя поточна мета ведення щоденника?",
     questionEmail: "Введи email",
     questionPassword: "Створи пароль",
+    nameTagline: "Введи своє ім’я нижче.",
+    purposeTagline: "Обери те, що зараз відгукується найбільше.",
+    emailTagline: "Ми використаємо його, щоб захистити акаунт.",
+    passwordTagline: "Нехай це буде щось, що знаєш лише ти.",
+    back: "Назад",
     name: "Ім’я",
     email: "Email",
     password: "Пароль",
@@ -692,6 +711,7 @@ function setScreen(name) {
 
 function setRegisterStep(index) {
   registerStepIndex = Math.min(Math.max(index, 0), registerSteps.length - 1);
+  registerScreen?.classList.toggle("is-welcome-step", registerStepIndex === 0);
   registerSteps.forEach((step) => {
     step.classList.toggle("is-active", Number(step.dataset.registerStep) === registerStepIndex);
   });
@@ -715,19 +735,23 @@ function applyLanguage() {
   });
 
   setText(".register-logo, .home-logo, .figma-logo", "appName");
-  setText(".register-welcome-copy h1, .home-welcome-copy h1", "welcomeTitle");
-  setText(".register-welcome-copy p, .home-welcome-copy p", "homeBody");
+  setText(".register-welcome-copy h1", "welcomeTitle");
+  setText(".register-welcome-copy p", "welcomeBody");
+  setText(".home-welcome-copy h1", "homeTitle");
+  setText(".home-welcome-copy p", "homeBody");
   setHTML(".figma-welcome-copy h1", "welcomeTitle");
   setHTML(".figma-welcome-copy p", "introBody");
   setText(".register-welcome [data-register-next]", "startJournaling");
-  setText('[data-register-step="1"] .register-copy span', "step1");
-  setText('[data-register-step="2"] .register-copy span', "step2");
-  setText('[data-register-step="3"] .register-copy span', "step3");
-  setText('[data-register-step="4"] .register-copy span', "step4");
+  setText("[data-register-login]", "logIn");
   setText('[data-register-step="1"] .register-copy h1', "questionName");
   setText('[data-register-step="2"] .register-copy h1', "questionPurpose");
   setText('[data-register-step="3"] .register-copy h1', "questionEmail");
   setText('[data-register-step="4"] .register-copy h1', "questionPassword");
+  setText('[data-register-step="1"] .register-copy p', "nameTagline");
+  setText('[data-register-step="2"] .register-copy p', "purposeTagline");
+  setText('[data-register-step="3"] .register-copy p', "emailTagline");
+  setText('[data-register-step="4"] .register-copy p', "passwordTagline");
+  setAttr("[data-register-back]", "aria-label", "back");
   const nameLabel = registerName?.closest(".register-field")?.querySelector("span");
   const emailLabel = registerEmail?.closest(".register-field")?.querySelector("span");
   const passwordLabel = registerPassword?.closest(".register-field")?.querySelector("span");
@@ -1678,6 +1702,19 @@ registerScreen?.addEventListener("click", (event) => {
 
   if (event.target.closest("[data-register-next]")) {
     advanceRegistration();
+  }
+
+  if (event.target.closest("[data-register-back]")) {
+    setRegisterStep(registerStepIndex - 1);
+  }
+
+  if (event.target.closest("[data-register-login]")) {
+    state.registered = true;
+    state.onboarded = true;
+    saveState();
+    setScreen("app");
+    setView("home");
+    render();
   }
 
   if (event.target.closest("[data-register-finish]")) {

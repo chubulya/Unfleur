@@ -14,6 +14,7 @@
   --radius-md: 16px;
   --phone-width: min(100vw, 393px);
   --page-x: clamp(16px, 6.1vw, 24px);
+  --header-top: 40px;
   --bottom-safe: env(safe-area-inset-bottom, 0px);
   --tab-bottom: max(16px, calc(16px + var(--bottom-safe)));
   font-family: "DM Sans", system-ui, sans-serif;
@@ -52,33 +53,42 @@ button {
 .language-switcher {
   position: absolute;
   z-index: 8;
-  top: 58px;
-  left: var(--page-x);
+  top: calc(var(--header-top) + 43px);
+  left: 50%;
   display: inline-flex;
   gap: 2px;
-  padding: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.34);
+  padding: 0;
+  border: 0;
   border-radius: 1000000px;
-  background: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 0 18px rgba(101, 75, 162, 0.18);
-  backdrop-filter: blur(28px);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: translateX(-50%);
 }
 
 .language-switcher button {
-  min-width: 38px;
-  height: 32px;
+  min-width: 0;
+  height: 24px;
   border: 0;
   border-radius: 1000000px;
-  color: rgba(255, 255, 255, 0.78);
+  padding: 4px 8px;
+  color: #fff;
   background: transparent;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1;
 }
 
 .language-switcher button.is-active {
-  color: #244e90;
-  background: rgba(255, 255, 255, 0.86);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  font-weight: 700;
+}
+
+.home-header .language-switcher {
+  position: static;
+  z-index: auto;
+  transform: none;
 }
 
 .phone-shell {
@@ -226,7 +236,7 @@ button {
 
 .figma-logo {
   position: absolute;
-  top: 70px;
+  top: calc(var(--header-top) + 6px);
   left: 50%;
   width: 109px;
   height: 29px;
@@ -243,7 +253,7 @@ button {
 
 .figma-welcome-copy {
   position: absolute;
-  top: 200px;
+  top: 274px;
   left: var(--page-x);
   right: var(--page-x);
   width: auto;
@@ -816,7 +826,9 @@ button {
 }
 
 .moodlet-continue:disabled {
-  opacity: 0.45;
+  color: #afafaf;
+  background: #d9d9d9;
+  cursor: default;
 }
 
 .confetti-burst {
@@ -1284,14 +1296,12 @@ button {
 .app-header {
   position: absolute;
   z-index: 4;
-  top: 54px;
+  top: var(--header-top);
   left: 0;
   right: 0;
   height: 75px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 8px var(--page-x) 0;
+  display: block;
+  padding: 0;
   text-align: center;
 }
 
@@ -1315,12 +1325,16 @@ button {
 }
 
 .app-header > div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 124px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   align-items: center;
   justify-content: center;
+  transform: translate(-50%, -50%);
 }
 
 .screen-app.is-home-view .app-header {
@@ -1339,8 +1353,18 @@ button {
 }
 
 .app-header .round-button {
+  position: absolute;
+  top: 8px;
   width: 56px;
   height: 56px;
+}
+
+.app-header .round-button:first-child {
+  left: var(--page-x);
+}
+
+.app-header .round-button:last-child {
+  right: var(--page-x);
 }
 
 .app-header [data-icon]::before {
@@ -1386,8 +1410,8 @@ button {
 [data-icon="delete"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 21a2 2 0 0 1-2-2V8h14v11a2 2 0 0 1-2 2H7ZM9 4h6l1 2h4v2H4V6h4l1-2Z'/%3E%3C/svg%3E"); }
 
 .screen-register {
-  color: #fff;
-  background: #365bcd;
+  color: #2a3a53;
+  background: #fff;
 }
 
 .register-flower-bg {
@@ -1402,10 +1426,33 @@ button {
   background: linear-gradient(180deg, #284ecb 0%, rgba(64, 96, 204, 0.87) 37.362%, rgba(217, 217, 217, 0) 100%);
 }
 
+.screen-register:not(.is-welcome-step) .register-flower-bg,
+.screen-register:not(.is-welcome-step) .register-blue-fade {
+  display: none;
+}
+
+.screen-register.is-welcome-step {
+  color: #fff;
+  background: #365bcd;
+}
+
+.screen-register.is-welcome-step .register-back-button {
+  display: none;
+}
+
+.screen-register:not(.is-welcome-step) .language-switcher button {
+  color: #2a3a53;
+}
+
+.screen-register:not(.is-welcome-step) .language-switcher button.is-active {
+  color: #2a3a53;
+  background: rgba(42, 58, 83, 0.05);
+}
+
 .register-logo {
   position: absolute;
   z-index: 2;
-  top: 70px;
+  top: calc(var(--header-top) + 6px);
   left: 50%;
   width: 109px;
   height: 29px;
@@ -1416,6 +1463,30 @@ button {
   font-weight: 700;
   letter-spacing: 0.24px;
   transform: translateX(-50%);
+}
+
+.screen-register:not(.is-welcome-step) .register-logo {
+  color: #2a3a53;
+}
+
+.register-back-button {
+  position: absolute;
+  z-index: 7;
+  top: calc(var(--header-top) + 8px);
+  left: var(--page-x);
+  width: 56px;
+  height: 56px;
+  color: #244e90;
+  background: rgba(42, 58, 83, 0.05);
+}
+
+.register-back-button::before {
+  content: "";
+  width: 32px;
+  height: 32px;
+  display: block;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m15.5 19-7-7 7-7 1.4 1.4-5.6 5.6 5.6 5.6L15.5 19Z'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .register-step {
@@ -1431,7 +1502,7 @@ button {
 
 .register-welcome-copy {
   position: absolute;
-  top: 270px;
+  top: 274px;
   left: var(--page-x);
   right: var(--page-x);
   display: grid;
@@ -1459,50 +1530,86 @@ button {
   position: absolute;
   left: var(--page-x);
   right: var(--page-x);
-  bottom: max(46px, calc(46px + var(--bottom-safe)));
-  display: grid;
-  gap: 18px;
-  padding: 24px 20px 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 32px;
+  top: 256px;
+  bottom: max(45px, calc(45px + var(--bottom-safe)));
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
   color: #2a3a53;
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 0 18px rgba(101, 75, 162, 0.18);
-  backdrop-filter: blur(45px);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .register-copy {
+  min-height: 90px;
   display: grid;
-  gap: 8px;
+  justify-items: center;
+  gap: 12px;
   text-align: center;
 }
 
-.register-copy span {
-  color: #244e90;
-  font-size: 12px;
-  font-weight: 700;
+.funnel-progress {
+  position: relative;
+  width: 73px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 100000px;
+  background: #f3f3f5;
+}
+
+.funnel-progress::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 25%;
+  border-radius: 100000px;
+  background: #244e90;
+}
+
+[data-register-step="2"] .funnel-progress::after {
+  width: 50%;
+}
+
+[data-register-step="3"] .funnel-progress::after {
+  width: 75%;
+}
+
+[data-register-step="4"] .funnel-progress::after {
+  width: 100%;
+}
+
+.register-copy p {
+  margin: 0;
+  color: #2a3a53;
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .register-field {
-  display: grid;
-  gap: 8px;
+  display: block;
 }
 
 .register-field span {
-  color: #244e90;
-  font-size: 14px;
-  font-weight: 600;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
 }
 
 .register-field input {
   width: 100%;
-  height: 56px;
+  height: 52px;
   border: 1px solid rgba(42, 58, 83, 0.06);
-  border-radius: 1000px;
-  padding: 0 18px;
+  border-radius: 24px;
+  padding: 0 16px;
   outline: 0;
   color: #2a3a53;
-  background: rgba(255, 255, 255, 0.76);
+  background: #f3f3f5;
   font: inherit;
 }
 
@@ -1516,9 +1623,9 @@ button {
 }
 
 .purpose-options button {
-  min-height: 48px;
+  min-height: 52px;
   border: 1px solid rgba(36, 78, 144, 0.06);
-  border-radius: 1000px;
+  border-radius: 24px;
   color: #244e90;
   background: rgba(255, 255, 255, 0.76);
   font-size: 14px;
@@ -1531,10 +1638,7 @@ button {
 }
 
 .register-primary-button {
-  position: absolute;
-  left: var(--page-x);
-  right: var(--page-x);
-  bottom: max(46px, calc(46px + var(--bottom-safe)));
+  width: 100%;
   height: 56px;
   border: 0;
   border-radius: 1000000px;
@@ -1545,16 +1649,40 @@ button {
   font-weight: 600;
 }
 
+.register-button-stack {
+  position: absolute;
+  z-index: 3;
+  left: var(--page-x);
+  right: var(--page-x);
+  bottom: max(45px, calc(45px + var(--bottom-safe)));
+  display: grid;
+  gap: 12px;
+}
+
+.register-login-button {
+  width: 100%;
+  height: 56px;
+  border: 0;
+  border-radius: 1000000px;
+  color: #fff;
+  background: transparent;
+  text-shadow: 0 0 18px rgba(101, 75, 162, 0.18);
+  font-size: 16px;
+  font-weight: 600;
+}
+
 .register-panel .register-primary-button {
   position: static;
+  margin-top: auto;
   width: 100%;
+  max-width: 345px;
   color: #fff;
   background: #575df6;
 }
 
 .view {
   position: absolute;
-  inset: 129px 0 0;
+  inset: calc(var(--header-top) + 75px) 0 0;
   display: none;
   padding-bottom: calc(142px + var(--bottom-safe));
   overflow: auto;
@@ -1598,10 +1726,29 @@ button {
   );
 }
 
-.home-logo {
+.home-header {
   position: absolute;
-  top: 70px;
+  z-index: 8;
+  top: var(--header-top);
+  left: 0;
+  right: 0;
+  height: 75px;
+  pointer-events: none;
+}
+
+.home-header-center {
+  position: absolute;
+  top: 6px;
   left: 50%;
+  width: 109px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transform: translateX(-50%);
+}
+
+.home-logo {
   width: 109px;
   height: 29px;
   margin: 0;
@@ -1611,21 +1758,26 @@ button {
   font-weight: 700;
   line-height: normal;
   letter-spacing: 0.24px;
+  text-align: center;
   white-space: nowrap;
-  transform: translateX(-50%);
 }
 
 .home-admin-button {
   position: absolute;
-  z-index: 6;
-  top: 58px;
+  z-index: 1;
+  top: 8px;
   right: var(--page-x);
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   color: #244e90;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.3);
   box-shadow: 0 0 18px rgba(101, 75, 162, 0.18);
-  backdrop-filter: blur(28px);
+  backdrop-filter: blur(45px);
+}
+
+.home-header-center,
+.home-admin-button {
+  pointer-events: auto;
 }
 
 .home-welcome-copy {
@@ -2811,11 +2963,6 @@ textarea {
 .pot-preview.clay { background: linear-gradient(160deg, #e49a5f, #b9673c 62%, #874327); }
 
 @media (max-height: 760px) {
-  .figma-logo,
-  .home-logo {
-    top: 40px;
-  }
-
   .figma-welcome-copy {
     top: 152px;
   }

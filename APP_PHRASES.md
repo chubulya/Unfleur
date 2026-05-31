@@ -7,10 +7,13 @@ This document lists the user-facing phrases currently used in the app in English
 | Brand | UNFLEUR | UNFLEUR |
 | Welcome | Welcome to Unfleur | Вітаємо в Unfleur |
 | Welcome intro | Your safe place to share your thoughts that actually grow something. | Твій безпечний простір, щоб ділитися думками, з яких справді щось виростає. |
-| Home intro | Your safe place to plant your thoughts and actually grow something. | Твій безпечний простір, щоб садити думки й справді вирощувати щось живе. |
+| Registration welcome intro | Your safe place to plant your thoughts and actually grow something. | Твій безпечний простір, щоб садити думки й справді вирощувати щось живе. |
+| Home title | Capture your life journey | Закарбовуй свій життєвий шлях |
+| Home intro | Unfleur is your safe place to plant your thoughts that actually grow something. | Unfleur — твій безпечний простір, щоб садити думки, з яких справді виростає щось живе. |
 | Review title | Glad you’re having a good day so far | Раді, що твій день поки складається добре |
 | Review body | Take a moment to review your note, then save it or make any necessary changes. | Переглянь нотатку й збережи її або внеси потрібні зміни. |
-| Primary CTA | Start Journaling | Почати щоденник |
+| Primary CTA | Create account | Створити акаунт |
+| Secondary CTA | Log in | Увійти |
 | Button | Continue | Продовжити |
 | Button | Save | Зберегти |
 | Button | Save Note | Зберегти нотатку |
@@ -29,6 +32,11 @@ This document lists the user-facing phrases currently used in the app in English
 | Registration | What is your current purpose of journaling? | Яка твоя поточна мета ведення щоденника? |
 | Registration | Enter your email | Введи email |
 | Registration | Create your password | Створи пароль |
+| Registration helper | Type your name below. | Введи своє ім’я нижче. |
+| Registration helper | Choose what feels most true today. | Обери те, що зараз відгукується найбільше. |
+| Registration helper | We’ll use it to keep your account safe. | Ми використаємо його, щоб захистити акаунт. |
+| Registration helper | Make it something only you know. | Нехай це буде щось, що знаєш лише ти. |
+| Registration action | Back | Назад |
 | Registration field | Name | Ім’я |
 | Registration field | Email | Email |
 | Registration field | Password | Пароль |

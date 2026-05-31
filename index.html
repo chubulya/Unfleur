@@ -7,13 +7,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=language-switcher-1" />
+    <link rel="stylesheet" href="styles.css?v=funnel-header-update-1" />
   </head>
   <body>
     <main class="phone-shell" aria-live="polite">
       <section class="screen screen-intro is-active" data-screen="intro" data-node-id="4:168">
         <div class="figma-bg" data-node-id="4:169" aria-hidden="true"></div>
         <div class="figma-blue-fade" data-node-id="4:170" aria-hidden="true"></div>
+        <div class="language-switcher intro-language-switcher" aria-label="Language">
+          <button type="button" data-language="en">🇺🇸 EN</button>
+          <button type="button" data-language="ua">🇺🇦 УКР</button>
+        </div>
 
         <p class="figma-logo" data-node-id="4:174">UNFLEUR</p>
 
@@ -48,9 +52,10 @@
         <div class="register-flower-bg" aria-hidden="true"></div>
         <div class="register-blue-fade" aria-hidden="true"></div>
         <div class="language-switcher register-language-switcher" aria-label="Language">
-          <button type="button" data-language="en">EN</button>
-          <button type="button" data-language="ua">UA</button>
+          <button type="button" data-language="en">🇺🇸 EN</button>
+          <button type="button" data-language="ua">🇺🇦 УКР</button>
         </div>
+        <button class="round-button register-back-button" type="button" aria-label="Back" data-register-back></button>
         <p class="register-logo">UNFLEUR</p>
 
         <div class="register-step register-welcome is-active" data-register-step="0">
@@ -58,14 +63,18 @@
             <h1>Welcome to Unfleur</h1>
             <p>Your safe place to plant your thoughts and actually grow something.</p>
           </div>
-          <button class="register-primary-button" type="button" data-register-next>Start Journaling</button>
+          <div class="register-button-stack">
+            <button class="register-primary-button" type="button" data-register-next>Create account</button>
+            <button class="register-login-button" type="button" data-register-login>Log in</button>
+          </div>
         </div>
 
         <div class="register-step" data-register-step="1">
           <div class="register-panel">
             <div class="register-copy">
-              <span>Step 1 of 4</span>
+              <div class="funnel-progress" aria-hidden="true"></div>
               <h1>What is your name?</h1>
+              <p>Type your name below.</p>
             </div>
             <label class="register-field">
               <span>Name</span>
@@ -78,8 +87,9 @@
         <div class="register-step" data-register-step="2">
           <div class="register-panel">
             <div class="register-copy">
-              <span>Step 2 of 4</span>
+              <div class="funnel-progress" aria-hidden="true"></div>
               <h1>What is your current purpose of journaling?</h1>
+              <p>Choose what feels most true today.</p>
             </div>
             <div class="purpose-options" id="register-purpose-options">
               <button type="button" data-purpose="Reflect on my days">Reflect on my days</button>
@@ -94,8 +104,9 @@
         <div class="register-step" data-register-step="3">
           <div class="register-panel">
             <div class="register-copy">
-              <span>Step 3 of 4</span>
+              <div class="funnel-progress" aria-hidden="true"></div>
               <h1>Enter your email</h1>
+              <p>We’ll use it to keep your account safe.</p>
             </div>
             <label class="register-field">
               <span>Email</span>
@@ -108,8 +119,9 @@
         <div class="register-step" data-register-step="4">
           <div class="register-panel">
             <div class="register-copy">
-              <span>Step 4 of 4</span>
+              <div class="funnel-progress" aria-hidden="true"></div>
               <h1>Create your password</h1>
+              <p>Make it something only you know.</p>
             </div>
             <label class="register-field">
               <span>Password</span>
@@ -133,15 +145,19 @@
         <section class="view view-home is-active" data-view="home">
           <div class="home-flower-bg" aria-hidden="true"></div>
           <div class="home-blue-fade" aria-hidden="true"></div>
-          <div class="language-switcher home-language-switcher" aria-label="Language">
-            <button type="button" data-language="en">EN</button>
-            <button type="button" data-language="ua">UA</button>
-          </div>
-          <button class="round-button home-admin-button" type="button" aria-label="Open admin controls" data-action="open-admin-modal" data-icon="admin"></button>
-          <p class="home-logo">UNFLEUR</p>
+          <header class="home-header">
+            <div class="home-header-center">
+              <p class="home-logo">UNFLEUR</p>
+              <div class="language-switcher home-language-switcher" aria-label="Language">
+                <button type="button" data-language="en">🇺🇸 EN</button>
+                <button type="button" data-language="ua">🇺🇦 УКР</button>
+              </div>
+            </div>
+            <button class="round-button home-admin-button" type="button" aria-label="Open admin controls" data-action="open-admin-modal" data-icon="admin"></button>
+          </header>
           <div class="home-welcome-copy">
-            <h1>Welcome to Unfleur</h1>
-            <p>Your safe place to plant your thoughts and actually grow something.</p>
+            <h1>Capture your life journey</h1>
+            <p>Unfleur is your safe place to plant your thoughts that actually grow something.</p>
           </div>
           <div class="home-note-shell" id="home-note-shell">
             <div class="home-note-card" id="home-note-card">
@@ -453,6 +469,6 @@
       </dialog>
     </main>
 
-    <script src="app.js?v=language-switcher-1"></script>
+    <script src="app.js?v=funnel-header-update-1"></script>
   </body>
 </html>
