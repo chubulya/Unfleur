@@ -172,34 +172,48 @@ const registerPurposeOptions = document.querySelector("#register-purpose-options
 const languageButtons = document.querySelectorAll("[data-language]");
 
 const moodlets = [
-  ["Happy", "Rectangle 5-1.png"],
-  ["Sad", "Rectangle 5-2.png"],
-  ["Dreamy", "Rectangle 5-3.png"],
-  ["Inspired", "Rectangle 5-4.png"],
-  ["Lonely", "Rectangle 5-5.png"],
-  ["Calm", "Rectangle 5-6.png"],
-  ["Romantic", "Rectangle 5-7.png"],
-  ["Searching", "Rectangle 5-8.png"],
-  ["Relaxed", "Rectangle 5-9.png"],
-  ["Curious", "Rectangle 5-10.png"],
-  ["Cozy", "Rectangle 5-11.png"],
-  ["Excited", "Rectangle 5-12.png"],
-  ["Hopeful", "Rectangle 5-13.png"],
-  ["Grateful", "Rectangle 5-14.png"],
-  ["Growing", "Rectangle 5-15.png"],
-  ["Social", "Rectangle 5-16.png"],
-  ["Playful", "Rectangle 5-17.png"],
-  ["Vulnerable", "Rectangle 5-18.png"],
-  ["Flirty", "Rectangle 5-19.png"],
-  ["Toxic", "Rectangle 5-20.png"],
-  ["Emotional", "Rectangle 5-21.png"],
-  ["Soft", "Rectangle 5-22.png"],
-  ["Free", "Rectangle 5-23.png"],
-  ["Radiant", "Rectangle 5.png"],
+  ["Happy", "sun.png"],
+  ["Sad", "rain-cloud.png"],
+  ["Calm", "moon-and-stars.png"],
+  ["Free", "butterfly.png"],
+  ["Playful", "balloon.png"],
+  ["Peaceful", "candle.png"],
+  ["Tender", "flower.png"],
+  ["Reflective", "winding-river.png"],
+  ["Dreamy", "soft-cloud.png"],
+  ["Hopeful", "paper-boat.png"],
+  ["Cozy", "cup-of-tea.png"],
+  ["Inspired", "shooting-star.png"],
+  ["Optimistic", "rainbow.png"],
+  ["Grateful", "pearl-shell.png"],
+  ["Growing", "sprout.png"],
+  ["Adventurous", "paper-plane.png"],
+  ["Light", "dandelion.png"],
+  ["Excited", "kite.png"],
+  ["Fresh", "dew-drop-on-leaf.png"],
+  ["Comforted", "lantern.png"],
+  ["Gentle", "feather.png"],
+  ["Sweet", "cherries.png"],
+  ["Curious", "mushroom.png"],
+  ["Restless", "ocean-wave.png"],
 ].map(([name, fileName]) => ({
   name,
   image: `assets/moodlets/${fileName}`,
 }));
+
+const moodletAliases = {
+  Lonely: "Reflective",
+  Romantic: "Tender",
+  Searching: "Curious",
+  Relaxed: "Peaceful",
+  Social: "Adventurous",
+  Vulnerable: "Tender",
+  Flirty: "Sweet",
+  Toxic: "Restless",
+  Emotional: "Reflective",
+  Soft: "Gentle",
+  Radiant: "Optimistic",
+};
 
 const mockJournalNotes = [
   {
@@ -208,23 +222,23 @@ const mockJournalNotes = [
   },
   {
     text: "A strange, bright day. I noticed how much easier it is to breathe after naming what I actually feel.",
-    moodlets: ["Curious", "Soft", "Hopeful"],
+    moodlets: ["Curious", "Gentle", "Hopeful"],
   },
   {
     text: "I almost skipped this note, then gave myself two quiet minutes. Bloomy gets a little taller when I show up.",
-    moodlets: ["Vulnerable", "Inspired", "Growing"],
+    moodlets: ["Tender", "Inspired", "Growing"],
   },
   {
     text: "Today had a tiny win: I chose rest before everything became too loud. Keeping that one.",
-    moodlets: ["Relaxed", "Cozy", "Free"],
+    moodlets: ["Peaceful", "Cozy", "Free"],
   },
   {
     text: "There was a gentle moment in the middle of the mess. I want to remember that it was real.",
-    moodlets: ["Emotional", "Grateful", "Radiant"],
+    moodlets: ["Reflective", "Grateful", "Optimistic"],
   },
   {
     text: "I made space for myself today, even if it was only a few sentences. That still feels like progress.",
-    moodlets: ["Hopeful", "Calm", "Social"],
+    moodlets: ["Hopeful", "Calm", "Adventurous"],
   },
   {
     text: "Bloomy is starting to look less like a promise and more like proof that I came back.",
@@ -327,8 +341,8 @@ const copy = {
     startOver: "Start over",
     adminTitle: "Bloomy admin",
     adminBody: "Set Bloomy’s current streak and recent skipped days.",
-    dayInRow: "Day in a row",
-    skippedBeforeToday: "Skipped before today",
+    dayInRow: "Complete days in a Streak",
+    skippedBeforeToday: "Skipped days before today",
     none: "None",
     oneDay: "1 day",
     twoDays: "2 days",
@@ -458,8 +472,8 @@ const copy = {
     startOver: "Почати знову",
     adminTitle: "Адмінка Блумі",
     adminBody: "Налаштуй поточну серію Блумі та нещодавні пропущені дні.",
-    dayInRow: "День поспіль",
-    skippedBeforeToday: "Пропущено перед сьогодні",
+    dayInRow: "Завершені дні в серії",
+    skippedBeforeToday: "Пропущені дні перед сьогодні",
     none: "Немає",
     oneDay: "1 день",
     twoDays: "2 дні",
@@ -521,6 +535,7 @@ let pendingDeleteEntryId = "";
 let homeEntranceTimer = null;
 let welcomeEntranceTimer = null;
 let homeEntrancePlayed = false;
+let welcomeEntrancePlayed = false;
 
 function loadState() {
   try {
@@ -626,7 +641,7 @@ function realGrowthDay() {
 
 function skippedJournalDaysBeforeToday() {
   normalizeBloomyState();
-  if (state.mockDataEnabled) return state.skippedJournalDays;
+  if (state.mockDataEnabled && !state.entries.length) return state.skippedJournalDays;
   if (!state.entries.length || hasTodayEntry()) return 0;
 
   const latestEntryDate = state.entries
@@ -652,6 +667,8 @@ function streakCount(endDate = startOfToday()) {
 
 function bloomyDisplayStage() {
   normalizeBloomyState();
+  if (state.entries.length) return Math.max(1, realGrowthDay());
+
   if (state.mockDataEnabled) {
     const growthDay = mockGrowthDayAfterToday();
     return hasTodayEntry() ? growthDay : Math.max(1, growthDay - 1);
@@ -722,6 +739,12 @@ function mockJournalModel() {
     completedCount += 1;
   }
 
+  state.entries.forEach((entry) => {
+    const key = dayKey(entry.date);
+    completed.add(key);
+    missed.delete(key);
+  });
+
   return { completed, missed, entriesByDay };
 }
 
@@ -755,6 +778,10 @@ function setScreen(name) {
   screens.forEach((screen) => {
     screen.classList.toggle("is-active", screen.dataset.screen === name);
   });
+  if (name === "intro" && !welcomeEntrancePlayed) {
+    welcomeEntranceTimer = playEntrance(welcomeScreen, "is-welcome-entering", "welcome");
+    welcomeEntrancePlayed = true;
+  }
 }
 
 function playEntrance(element, className, timerName) {
@@ -776,8 +803,9 @@ function setRegisterStep(index) {
   registerSteps.forEach((step) => {
     step.classList.toggle("is-active", Number(step.dataset.registerStep) === registerStepIndex);
   });
-  if (registerStepIndex === 0) {
+  if (registerStepIndex === 0 && !welcomeEntrancePlayed) {
     welcomeEntranceTimer = playEntrance(registerScreen, "is-welcome-entering", "welcome");
+    welcomeEntrancePlayed = true;
   }
   if (registerStepIndex === 1) window.setTimeout(() => registerName?.focus(), 120);
   if (registerStepIndex === 3) window.setTimeout(() => registerEmail?.focus(), 120);
@@ -865,7 +893,7 @@ function applyLanguage() {
   const profileEmailLabel = profileEmailInput?.closest(".profile-edit-field")?.querySelector("span");
   if (profileNameLabel) profileNameLabel.textContent = t("name");
   if (profileEmailLabel) profileEmailLabel.textContent = t("email");
-  setText("#profile-name-save, #profile-email-save", "saveChanges");
+  setText("#profile-name-save, #profile-email-save", "save");
   setText(".profile-edit-actions [data-profile-edit-close]", "cancel");
   setAttr("#profile-name-input", "placeholder", "namePlaceholder");
   setAttr("#profile-email-input", "placeholder", "emailPlaceholder");
@@ -949,6 +977,7 @@ function finishRegistration() {
   state.registered = true;
   state.onboarded = true;
   saveState();
+  homeEntrancePlayed = false;
   setScreen("app");
   setView("home");
   render();
@@ -960,6 +989,7 @@ function finishLogin() {
   ensureProfileState();
   if (loginEmail?.value.trim()) state.profile.email = loginEmail.value.trim();
   saveState();
+  homeEntrancePlayed = false;
   setScreen("app");
   setView("home");
   render();
@@ -974,6 +1004,7 @@ function setView(name) {
   tabs.forEach((tab) => {
     tab.classList.toggle("is-active", tab.dataset.tab === name);
   });
+  updateTabIndicator();
 
   const labels = {
     home: [t("myJournal"), formatMonth()],
@@ -994,6 +1025,16 @@ function setView(name) {
       homeEntrancePlayed = true;
     }
   }
+}
+
+function updateTabIndicator() {
+  const tabBar = document.querySelector(".tab-bar");
+  const activeTab = tabBar?.querySelector("button.is-active");
+  if (!tabBar || !activeTab) return;
+  const tabBarRect = tabBar.getBoundingClientRect();
+  const activeRect = activeTab.getBoundingClientRect();
+  tabBar.style.setProperty("--tab-indicator-x", `${activeRect.left - tabBarRect.left - 12}px`);
+  tabBar.style.setProperty("--tab-indicator-width", `${activeRect.width}px`);
 }
 
 function focusJournalOnToday() {
@@ -1020,7 +1061,7 @@ function renderWeeklyProgress() {
     date.setDate(start.getDate() + index);
     const key = dayKey(date);
     const isMissed = journal.missed.has(key);
-    const isComplete = (journal.completed.has(key) || (key === dayKey(today) && hasTodayEntry())) && !isMissed;
+    const isComplete = journal.completed.has(key) && !isMissed;
     const item = document.createElement("div");
     item.className = `day-progress ${isComplete ? "is-complete" : ""} ${isMissed ? "is-missed" : ""} ${key === selectedDayKey ? "is-selected" : ""}`;
     item.dataset.day = key;
@@ -1213,7 +1254,8 @@ function updateEntryExpanders() {
 }
 
 function moodletStyle(name) {
-  const moodlet = moodlets.find((item) => item.name === name) || moodlets[0];
+  const normalizedName = moodletAliases[name] || name;
+  const moodlet = moodlets.find((item) => item.name === normalizedName) || moodlets[0];
   return `--moodlet-image:url('${encodeURI(moodlet.image)}')`;
 }
 
@@ -2272,6 +2314,7 @@ weeklyProgress?.addEventListener("keydown", (event) => {
 });
 
 journalView?.addEventListener("scroll", updateJournalScrollState, { passive: true });
+window.addEventListener("resize", updateTabIndicator);
 
 render();
 renderMoodletGrid();
