@@ -137,10 +137,7 @@ const congratsModal = document.querySelector("#congrats-modal");
 const closeCongrats = document.querySelector("#close-congrats");
 const onboardingModal = document.querySelector("#onboarding-modal");
 const onboardingSheet = document.querySelector(".onboarding-sheet");
-const onboardingImage = document.querySelector("#onboarding-image");
-const onboardingKicker = document.querySelector("#onboarding-kicker");
-const onboardingTitle = document.querySelector("#onboarding-title");
-const onboardingBody = document.querySelector("#onboarding-body");
+const onboardingTrack = document.querySelector("#onboarding-track");
 const onboardingDots = document.querySelector("#onboarding-dots");
 const onboardingNext = document.querySelector("#onboarding-next");
 const stageTwoModal = document.querySelector("#stage-two-modal");
@@ -583,6 +580,9 @@ let adminDraftSkippedDays = state.skippedJournalDays;
 let registerStepIndex = 0;
 let registerPurpose = state.profile?.purpose || "";
 let onboardingStepIndex = 0;
+let onboardingTransitionTimer = null;
+let isOnboardingTransitioning = false;
+let onboardingGesture = null;
 let profilePurposeDraft = state.profile?.purpose || "";
 let pendingDeleteEntryId = "";
 let homeEntranceTimer = null;
@@ -864,12 +864,21 @@ function renderRegisterPurpose() {
 }
 
 function renderOnboarding() {
-  const slide = ONBOARDING_SLIDES[onboardingStepIndex];
-  if (!slide) return;
-  if (onboardingImage) onboardingImage.src = slide.image;
-  if (onboardingKicker) onboardingKicker.textContent = t("onboardingKicker");
-  if (onboardingTitle) onboardingTitle.textContent = t(slide.titleKey);
-  if (onboardingBody) onboardingBody.textContent = t(slide.bodyKey);
+  if (onboardingTrack) {
+    onboardingTrack.innerHTML = ONBOARDING_SLIDES.map((slide, index) => `
+      <article class="onboarding-slide" aria-hidden="${index === onboardingStepIndex ? "false" : "true"}">
+        <div class="onboarding-image-frame">
+          <img src="${slide.image}" alt="" />
+        </div>
+        <div class="onboarding-copy">
+          <p>${t("onboardingKicker")}</p>
+          <h2${index === onboardingStepIndex ? ' id="onboarding-title"' : ""}>${t(slide.titleKey)}</h2>
+          <p>${t(slide.bodyKey)}</p>
+        </div>
+      </article>
+    `).join("");
+    updateOnboardingTrack();
+  }
   if (onboardingNext) {
     onboardingNext.textContent =
       onboardingStepIndex === ONBOARDING_SLIDES.length - 1 ? t("startJournalingButton") : t("continue");
@@ -883,19 +892,27 @@ function renderOnboarding() {
   }
 }
 
+function updateOnboardingTrack() {
+  const offset = `calc(${onboardingStepIndex} * -100% + var(--onboarding-drag-x))`;
+  onboardingTrack?.style.setProperty("--onboarding-offset", offset);
+  onboardingTrack?.querySelectorAll(".onboarding-slide").forEach((slide, index) => {
+    slide.setAttribute("aria-hidden", String(index !== onboardingStepIndex));
+  });
+}
+
 function setOnboardingStep(index, animate = true) {
   const nextIndex = Math.min(Math.max(index, 0), ONBOARDING_SLIDES.length - 1);
-  if (!animate || nextIndex === onboardingStepIndex) {
-    onboardingStepIndex = nextIndex;
-    renderOnboarding();
-    return;
-  }
-  onboardingSheet?.classList.add("is-changing");
-  window.setTimeout(() => {
-    onboardingStepIndex = nextIndex;
-    renderOnboarding();
-    onboardingSheet?.classList.remove("is-changing");
-  }, 170);
+  if (nextIndex === onboardingStepIndex && animate) return;
+  window.clearTimeout(onboardingTransitionTimer);
+  onboardingSheet?.style.setProperty("--onboarding-drag-x", "0px");
+  onboardingSheet?.classList.remove("is-dragging");
+  if (!animate) onboardingSheet?.classList.remove("is-carousel-animated");
+  onboardingSheet?.classList.toggle("is-carousel-animated", animate && nextIndex !== onboardingStepIndex);
+  onboardingStepIndex = nextIndex;
+  renderOnboarding();
+  onboardingTransitionTimer = window.setTimeout(() => {
+    onboardingSheet?.classList.remove("is-carousel-animated");
+  }, 430);
 }
 
 function openOnboardingModal() {
@@ -918,6 +935,55 @@ function advanceOnboarding() {
     return;
   }
   closeOnboardingModal();
+}
+
+function startOnboardingGesture(event) {
+  if (!onboardingModal?.classList.contains("is-open")) return;
+  if (isOnboardingTransitioning) return;
+  if (event.target.closest("button, input, textarea, a")) return;
+  onboardingGesture = {
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    deltaX: 0,
+    isHorizontal: false,
+  };
+  onboardingSheet?.setPointerCapture?.(event.pointerId);
+}
+
+function moveOnboardingGesture(event) {
+  if (!onboardingGesture || event.pointerId !== onboardingGesture.pointerId) return;
+  const deltaX = event.clientX - onboardingGesture.startX;
+  const deltaY = event.clientY - onboardingGesture.startY;
+  if (!onboardingGesture.isHorizontal && Math.abs(deltaX) > 12 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+    onboardingGesture.isHorizontal = true;
+    onboardingSheet?.classList.add("is-dragging");
+  }
+  if (!onboardingGesture.isHorizontal) return;
+  event.preventDefault();
+  const isFirst = onboardingStepIndex === 0;
+  const isLast = onboardingStepIndex === ONBOARDING_SLIDES.length - 1;
+  const resistance = (isFirst && deltaX > 0) || (isLast && deltaX < 0) ? 0.28 : 0.72;
+  const dragX = Math.max(-92, Math.min(92, deltaX * resistance));
+  onboardingGesture.deltaX = deltaX;
+  onboardingSheet?.style.setProperty("--onboarding-drag-x", `${dragX}px`);
+  updateOnboardingTrack();
+}
+
+function endOnboardingGesture(event) {
+  if (!onboardingGesture || event.pointerId !== onboardingGesture.pointerId) return;
+  const { deltaX, isHorizontal } = onboardingGesture;
+  onboardingGesture = null;
+  onboardingSheet?.releasePointerCapture?.(event.pointerId);
+  onboardingSheet?.classList.remove("is-dragging");
+  onboardingSheet?.style.setProperty("--onboarding-drag-x", "0px");
+  updateOnboardingTrack();
+  if (!isHorizontal || Math.abs(deltaX) < 58) return;
+  if (deltaX < 0 && onboardingStepIndex < ONBOARDING_SLIDES.length - 1) {
+    setOnboardingStep(onboardingStepIndex + 1);
+  } else if (deltaX > 0 && onboardingStepIndex > 0) {
+    setOnboardingStep(onboardingStepIndex - 1);
+  }
 }
 
 function applyLanguage() {
@@ -2117,6 +2183,10 @@ onboardingDots?.addEventListener("click", (event) => {
   if (!dot) return;
   setOnboardingStep(Number(dot.dataset.onboardingStep));
 });
+onboardingSheet?.addEventListener("pointerdown", startOnboardingGesture);
+onboardingSheet?.addEventListener("pointermove", moveOnboardingGesture);
+onboardingSheet?.addEventListener("pointerup", endOnboardingGesture);
+onboardingSheet?.addEventListener("pointercancel", endOnboardingGesture);
 
 welcomeContinue?.addEventListener("click", () => {
   const text = welcomeNote.value.trim();

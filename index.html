@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=mock-admin-1" />
+    <link rel="stylesheet" href="styles.css?v=onboarding-carousel-3" />
   </head>
   <body>
     <main class="phone-shell" aria-live="polite">
@@ -286,15 +286,10 @@
         <div class="onboarding-modal" id="onboarding-modal" aria-hidden="true">
           <div class="onboarding-sheet" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
             <div class="sheet-handle" aria-hidden="true"></div>
-            <div class="onboarding-image-frame">
-              <img id="onboarding-image" src="assets/onboarding-describe-day.png" alt="" />
+            <div class="onboarding-viewport">
+              <div class="onboarding-track" id="onboarding-track"></div>
             </div>
-            <div class="onboarding-copy">
-              <p id="onboarding-kicker">How it works</p>
-              <h2 id="onboarding-title">Describe your day</h2>
-              <p id="onboarding-body">Write what happened, what felt heavy, or what made you smile. A few honest lines are enough.</p>
-              <div class="onboarding-dots" id="onboarding-dots" aria-label="Onboarding progress"></div>
-            </div>
+            <div class="onboarding-dots" id="onboarding-dots" aria-label="Onboarding progress"></div>
             <button class="onboarding-primary-button" id="onboarding-next" type="button">Continue</button>
           </div>
         </div>
@@ -572,6 +567,6 @@
       </dialog>
     </main>
 
-    <script src="app.js?v=mock-admin-1"></script>
+    <script src="app.js?v=onboarding-carousel-3"></script>
   </body>
 </html>
