@@ -7,7 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=onboarding-carousel-3" />
+    <link rel="stylesheet" href="styles.css?v=input-states-1" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
     <main class="phone-shell" aria-live="polite">
@@ -57,6 +58,7 @@
         </div>
         <button class="round-button register-back-button" type="button" aria-label="Back" data-register-back></button>
         <p class="register-logo">UNFLEUR</p>
+        <p class="auth-feedback" id="auth-feedback" role="status" aria-live="polite" hidden></p>
 
         <div class="register-step register-welcome is-active" data-register-step="0">
           <div class="register-welcome-copy">
@@ -567,6 +569,6 @@
       </dialog>
     </main>
 
-    <script src="app.js?v=onboarding-carousel-3"></script>
+    <script src="app.js?v=supabase-auth-1"></script>
   </body>
 </html>
