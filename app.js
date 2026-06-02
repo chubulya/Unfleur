@@ -51,6 +51,29 @@ const BLOOMY_IMAGES = {
   },
 };
 
+const ONBOARDING_SLIDES = [
+  {
+    image: "assets/onboarding-describe-day.png",
+    titleKey: "onboardingTitle1",
+    bodyKey: "onboardingBody1",
+  },
+  {
+    image: "assets/onboarding-moodlets.png",
+    titleKey: "onboardingTitle2",
+    bodyKey: "onboardingBody2",
+  },
+  {
+    image: "assets/onboarding-seed.png",
+    titleKey: "onboardingTitle3",
+    bodyKey: "onboardingBody3",
+  },
+  {
+    image: "assets/onboarding-thrive.png",
+    titleKey: "onboardingTitle4",
+    bodyKey: "onboardingBody4",
+  },
+];
+
 const defaults = {
   onboarded: true,
   registered: false,
@@ -112,6 +135,14 @@ const selectedMoodletsNode = document.querySelector("#selected-moodlets");
 const editMoodlets = document.querySelector("#edit-moodlets");
 const congratsModal = document.querySelector("#congrats-modal");
 const closeCongrats = document.querySelector("#close-congrats");
+const onboardingModal = document.querySelector("#onboarding-modal");
+const onboardingSheet = document.querySelector(".onboarding-sheet");
+const onboardingImage = document.querySelector("#onboarding-image");
+const onboardingKicker = document.querySelector("#onboarding-kicker");
+const onboardingTitle = document.querySelector("#onboarding-title");
+const onboardingBody = document.querySelector("#onboarding-body");
+const onboardingDots = document.querySelector("#onboarding-dots");
+const onboardingNext = document.querySelector("#onboarding-next");
 const stageTwoModal = document.querySelector("#stage-two-modal");
 const closeStageTwo = document.querySelector("#close-stage-two");
 const stageThreeModal = document.querySelector("#stage-three-modal");
@@ -160,7 +191,8 @@ const adminDayGrid = document.querySelector("#admin-day-grid");
 const adminSkipOptions = document.querySelector("#admin-skip-options");
 const adminSummary = document.querySelector("#admin-summary");
 const adminSave = document.querySelector("#admin-save");
-const adminClear = document.querySelector("#admin-clear");
+const adminControls = document.querySelector("#admin-controls");
+const adminMockToggle = document.querySelector("#admin-mock-toggle");
 const registerScreen = document.querySelector(".screen-register");
 const registerSteps = document.querySelectorAll("[data-register-step]");
 const registerName = document.querySelector("#register-name");
@@ -321,6 +353,16 @@ const copy = {
     congratsTitle: "Congratulations!",
     congratsBody: "You’ve just planted your first flower—excited to see what blooms? Keep up with your journaling for a full week to help your plant thrive!",
     congratsButton: "Ok, Let’s GO!",
+    onboardingKicker: "How it works",
+    onboardingTitle1: "Describe your day",
+    onboardingBody1: "Write what happened, what felt heavy, or what made you smile. A few honest lines are enough.",
+    onboardingTitle2: "Add Moodlets",
+    onboardingBody2: "Choose the feelings that shaped your day so your notes become easier to revisit and understand.",
+    onboardingTitle3: "Plant the first seed",
+    onboardingBody3: "Your first saved note starts Bloomy’s growth. Every return gives that tiny habit more life.",
+    onboardingTitle4: "Watch Bloomy thrive",
+    onboardingBody4: "Keep journaling through the week to water, care for, and grow Bloomy one day at a time.",
+    startJournalingButton: "Start Journaling",
     stage2Title: "Well, hello Bloomy!",
     stage2Body: "You did a great job journaling your day yesterday, keep going to see the next stages of Bloomy’s growth!",
     stage3Title: "Do you see what we see?",
@@ -341,15 +383,15 @@ const copy = {
     startOver: "Start over",
     adminTitle: "Bloomy admin",
     adminBody: "Set Bloomy’s current streak and recent skipped days.",
-    dayInRow: "Complete days in a Streak",
+    mockData: "Mock data",
+    dayInRow: "Days in a streak before the current one",
     skippedBeforeToday: "Skipped days before today",
     none: "None",
     oneDay: "1 day",
     twoDays: "2 days",
     apply: "Apply",
-    clearMockData: "Clear mock data",
-    mockActive: "Bloomy will appear on visit day {day} of 7 with {skipped} skipped day(s). Today’s note grows Bloomy to stage {growthDay}.",
-    mockCleared: "Mock data is cleared. Journal is using real notes saved locally.",
+    mockActive: "Mock mode is active. Bloomy uses {day} previous streak day(s), {skipped} skipped day(s), and hides real notes until you switch back.",
+    mockCleared: "Real data is active. Admin controls are locked and the journal shows your saved notes.",
     skippedTitle: "Journaling skipped",
     skippedBody: "Bloomy missed a note on this day.",
     noEntriesTitle: "No entries yet",
@@ -452,6 +494,16 @@ const copy = {
     congratsTitle: "Вітаємо!",
     congratsBody: "Ти щойно посадив свою першу квітку. Цікаво, що розквітне? Веди щоденник цілий тиждень, щоб допомогти рослині рости!",
     congratsButton: "Гаразд, почнімо!",
+    onboardingKicker: "Як це працює",
+    onboardingTitle1: "Опиши свій день",
+    onboardingBody1: "Запиши, що сталося, що було важким або що змусило усміхнутися. Кількох чесних рядків достатньо.",
+    onboardingTitle2: "Додай Moodlets",
+    onboardingBody2: "Обери почуття, які формували твій день, щоб пізніше легше повертатися до нотаток і розуміти себе.",
+    onboardingTitle3: "Посади перше зернятко",
+    onboardingBody3: "Перша збережена нотатка запускає ріст Блумі. Кожне повернення додає цій маленькій звичці життя.",
+    onboardingTitle4: "Дивись, як Блумі росте",
+    onboardingBody4: "Пиши протягом тижня, щоб поливати, доглядати й вирощувати Блумі день за днем.",
+    startJournalingButton: "Почати писати",
     stage2Title: "Привіт, Блумі!",
     stage2Body: "Ти чудово впорався з учорашнім записом. Продовжуй, щоб побачити наступні етапи росту Блумі!",
     stage3Title: "Бачиш те, що бачимо ми?",
@@ -472,15 +524,15 @@ const copy = {
     startOver: "Почати знову",
     adminTitle: "Адмінка Блумі",
     adminBody: "Налаштуй поточну серію Блумі та нещодавні пропущені дні.",
-    dayInRow: "Завершені дні в серії",
+    mockData: "Мок-дані",
+    dayInRow: "Дні в серії перед поточним днем",
     skippedBeforeToday: "Пропущені дні перед сьогодні",
     none: "Немає",
     oneDay: "1 день",
     twoDays: "2 дні",
     apply: "Застосувати",
-    clearMockData: "Очистити мок-дані",
-    mockActive: "Блумі буде на {day}-му дні з 7 і з {skipped} пропущеними днями. Сьогоднішня нотатка виростить Блумі до етапу {growthDay}.",
-    mockCleared: "Мок-дані очищено. Щоденник використовує реальні локально збережені нотатки.",
+    mockActive: "Мок-режим активний. Блумі використовує {day} днів попередньої серії та {skipped} пропущених днів, а реальні нотатки приховані до перемикання назад.",
+    mockCleared: "Активні реальні дані. Адмін-контроли заблоковані, а щоденник показує збережені нотатки.",
     skippedTitle: "Щоденник пропущено",
     skippedBody: "Цього дня Блумі не отримав нотатку.",
     noEntriesTitle: "Записів ще немає",
@@ -530,6 +582,7 @@ let adminDraftVisitDay = state.adminVisitDay;
 let adminDraftSkippedDays = state.skippedJournalDays;
 let registerStepIndex = 0;
 let registerPurpose = state.profile?.purpose || "";
+let onboardingStepIndex = 0;
 let profilePurposeDraft = state.profile?.purpose || "";
 let pendingDeleteEntryId = "";
 let homeEntranceTimer = null;
@@ -641,7 +694,7 @@ function realGrowthDay() {
 
 function skippedJournalDaysBeforeToday() {
   normalizeBloomyState();
-  if (state.mockDataEnabled && !state.entries.length) return state.skippedJournalDays;
+  if (state.mockDataEnabled) return state.skippedJournalDays;
   if (!state.entries.length || hasTodayEntry()) return 0;
 
   const latestEntryDate = state.entries
@@ -667,11 +720,8 @@ function streakCount(endDate = startOfToday()) {
 
 function bloomyDisplayStage() {
   normalizeBloomyState();
-  if (state.entries.length) return Math.max(1, realGrowthDay());
-
   if (state.mockDataEnabled) {
-    const growthDay = mockGrowthDayAfterToday();
-    return hasTodayEntry() ? growthDay : Math.max(1, growthDay - 1);
+    return Math.max(1, Math.min(state.adminVisitDay, 7));
   }
 
   const today = startOfToday();
@@ -681,7 +731,7 @@ function bloomyDisplayStage() {
 
 function mockGrowthDayAfterToday() {
   normalizeBloomyState();
-  return Math.min(Math.max(state.adminVisitDay - state.skippedJournalDays, 1), 7);
+  return Math.min(Math.max(state.adminVisitDay + 1, 1), 7);
 }
 
 function bloomyImageForStage(stage) {
@@ -711,7 +761,7 @@ function mockJournalModel() {
 
   let completedCount = 0;
   let dayOffset = 1;
-  const previousCompletedDays = Math.max(0, mockGrowthDayAfterToday() - 1);
+  const previousCompletedDays = Math.max(0, Math.min(state.adminVisitDay, 7));
   while (completedCount < previousCompletedDays) {
     const date = addDays(today, -dayOffset);
     const key = dayKey(date);
@@ -738,12 +788,6 @@ function mockJournalModel() {
     ]);
     completedCount += 1;
   }
-
-  state.entries.forEach((entry) => {
-    const key = dayKey(entry.date);
-    completed.add(key);
-    missed.delete(key);
-  });
 
   return { completed, missed, entriesByDay };
 }
@@ -819,6 +863,63 @@ function renderRegisterPurpose() {
   });
 }
 
+function renderOnboarding() {
+  const slide = ONBOARDING_SLIDES[onboardingStepIndex];
+  if (!slide) return;
+  if (onboardingImage) onboardingImage.src = slide.image;
+  if (onboardingKicker) onboardingKicker.textContent = t("onboardingKicker");
+  if (onboardingTitle) onboardingTitle.textContent = t(slide.titleKey);
+  if (onboardingBody) onboardingBody.textContent = t(slide.bodyKey);
+  if (onboardingNext) {
+    onboardingNext.textContent =
+      onboardingStepIndex === ONBOARDING_SLIDES.length - 1 ? t("startJournalingButton") : t("continue");
+  }
+  if (onboardingDots) {
+    onboardingDots.innerHTML = ONBOARDING_SLIDES.map((_, index) => {
+      const activeClass = index === onboardingStepIndex ? " class=\"is-active\"" : "";
+      const label = `${index + 1} / ${ONBOARDING_SLIDES.length}`;
+      return `<button type="button"${activeClass} data-onboarding-step="${index}" aria-label="${label}"></button>`;
+    }).join("");
+  }
+}
+
+function setOnboardingStep(index, animate = true) {
+  const nextIndex = Math.min(Math.max(index, 0), ONBOARDING_SLIDES.length - 1);
+  if (!animate || nextIndex === onboardingStepIndex) {
+    onboardingStepIndex = nextIndex;
+    renderOnboarding();
+    return;
+  }
+  onboardingSheet?.classList.add("is-changing");
+  window.setTimeout(() => {
+    onboardingStepIndex = nextIndex;
+    renderOnboarding();
+    onboardingSheet?.classList.remove("is-changing");
+  }, 170);
+}
+
+function openOnboardingModal() {
+  setOnboardingStep(0, false);
+  onboardingModal?.classList.add("is-open");
+  onboardingModal?.setAttribute("aria-hidden", "false");
+}
+
+function closeOnboardingModal() {
+  onboardingModal?.classList.remove("is-open");
+  onboardingModal?.setAttribute("aria-hidden", "true");
+  state.onboarded = true;
+  saveState();
+  window.setTimeout(() => homeNote?.focus(), 180);
+}
+
+function advanceOnboarding() {
+  if (onboardingStepIndex < ONBOARDING_SLIDES.length - 1) {
+    setOnboardingStep(onboardingStepIndex + 1);
+    return;
+  }
+  closeOnboardingModal();
+}
+
 function applyLanguage() {
   state.language = language();
   document.documentElement.lang = language() === "ua" ? "uk" : "en";
@@ -864,6 +965,7 @@ function applyLanguage() {
   setText('[data-purpose="Understand my emotions"]', "purposeEmotions");
   setText('[data-purpose="Build a daily habit"]', "purposeHabit");
   setText('[data-purpose="Feel calmer"]', "purposeCalmer");
+  renderOnboarding();
 
   setText("#welcome-note-card > span, #home-note-card > span, #app-note-title", "notePrompt");
   setAttr("#welcome-note, #home-note, #app-note", "aria-label", "notePrompt");
@@ -928,13 +1030,13 @@ function applyLanguage() {
   setText("#app-note-cancel", "cancel");
   setText("#admin-title", "adminTitle");
   setText(".admin-header p", "adminBody");
-  setText(".admin-field:nth-of-type(1) > span", "dayInRow");
-  setText(".admin-field:nth-of-type(2) > span", "skippedBeforeToday");
+  setText(".admin-data-toggle span", "mockData");
+  setText("#admin-controls .admin-field:nth-of-type(1) > span", "dayInRow");
+  setText("#admin-controls .admin-field:nth-of-type(2) > span", "skippedBeforeToday");
   setText('[data-skip-days="0"]', "none");
   setText('[data-skip-days="1"]', "oneDay");
   setText('[data-skip-days="2"]', "twoDays");
   setText("#admin-save", "apply");
-  setText("#admin-clear", "clearMockData");
   setText("#delete-confirm-title", "deleteConfirmTitle");
   setText(".delete-confirm-copy p", "deleteConfirmBody");
   setText("#delete-confirm-yes", "yesDelete");
@@ -975,7 +1077,7 @@ function finishRegistration() {
   state.profile.purpose = registerPurpose;
   state.profile.email = registerEmail.value.trim();
   state.registered = true;
-  state.onboarded = true;
+  state.onboarded = false;
   saveState();
   homeEntrancePlayed = false;
   setScreen("app");
@@ -1151,7 +1253,8 @@ function saveProfileField(type) {
 function renderEntries() {
   const journal = mockJournalModel();
   const mockEntries = journal.entriesByDay.get(selectedDayKey) || [];
-  const entries = [...state.entries, ...mockEntries]
+  const sourceEntries = state.mockDataEnabled ? mockEntries : state.entries;
+  const entries = sourceEntries
     .filter((entry) => dayKey(entry.date) === selectedDayKey)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
   homeEntryList.innerHTML = "";
@@ -1293,7 +1396,7 @@ function bloomyImageState() {
   normalizeBloomyState();
   const stage = bloomyDisplayStage();
   const skippedDays = skippedJournalDaysBeforeToday();
-  if (hasTodayEntry()) return bloomyImageForStage(stage);
+  if (!state.mockDataEnabled && hasTodayEntry()) return bloomyImageForStage(stage);
   if (skippedDays >= 2) return BLOOMY_IMAGES.missed2;
   if (skippedDays === 1) return BLOOMY_IMAGES.missed1;
   return bloomyImageForStage(stage);
@@ -1331,6 +1434,9 @@ function render() {
   renderProfilePurposeOptions();
   renderProfile();
   applyLanguage();
+  if (state.registered && !state.onboarded && !onboardingModal?.classList.contains("is-open")) {
+    window.requestAnimationFrame(openOnboardingModal);
+  }
 }
 
 function escapeHTML(value) {
@@ -1669,7 +1775,7 @@ function showGrowthMilestone(milestoneDay) {
 function showMissedJournalModal() {
   normalizeBloomyState();
   const skippedDays = skippedJournalDaysBeforeToday();
-  if (hasTodayEntry()) return;
+  if (!state.mockDataEnabled && hasTodayEntry()) return;
   if (!missedModal || skippedDays === 0) return;
   const image = bloomyImageState();
   const isTwoDays = skippedDays >= 2;
@@ -1710,22 +1816,28 @@ function handleMissedPrimaryAction() {
 
 function renderAdminModal() {
   if (!adminDayGrid || !adminSkipOptions || !adminSummary) return;
+  const mockEnabled = state.mockDataEnabled !== false;
+  if (adminMockToggle) adminMockToggle.checked = mockEnabled;
+  adminControls?.classList.toggle("is-disabled", !mockEnabled);
+  adminControls?.setAttribute("aria-disabled", String(!mockEnabled));
+  if (adminSave) adminSave.disabled = !mockEnabled;
   adminDayGrid.innerHTML = "";
   for (let day = 1; day <= 7; day += 1) {
     const button = document.createElement("button");
     button.type = "button";
     button.dataset.visitDay = String(day);
+    button.disabled = !mockEnabled;
     button.className = day === adminDraftVisitDay ? "is-selected" : "";
     button.textContent = String(day);
     adminDayGrid.append(button);
   }
 
   adminSkipOptions.querySelectorAll("[data-skip-days]").forEach((button) => {
+    button.disabled = !mockEnabled;
     button.classList.toggle("is-selected", Number(button.dataset.skipDays) === adminDraftSkippedDays);
   });
-  const growthDay = Math.min(Math.max(adminDraftVisitDay - adminDraftSkippedDays, 1), 7);
-  adminSummary.textContent = state.mockDataEnabled
-    ? t("mockActive", { day: adminDraftVisitDay, skipped: adminDraftSkippedDays, growthDay })
+  adminSummary.textContent = mockEnabled
+    ? t("mockActive", { day: adminDraftVisitDay, skipped: adminDraftSkippedDays })
     : t("mockCleared");
 }
 
@@ -1742,14 +1854,15 @@ function closeAdminModal() {
   adminModal?.setAttribute("aria-hidden", "true");
 }
 
-function clearMockData() {
-  state.adminVisitDay = 1;
-  state.skippedJournalDays = 0;
-  state.mockDataEnabled = false;
+function setMockDataEnabled(enabled) {
+  state.mockDataEnabled = enabled;
+  if (enabled) {
+    state.adminVisitDay = adminDraftVisitDay;
+    state.skippedJournalDays = adminDraftSkippedDays;
+  }
   adminDraftVisitDay = state.adminVisitDay;
   adminDraftSkippedDays = state.skippedJournalDays;
   saveState();
-  closeAdminModal();
   closeMissedJournalModal();
   stageTwoModal?.classList.remove("is-open");
   stageTwoModal?.setAttribute("aria-hidden", "true");
@@ -1776,6 +1889,8 @@ function logOut() {
   closeProfileEditModals();
   closeDeleteConfirmModal();
   closeMissedJournalModal();
+  onboardingModal?.classList.remove("is-open");
+  onboardingModal?.setAttribute("aria-hidden", "true");
   congratsModal?.classList.remove("is-open");
   congratsModal?.setAttribute("aria-hidden", "true");
   stageTwoModal?.classList.remove("is-open");
@@ -1994,6 +2109,13 @@ registerScreen?.addEventListener("click", (event) => {
       advanceRegistration();
     }
   });
+});
+
+onboardingNext?.addEventListener("click", advanceOnboarding);
+onboardingDots?.addEventListener("click", (event) => {
+  const dot = event.target.closest("[data-onboarding-step]");
+  if (!dot) return;
+  setOnboardingStep(Number(dot.dataset.onboardingStep));
 });
 
 welcomeContinue?.addEventListener("click", () => {
@@ -2253,6 +2375,7 @@ appNoteModal?.addEventListener("click", (event) => {
 });
 
 adminDayGrid?.addEventListener("click", (event) => {
+  if (state.mockDataEnabled === false) return;
   const button = event.target.closest("[data-visit-day]");
   if (!button) return;
   adminDraftVisitDay = Number(button.dataset.visitDay);
@@ -2260,17 +2383,23 @@ adminDayGrid?.addEventListener("click", (event) => {
 });
 
 adminSkipOptions?.addEventListener("click", (event) => {
+  if (state.mockDataEnabled === false) return;
   const button = event.target.closest("[data-skip-days]");
   if (!button) return;
   adminDraftSkippedDays = Number(button.dataset.skipDays);
   renderAdminModal();
 });
 
+adminMockToggle?.addEventListener("change", () => {
+  setMockDataEnabled(adminMockToggle.checked);
+});
+
 adminSave?.addEventListener("click", () => {
+  if (state.mockDataEnabled === false) return;
   state.adminVisitDay = adminDraftVisitDay;
   state.skippedJournalDays = adminDraftSkippedDays;
   state.mockDataEnabled = true;
-  const shouldShowMissedModal = journalView?.classList.contains("is-active") && skippedJournalDaysBeforeToday() > 0 && !hasTodayEntry();
+  const shouldShowMissedModal = journalView?.classList.contains("is-active") && skippedJournalDaysBeforeToday() > 0;
   saveState();
   renderWeeklyProgress();
   renderEntries();
@@ -2278,8 +2407,6 @@ adminSave?.addEventListener("click", () => {
   closeAdminModal();
   if (shouldShowMissedModal) showMissedJournalModal();
 });
-
-adminClear?.addEventListener("click", clearMockData);
 
 adminModal?.addEventListener("click", (event) => {
   if (event.target === adminModal) closeAdminModal();
