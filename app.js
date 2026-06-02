@@ -1,8 +1,6 @@
 const STORAGE_KEY = "unfleur-state";
 const NOTE_TOAST_DURATION = 850;
 const MILESTONE_MODAL_DELAY = 1100;
-const SUPABASE_URL = "https://zmrfibtymaxrvnepqzbb.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_F47KXurNPu6U72tAGFDRoA_bLFdHRse";
 const CHECKED_DAY_MARKER = "https://www.figma.com/api/mcp/asset/11dfd974-923e-4656-826b-aafd34554552";
 const MISSED_DAY_MARKER = "https://www.figma.com/api/mcp/asset/9bb56a09-d123-4371-b554-9208b045871c";
 const BLOOMY_IMAGES = {
@@ -79,7 +77,6 @@ const ONBOARDING_SLIDES = [
 const defaults = {
   onboarded: true,
   registered: false,
-  supabaseUserId: "",
   profile: {
     name: "",
     purpose: "",
@@ -95,8 +92,6 @@ const defaults = {
 };
 
 let state = loadState();
-let authUser = null;
-const supabaseClient = window.supabase?.createClient?.(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) || null;
 
 const screens = document.querySelectorAll("[data-screen]");
 const appScreen = document.querySelector(".screen-app");
@@ -125,7 +120,6 @@ const profileEmailInput = document.querySelector("#profile-email-input");
 const profilePurposeOptions = document.querySelector("#profile-purpose-options");
 const profileNameSave = document.querySelector("#profile-name-save");
 const profileEmailSave = document.querySelector("#profile-email-save");
-const authFeedback = document.querySelector("#auth-feedback");
 const welcomeNoteFlow = document.querySelector(".figma-note-flow");
 const welcomeNoteCard = document.querySelector("#welcome-note-card");
 const welcomeNote = document.querySelector("#welcome-note");
@@ -294,7 +288,7 @@ const copy = {
     reviewBody: "Take a moment to review your note, then save it or make any necessary changes.",
     startJournaling: "Create account",
     logIn: "Log in",
-    loginBody: "Use the email and password you created for Unfleur.",
+    loginBody: "Enter any credentials to continue for now.",
     continue: "Continue",
     save: "Save",
     saveNote: "Save Note",
@@ -325,19 +319,6 @@ const copy = {
     emailPlaceholder: "you@example.com",
     passwordPlaceholder: "Create a password",
     enterUnfleur: "Enter Unfleur",
-    nameRequired: "The name field can’t be empty.",
-    nameLetters: "The name should only contain letters.",
-    emailRequired: "The email field can’t be empty.",
-    passwordRequired: "The password field can’t be empty.",
-    creatingAccount: "Creating your account...",
-    signingIn: "Signing you in...",
-    authReady: "You’re in. Welcome back.",
-    authCheckEmail: "Check your email to confirm your account, then log in.",
-    authMissingSupabase: "Supabase is not available yet. Refresh the page and try again.",
-    authInvalidEmail: "Please enter a valid email.",
-    authPasswordShort: "Use at least 6 characters for your password.",
-    authProfileSaved: "Profile saved",
-    authSignedOut: "You’ve been logged out.",
     loginPasswordPlaceholder: "Password",
     purposeReflect: "Reflect on my days",
     purposeEmotions: "Understand my emotions",
@@ -448,7 +429,7 @@ const copy = {
     reviewBody: "Переглянь нотатку й збережи її або внеси потрібні зміни.",
     startJournaling: "Створити акаунт",
     logIn: "Увійти",
-    loginBody: "Використай email і пароль, які створила для Unfleur.",
+    loginBody: "Введи будь-які дані, щоб продовжити.",
     continue: "Продовжити",
     save: "Зберегти",
     saveNote: "Зберегти нотатку",
@@ -479,19 +460,6 @@ const copy = {
     emailPlaceholder: "you@example.com",
     passwordPlaceholder: "Створи пароль",
     enterUnfleur: "Увійти в Unfleur",
-    nameRequired: "Поле імені не може бути порожнім.",
-    nameLetters: "Ім’я має містити лише літери.",
-    emailRequired: "Поле email не може бути порожнім.",
-    passwordRequired: "Поле пароля не може бути порожнім.",
-    creatingAccount: "Створюємо акаунт...",
-    signingIn: "Входимо...",
-    authReady: "Ти всередині. Раді бачити знову.",
-    authCheckEmail: "Перевір email, підтвердь акаунт і тоді увійди.",
-    authMissingSupabase: "Supabase поки недоступний. Онови сторінку й спробуй ще раз.",
-    authInvalidEmail: "Введи коректний email.",
-    authPasswordShort: "Пароль має містити щонайменше 6 символів.",
-    authProfileSaved: "Профіль збережено",
-    authSignedOut: "Ти вийшла з акаунта.",
     loginPasswordPlaceholder: "Пароль",
     purposeReflect: "Осмислювати свої дні",
     purposeEmotions: "Краще розуміти емоції",
@@ -645,129 +613,6 @@ function locale() {
 function t(key, values = {}) {
   const phrase = copy[language()]?.[key] ?? copy.en[key] ?? key;
   return Object.entries(values).reduce((result, [name, value]) => result.replaceAll(`{${name}}`, value), phrase);
-}
-
-function authMessage(message) {
-  if (!message) return "";
-  if (/already registered/i.test(message)) return "This email already has an account. Try logging in.";
-  if (/invalid login credentials/i.test(message)) return "Email or password doesn’t match.";
-  if (/email/i.test(message) && /invalid/i.test(message)) return t("authInvalidEmail");
-  if (/password/i.test(message) && /six|6/i.test(message)) return t("authPasswordShort");
-  return message;
-}
-
-function showAuthFeedback(message, tone = "neutral") {
-  if (!authFeedback) return;
-  authFeedback.textContent = copy.en[message] || copy.ua[message] ? t(message) : message;
-  authFeedback.hidden = false;
-  authFeedback.dataset.tone = tone;
-}
-
-function clearAuthFeedback() {
-  if (!authFeedback) return;
-  authFeedback.textContent = "";
-  authFeedback.hidden = true;
-  authFeedback.dataset.tone = "neutral";
-}
-
-function isValidEmail(value) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function isValidName(value) {
-  return /^[\p{L}][\p{L}\s'.-]*$/u.test(value);
-}
-
-function setInputError(input, messageKey) {
-  const field = input?.closest(".register-field");
-  if (!field) return;
-  let message = field.querySelector(".field-error");
-  if (!message) {
-    message = document.createElement("p");
-    message.className = "field-error";
-    field.append(message);
-  }
-  message.textContent = t(messageKey);
-  field.classList.add("is-error");
-  input.setAttribute("aria-invalid", "true");
-  input.setAttribute("aria-describedby", `${input.id}-error`);
-  message.id = `${input.id}-error`;
-}
-
-function clearInputError(input) {
-  const field = input?.closest(".register-field");
-  if (!field) return;
-  field.classList.remove("is-error");
-  input.removeAttribute("aria-invalid");
-  input.removeAttribute("aria-describedby");
-  field.querySelector(".field-error")?.remove();
-}
-
-function clearAuthInputs() {
-  [registerName, registerEmail, registerPassword, loginEmail, loginPassword, profileNameInput, profileEmailInput]
-    .forEach(clearInputError);
-}
-
-function setAuthBusy(isBusy, messageKey = "") {
-  registerScreen?.classList.toggle("is-auth-busy", isBusy);
-  registerScreen?.querySelectorAll("button, input").forEach((node) => {
-    if (node.matches("[data-language], [data-register-back]")) return;
-    node.disabled = isBusy;
-  });
-  if (isBusy && messageKey) showAuthFeedback(messageKey);
-}
-
-function mapProfileFromRow(row) {
-  if (!row) return;
-  ensureProfileState();
-  state.profile.name = row.name || state.profile.name || "";
-  state.profile.email = row.email || authUser?.email || state.profile.email || "";
-  state.profile.purpose = row.purpose || state.profile.purpose || "";
-  state.profile.notificationsEnabled = row.notifications_enabled !== false;
-  state.language = row.language || state.language || "en";
-  state.onboarded = row.onboarded === true;
-}
-
-async function loadRemoteProfile() {
-  if (!supabaseClient || !authUser) return;
-  const { data, error, status } = await supabaseClient
-    .from("profiles")
-    .select("email,name,purpose,notifications_enabled,language,onboarded")
-    .eq("user_id", authUser.id)
-    .maybeSingle();
-
-  if (error && status !== 406) throw error;
-  if (data) mapProfileFromRow(data);
-}
-
-async function saveRemoteProfile() {
-  if (!supabaseClient || !authUser) return;
-  ensureProfileState();
-  const { error } = await supabaseClient
-    .from("profiles")
-    .upsert({
-      user_id: authUser.id,
-      email: authUser.email || state.profile.email || "",
-      name: state.profile.name || "",
-      purpose: state.profile.purpose || "",
-      notifications_enabled: state.profile.notificationsEnabled !== false,
-      language: language(),
-      onboarded: state.onboarded === true,
-    }, { onConflict: "user_id" });
-
-  if (error) throw error;
-}
-
-async function useAuthenticatedUser(user, options = {}) {
-  authUser = user || null;
-  if (!authUser) return;
-  ensureProfileState();
-  state.registered = true;
-  state.supabaseUserId = authUser.id;
-  state.profile.email = authUser.email || state.profile.email || "";
-  if (options.loadProfile !== false) await loadRemoteProfile();
-  if (options.onboarded !== undefined) state.onboarded = options.onboarded;
-  saveState();
 }
 
 function setText(selector, key, values = {}) {
@@ -1081,7 +926,6 @@ function closeOnboardingModal() {
   onboardingModal?.setAttribute("aria-hidden", "true");
   state.onboarded = true;
   saveState();
-  saveRemoteProfile().catch((error) => showNoteToast(authMessage(error.message)));
   window.setTimeout(() => homeNote?.focus(), 180);
 }
 
@@ -1278,139 +1122,45 @@ function applyLanguage() {
 
 function advanceRegistration() {
   if (registerStepIndex === 1 && !registerName.value.trim()) {
-    setInputError(registerName, "nameRequired");
-    registerName.focus();
-    return;
-  }
-  if (registerStepIndex === 1 && !isValidName(registerName.value.trim())) {
-    setInputError(registerName, "nameLetters");
     registerName.focus();
     return;
   }
   if (registerStepIndex === 2 && !registerPurpose) return;
   if (registerStepIndex === 3 && !registerEmail.value.trim()) {
-    setInputError(registerEmail, "emailRequired");
     registerEmail.focus();
     return;
   }
-  if (registerStepIndex === 3 && !isValidEmail(registerEmail.value.trim())) {
-    setInputError(registerEmail, "authInvalidEmail");
-    registerEmail.focus();
-    return;
-  }
-  clearAuthInputs();
-  clearAuthFeedback();
   setRegisterStep(registerStepIndex + 1);
 }
 
-async function finishRegistration() {
+function finishRegistration() {
   if (!registerPassword.value.trim()) {
-    setInputError(registerPassword, "passwordRequired");
     registerPassword.focus();
     return;
   }
-  const email = registerEmail.value.trim();
-  const password = registerPassword.value.trim();
-  if (!isValidEmail(email)) {
-    setInputError(registerEmail, "authInvalidEmail");
-    registerEmail.focus();
-    return;
-  }
-  if (password.length < 6) {
-    setInputError(registerPassword, "authPasswordShort");
-    registerPassword.focus();
-    return;
-  }
-  if (!supabaseClient) {
-    showAuthFeedback("authMissingSupabase", "error");
-    return;
-  }
-
-  clearAuthFeedback();
-  setAuthBusy(true, "creatingAccount");
   ensureProfileState();
   state.profile.name = registerName.value.trim();
   state.profile.purpose = registerPurpose;
-  state.profile.email = email;
-
-  try {
-    const { data, error } = await supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name: state.profile.name,
-          purpose: state.profile.purpose,
-          language: language(),
-        },
-      },
-    });
-    if (error) throw error;
-
-    if (!data.session) {
-      saveState();
-      showAuthFeedback("authCheckEmail", "success");
-      setRegisterStep(5);
-      if (loginEmail) loginEmail.value = email;
-      return;
-    }
-
-    await useAuthenticatedUser(data.user, { loadProfile: false, onboarded: false });
-    await saveRemoteProfile();
-    homeEntrancePlayed = false;
-    clearAuthFeedback();
-    setScreen("app");
-    setView("home");
-    render();
-  } catch (error) {
-    showAuthFeedback(authMessage(error.message), "error");
-  } finally {
-    setAuthBusy(false);
-  }
+  state.profile.email = registerEmail.value.trim();
+  state.registered = true;
+  state.onboarded = false;
+  saveState();
+  homeEntrancePlayed = false;
+  setScreen("app");
+  setView("home");
+  render();
 }
 
-async function finishLogin() {
-  const email = loginEmail?.value.trim() || "";
-  const password = loginPassword?.value.trim() || "";
-  if (!email) {
-    setInputError(loginEmail, "emailRequired");
-    loginEmail?.focus();
-    return;
-  }
-  if (!isValidEmail(email)) {
-    setInputError(loginEmail, "authInvalidEmail");
-    loginEmail?.focus();
-    return;
-  }
-  if (!password) {
-    setInputError(loginPassword, "passwordRequired");
-    loginPassword?.focus();
-    return;
-  }
-  if (!supabaseClient) {
-    showAuthFeedback("authMissingSupabase", "error");
-    return;
-  }
-
-  clearAuthFeedback();
-  setAuthBusy(true, "signingIn");
+function finishLogin() {
+  state.registered = true;
+  state.onboarded = true;
   ensureProfileState();
-  state.profile.email = email;
-
-  try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    await useAuthenticatedUser(data.user, { loadProfile: true });
-    homeEntrancePlayed = false;
-    clearAuthFeedback();
-    setScreen("app");
-    setView("home");
-    render();
-  } catch (error) {
-    showAuthFeedback(authMessage(error.message), "error");
-  } finally {
-    setAuthBusy(false);
-  }
+  if (loginEmail?.value.trim()) state.profile.email = loginEmail.value.trim();
+  saveState();
+  homeEntrancePlayed = false;
+  setScreen("app");
+  setView("home");
+  render();
 }
 
 function setView(name) {
@@ -1545,57 +1295,24 @@ function openProfileEditModal(type) {
   }
 }
 
-async function saveProfileField(type) {
+function saveProfileField(type) {
   ensureProfileState();
   if (type === "name") {
     state.profile.name = profileNameInput?.value.trim() || "";
-    if (!state.profile.name) {
-      setInputError(profileNameInput, "nameRequired");
-      profileNameInput?.focus();
-      return;
-    }
-    if (!isValidName(state.profile.name)) {
-      setInputError(profileNameInput, "nameLetters");
-      profileNameInput?.focus();
-      return;
-    }
   }
   if (type === "email") {
     state.profile.email = profileEmailInput?.value.trim() || "";
-    if (!state.profile.email) {
-      setInputError(profileEmailInput, "emailRequired");
-      profileEmailInput?.focus();
-      return;
-    }
-    if (!isValidEmail(state.profile.email)) {
-      setInputError(profileEmailInput, "authInvalidEmail");
-      profileEmailInput?.focus();
-      return;
-    }
-    if (supabaseClient && authUser && state.profile.email !== authUser.email) {
-      const { error } = await supabaseClient.auth.updateUser({ email: state.profile.email });
-      if (error) {
-        showNoteToast(authMessage(error.message));
-        return;
-      }
-    }
   }
   if (type === "purpose") {
     state.profile.purpose = profilePurposeDraft;
     registerPurpose = profilePurposeDraft;
   }
-  try {
-    await saveRemoteProfile();
-    saveState();
-    renderProfile();
-    renderRegisterPurpose();
-    closeProfileEditModals();
-    showNoteToast("authProfileSaved");
-    if (document.querySelector(".view-profile.is-active")) {
-      subtitle.textContent = `${t("hello")}, ${state.profile?.name || t("placeholderName")}!`;
-    }
-  } catch (error) {
-    showNoteToast(authMessage(error.message));
+  saveState();
+  renderProfile();
+  renderRegisterPurpose();
+  closeProfileEditModals();
+  if (document.querySelector(".view-profile.is-active")) {
+    subtitle.textContent = `${t("hello")}, ${state.profile?.name || t("placeholderName")}!`;
   }
 }
 
@@ -1788,49 +1505,6 @@ function render() {
   }
 }
 
-async function initializeApp() {
-  if (supabaseClient) {
-    try {
-      const { data, error } = await supabaseClient.auth.getSession();
-      if (error) throw error;
-      if (data.session?.user) {
-        await useAuthenticatedUser(data.session.user, { loadProfile: true });
-      } else if (state.registered) {
-        state.registered = false;
-        state.supabaseUserId = "";
-        saveState();
-      }
-    } catch (error) {
-      showAuthFeedback(authMessage(error.message), "error");
-    }
-
-    supabaseClient.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") {
-        authUser = null;
-        return;
-      }
-      if (!session?.user || event === "INITIAL_SESSION") return;
-      authUser = session.user;
-      state.supabaseUserId = session.user.id;
-      state.profile.email = session.user.email || state.profile.email || "";
-      saveState();
-    });
-  } else {
-    state.registered = false;
-    showAuthFeedback("authMissingSupabase", "error");
-  }
-
-  render();
-  renderMoodletGrid();
-  renderSelectedMoodlets();
-  renderHomeSelectedMoodlets();
-  renderAppSelectedMoodlets();
-  renderAdminModal();
-  updateWelcomeNote();
-  updateHomeNote();
-  updateAppNote();
-}
-
 function escapeHTML(value) {
   return value.replace(/[&<>"']/g, (char) => {
     return {
@@ -1856,7 +1530,6 @@ document.addEventListener("click", (event) => {
   if (languageButton) {
     state.language = languageButton.dataset.language;
     saveState();
-    saveRemoteProfile().catch((error) => showNoteToast(authMessage(error.message)));
     applyLanguage();
     const activeView = document.querySelector(".view.is-active")?.dataset.view;
     if (activeView) setView(activeView);
@@ -1926,7 +1599,6 @@ document.addEventListener("click", (event) => {
     ensureProfileState();
     state.profile.notificationsEnabled = !state.profile.notificationsEnabled;
     saveState();
-    saveRemoteProfile().catch((error) => showNoteToast(authMessage(error.message)));
     renderProfile();
   }
 });
@@ -2276,17 +1948,8 @@ function setMockDataEnabled(enabled) {
   renderAdminModal();
 }
 
-async function logOut() {
-  if (supabaseClient) {
-    const { error } = await supabaseClient.auth.signOut();
-    if (error) {
-      showNoteToast(authMessage(error.message));
-      return;
-    }
-  }
-  authUser = null;
+function logOut() {
   state.registered = false;
-  state.supabaseUserId = "";
   saveState();
   closeAdminModal();
   closeProfileEditModals();
@@ -2310,7 +1973,6 @@ async function logOut() {
   stageSevenModal?.setAttribute("aria-hidden", "true");
   setScreen("register");
   setRegisterStep(0);
-  showAuthFeedback("authSignedOut", "success");
 }
 
 function deleteAccount() {
@@ -2500,10 +2162,6 @@ registerScreen?.addEventListener("click", (event) => {
 });
 
 [registerName, registerEmail, registerPassword, loginEmail, loginPassword].forEach((input) => {
-  input?.addEventListener("input", () => {
-    clearInputError(input);
-    clearAuthFeedback();
-  });
   input?.addEventListener("keydown", (event) => {
     if (event.key !== "Enter") return;
     event.preventDefault();
@@ -2517,10 +2175,6 @@ registerScreen?.addEventListener("click", (event) => {
       advanceRegistration();
     }
   });
-});
-
-[profileNameInput, profileEmailInput].forEach((input) => {
-  input?.addEventListener("input", () => clearInputError(input));
 });
 
 onboardingNext?.addEventListener("click", advanceOnboarding);
@@ -2859,4 +2513,12 @@ weeklyProgress?.addEventListener("keydown", (event) => {
 journalView?.addEventListener("scroll", updateJournalScrollState, { passive: true });
 window.addEventListener("resize", updateTabIndicator);
 
-initializeApp();
+render();
+renderMoodletGrid();
+renderSelectedMoodlets();
+renderHomeSelectedMoodlets();
+renderAppSelectedMoodlets();
+renderAdminModal();
+updateWelcomeNote();
+updateHomeNote();
+updateAppNote();
