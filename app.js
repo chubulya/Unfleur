@@ -1584,8 +1584,10 @@ function updateWelcomeNote() {
   if (!welcomeNote || !welcomeNoteFlow || !welcomeCounter) return;
 
   const length = welcomeNote.value.length;
-  const hasText = length > 0;
-  const hasMoodlets = selectedMoodlets.length > 0;
+  const hasText = Boolean(welcomeNote.value.trim());
+  const hasMoodlets = hasText && selectedMoodlets.length > 0;
+  welcomeNoteCard.querySelector("[data-add-moodlets]").hidden = !hasText;
+  selectedMoodletsBar.hidden = !hasMoodlets;
   welcomeNoteFlow.classList.toggle("has-text", hasText);
   welcomeContinue?.classList.toggle("is-visible", hasText);
   welcomeScreen?.classList.toggle("review-state", hasMoodlets);
@@ -1621,8 +1623,10 @@ function updateHomeNote() {
   if (!homeNote || !homeNoteCard || !homeNoteShell || !homeCounter) return;
 
   const length = homeNote.value.length;
-  const hasText = length > 0;
-  const hasMoodlets = homeSelectedMoodlets.length > 0;
+  const hasText = Boolean(homeNote.value.trim());
+  const hasMoodlets = hasText && homeSelectedMoodlets.length > 0;
+  homeNoteCard.querySelector("[data-add-moodlets]").hidden = !hasText;
+  homeSelectedMoodletsBar.hidden = !hasMoodlets;
   homeCounter.textContent = `${length}/500 ${t("symbols")}`;
   homeNoteShell.classList.toggle("has-text", hasText);
   homeNoteCard.classList.toggle("has-text", hasText);
@@ -1688,8 +1692,10 @@ function updateAppNote() {
   if (!appNote || !appNoteCard || !appCounter || !appNotePrimary) return;
 
   const length = appNote.value.length;
-  const hasText = length > 0;
-  const hasMoodlets = appSelectedMoodlets.length > 0;
+  const hasText = Boolean(appNote.value.trim());
+  const hasMoodlets = hasText && appSelectedMoodlets.length > 0;
+  appNoteCard.querySelector("[data-add-moodlets]").hidden = !hasText;
+  appSelectedMoodletsBar.hidden = !hasMoodlets;
   appCounter.textContent = `${length}/500 ${t("symbols")}`;
   appNoteCard.classList.toggle("has-text", hasText);
   appNoteCard.classList.toggle("has-moodlets", hasMoodlets);
@@ -2034,7 +2040,6 @@ function renderMoodletGrid() {
 
 function renderSelectedMoodlets() {
   if (!selectedMoodletsNode || !selectedMoodletsBar) return;
-  selectedMoodletsBar.hidden = selectedMoodlets.length === 0;
   selectedMoodletsNode.innerHTML = selectedMoodlets
     .map((name) => `<span class="moodlet-swatch" style="${moodletStyle(name)}" title="${name}"></span>`)
     .join("");
@@ -2042,7 +2047,6 @@ function renderSelectedMoodlets() {
 
 function renderAppSelectedMoodlets() {
   if (!appSelectedMoodletsNode || !appSelectedMoodletsBar) return;
-  appSelectedMoodletsBar.hidden = appSelectedMoodlets.length === 0;
   appSelectedMoodletsNode.innerHTML = appSelectedMoodlets
     .map((name) => `<span class="moodlet-swatch" style="${moodletStyle(name)}" title="${name}"></span>`)
     .join("");
@@ -2050,13 +2054,15 @@ function renderAppSelectedMoodlets() {
 
 function renderHomeSelectedMoodlets() {
   if (!homeSelectedMoodletsNode || !homeSelectedMoodletsBar) return;
-  homeSelectedMoodletsBar.hidden = homeSelectedMoodlets.length === 0;
   homeSelectedMoodletsNode.innerHTML = homeSelectedMoodlets
     .map((name) => `<span class="moodlet-swatch" style="${moodletStyle(name)}" title="${name}"></span>`)
     .join("");
 }
 
 function openMoodletModal(target = "welcome") {
+  const entry = { welcome: welcomeNote, home: homeNote, app: appNote }[target];
+  if (!entry?.value.trim()) return;
+
   activeMoodletTarget = target;
   renderMoodletGrid();
   moodletModal?.classList.add("is-open");

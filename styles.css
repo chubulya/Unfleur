@@ -680,13 +680,18 @@ button {
   padding: 0;
   border: 0;
   border-radius: 100000px;
-  background: rgba(255, 255, 255, 0.3);
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
-.figma-mic img {
+.figma-mic::before {
+  content: "";
   width: 13.844px;
   height: 19px;
   display: block;
+  background: currentColor;
+  -webkit-mask: url("assets/mic-light-4-168.svg") center / contain no-repeat;
+  mask: url("assets/mic-light-4-168.svg") center / contain no-repeat;
 }
 
 .figma-mic.is-listening {
@@ -1343,10 +1348,6 @@ button {
   flex: 1 0 0;
   align-items: flex-end;
   margin-top: auto;
-}
-
-.app-note-card .figma-mic {
-  background: rgba(42, 58, 83, 0.05);
 }
 
 .app-note-actions {
@@ -2167,7 +2168,7 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 32px;
   color: var(--accent);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--accent-soft);
   box-shadow: 0 0 18px rgba(58, 97, 167, 0.18);
   backdrop-filter: blur(45px);
   -webkit-backdrop-filter: blur(45px);
@@ -2177,12 +2178,9 @@ button {
 .home-admin-button::before {
   width: 32px;
   height: 32px;
-  background: transparent;
-  background-image: url("assets/settings-rounded-home.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
+  background: currentColor;
+  -webkit-mask: url("assets/settings-rounded-home.svg") center / contain no-repeat;
+  mask: url("assets/settings-rounded-home.svg") center / contain no-repeat;
 }
 
 .home-header-center,
@@ -2318,7 +2316,6 @@ button {
   background: rgba(42, 58, 83, 0.05);
 }
 
-.home-note-card .figma-mic,
 .home-note-card .moodlets-edit-button {
   background: rgba(42, 58, 83, 0.05);
 }
