@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=local-journal-23" />
+    <link rel="stylesheet" href="styles.css?v=local-journal-24" />
   </head>
   <body>
     <main class="phone-shell" aria-live="polite">
@@ -195,7 +195,7 @@
         <section class="view view-journal" data-view="journal">
           <div class="journal-overview">
             <div class="plant-card">
-              <div class="plant-portrait" aria-label="Your blooming plant">
+              <div class="plant-portrait" role="img" aria-label="Your blooming plant">
                 <div class="figma-pot-frame" id="plant">
                   <img class="figma-pot-bg" src="assets/journal-main-image.png" alt="" />
                   <img class="figma-pot-image" src="assets/journal-pot-image.png" alt="" />
@@ -394,23 +394,6 @@
           </div>
         </div>
 
-        <div class="missed-modal" id="missed-modal" aria-hidden="true">
-          <div class="missed-sheet" role="dialog" aria-modal="true" aria-labelledby="missed-title">
-            <div class="sheet-handle" aria-hidden="true"></div>
-            <div class="missed-plant">
-              <div class="figma-pot-frame missed-modal-frame" id="missed-modal-frame">
-                <img class="figma-pot-bg" id="missed-modal-bg" src="assets/journal-main-image.png" alt="" />
-                <img class="figma-pot-image" id="missed-modal-pot" src="assets/journal-pot-image.png" alt="" />
-              </div>
-            </div>
-            <div class="missed-copy">
-              <h2 id="missed-title">Welcome back</h2>
-              <p id="missed-body">Pick up whenever you’re ready. A few words about today are enough.</p>
-            </div>
-            <button class="missed-primary-button" id="close-missed" type="button">Got it</button>
-          </div>
-        </div>
-
         <div class="app-note-modal" id="app-note-modal" aria-hidden="true">
           <div class="app-note-sheet" role="dialog" aria-modal="true" aria-labelledby="app-note-title">
             <div class="sheet-handle" aria-hidden="true"></div>
@@ -562,6 +545,6 @@
       </dialog>
     </main>
 
-    <script src="app.js?v=local-journal-23"></script>
+    <script src="app.js?v=local-journal-24"></script>
   </body>
 </html>

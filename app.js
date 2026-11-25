@@ -53,6 +53,7 @@ const defaults = {
   pot: "blue",
   entries: [],
   adminVisitDay: 1,
+  adminEntryDay: null,
   skippedJournalDays: 0,
   mockDataEnabled: false,
   demoPreferenceSet: false,
@@ -120,13 +121,6 @@ const stageSixModal = document.querySelector("#stage-six-modal");
 const closeStageSix = document.querySelector("#close-stage-six");
 const stageSevenModal = document.querySelector("#stage-seven-modal");
 const closeStageSeven = document.querySelector("#close-stage-seven");
-const missedModal = document.querySelector("#missed-modal");
-const missedModalFrame = document.querySelector("#missed-modal-frame");
-const missedModalBg = document.querySelector("#missed-modal-bg");
-const missedModalPot = document.querySelector("#missed-modal-pot");
-const missedTitle = document.querySelector("#missed-title");
-const missedBody = document.querySelector("#missed-body");
-const closeMissed = document.querySelector("#close-missed");
 const homeNoteCard = document.querySelector("#home-note-card");
 const homeNoteShell = document.querySelector("#home-note-shell");
 const homeNote = document.querySelector("#home-note");
@@ -297,7 +291,8 @@ const copy = {
     hello: "Hello",
     addEntry: "Add entry",
     openAdmin: "Open admin controls",
-    bloomingPlant: "Your blooming plant",
+    bloomingPlant: "Your Bloomy plant",
+    brokenPlant: "Bloomy is wilted and the pot is cracked",
     profileSettings: "Profile settings",
     editName: "Edit your name",
     editPlan: "Edit plan",
@@ -341,11 +336,6 @@ const copy = {
     stage7Title: "Bloomy is in full bloom",
     stage7Body: "You’ve journaled for seven days in a row.",
     okThanks: "Got it",
-    missed1Title: "Welcome back",
-    missed1Body: "Pick up whenever you’re ready. A few words about today are enough.",
-    missed2Title: "Good to see you again",
-    missed2Body: "Take a moment to write about today whenever you feel ready.",
-    startOver: "Continue",
     adminTitle: "Bloomy admin",
     adminBody: "Set Bloomy’s current streak and recent skipped days.",
     mockData: "Show sample garden",
@@ -438,7 +428,8 @@ const copy = {
     hello: "Привіт",
     addEntry: "Додати запис",
     openAdmin: "Відкрити адмін-панель",
-    bloomingPlant: "Твоя квітуча рослина",
+    bloomingPlant: "Твоя рослина Блумі",
+    brokenPlant: "Блумі зів’яв, а горщик тріснув",
     profileSettings: "Налаштування профілю",
     editName: "Зміни своє ім’я",
     editPlan: "Редагувати план",
@@ -482,11 +473,6 @@ const copy = {
     stage7Title: "Блумі розквітнув",
     stage7Body: "Уже сім днів зі щоденником поспіль.",
     okThanks: "Зрозуміло",
-    missed1Title: "З поверненням",
-    missed1Body: "Пиши, коли захочеш. Кількох слів про сьогодні достатньо.",
-    missed2Title: "Раді знову бачити тебе",
-    missed2Body: "Можеш написати кілька слів про сьогодні, коли захочеш.",
-    startOver: "Продовжити",
     adminTitle: "Адмінка Блумі",
     adminBody: "Налаштуй поточну серію Блумі та нещодавні пропущені дні.",
     mockData: "Показати демо-сад",
@@ -661,45 +647,42 @@ function hasTodayEntry() {
   return state.entries.some((entry) => dayKey(entry.date) === today);
 }
 
-function realGrowthDay() {
-  return Math.min(new Set(state.entries.map((entry) => dayKey(entry.date))).size, 7);
+function hasEntryForCurrentGardenDay() {
+  return hasTodayEntry() && (!state.mockDataEnabled || state.adminEntryDay === dayKey(startOfToday()));
 }
 
 function skippedJournalDaysBeforeToday() {
-  normalizeBloomyState();
   if (state.mockDataEnabled) return state.skippedJournalDays;
-  if (!state.entries.length || hasTodayEntry()) return 0;
+  if (!state.entries.length) return 0;
 
-  const latestEntryDate = state.entries
-    .map((entry) => new Date(entry.date))
-    .sort((a, b) => b - a)[0];
-  latestEntryDate.setHours(0, 0, 0, 0);
-  const diffInDays = Math.round((startOfToday() - latestEntryDate) / 86400000);
-  return Math.min(Math.max(diffInDays - 1, 0), 2);
-}
-
-function streakCount(endDate = startOfToday()) {
-  const days = new Set(state.entries.map((entry) => dayKey(entry.date)));
-  let cursor = new Date(endDate);
-  let streak = 0;
-
-  while (days.has(dayKey(cursor))) {
-    streak += 1;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-
-  return Math.min(streak, 7);
+  const today = startOfToday();
+  const todayKey = dayKey(today);
+  const previousDays = state.entries.map((entry) => dayKey(entry.date)).filter((day) => day < todayKey);
+  if (!previousDays.length || previousDays.includes(dayKey(addDays(today, -1)))) return 0;
+  return previousDays.includes(dayKey(addDays(today, -2))) ? 1 : 2;
 }
 
 function bloomyDisplayStage() {
   normalizeBloomyState();
   if (state.mockDataEnabled) {
-    return Math.max(1, Math.min(state.adminVisitDay, 7));
+    if (!hasEntryForCurrentGardenDay()) return state.adminVisitDay;
+    return state.skippedJournalDays >= 2 ? 1 : Math.min(state.adminVisitDay + 1, 7);
   }
 
-  const today = startOfToday();
-  const streakEnd = hasTodayEntry() ? today : addDays(today, -1);
-  return Math.max(1, realGrowthDay() || streakCount(streakEnd));
+  const days = new Set(state.entries.map((entry) => dayKey(entry.date)));
+  let date = hasTodayEntry() ? startOfToday() : addDays(startOfToday(), -1);
+  let stage = 0;
+  let gap = 0;
+  while (gap < 2 && stage < 7) {
+    if (days.has(dayKey(date))) {
+      stage += 1;
+      gap = 0;
+    } else {
+      gap += 1;
+    }
+    date = addDays(date, -1);
+  }
+  return Math.max(1, stage);
 }
 
 function bloomyImageForStage(stage) {
@@ -751,6 +734,7 @@ function mockJournalModel() {
     completedCount += 1;
   }
 
+  if (hasEntryForCurrentGardenDay()) completed.add(dayKey(today));
   return { completed, missed, entriesByDay };
 }
 
@@ -1004,7 +988,6 @@ function applyLanguage() {
   setAttr(".figma-mic, .home-mic, .app-mic", "aria-label", "voiceNote");
   setAttr('[data-action="open-admin-modal"]', "aria-label", "openAdmin");
   setAttr('[data-action="open-note-modal"]', "aria-label", "addEntry");
-  setAttr(".plant-portrait", "aria-label", "bloomingPlant");
   setAttr(".profile-settings", "aria-label", "profileSettings");
   setAttr('.profile-edit-button[data-profile-edit="name"]', "aria-label", "editName");
   setAttr('.profile-edit-button[data-profile-edit="email"]', "aria-label", "editEmail");
@@ -1150,7 +1133,6 @@ function setView(name) {
   if (name === "journal") {
     focusJournalOnToday();
     updateJournalScrollState();
-    showMissedJournalModal();
   }
   if (name === "home") {
     if (!homeEntrancePlayed) {
@@ -1215,7 +1197,8 @@ function renderWeeklyProgress() {
     item.tabIndex = 0;
     item.ariaPressed = String(key === selectedDayKey);
     if (isToday) item.setAttribute("aria-current", "date");
-    item.ariaLabel = date.toLocaleDateString(locale(), { weekday: "long", month: "long", day: "numeric" });
+    const dateLabel = date.toLocaleDateString(locale(), { weekday: "long", month: "long", day: "numeric" });
+    item.ariaLabel = isMissed ? `${dateLabel}, ${t("skippedTitle")}` : dateLabel;
     item.innerHTML = `
       <strong>${date.toLocaleDateString(locale(), { weekday: "short" }).toUpperCase()}</strong>
       <div class="day-dot"></div>
@@ -1350,12 +1333,10 @@ function renderEntries() {
 }
 
 function saveEntry(text, moodlets, target) {
-  // Writing an entry returns to the personal journal from the sample garden.
-  state.mockDataEnabled = false;
   if (!state.registered) state.guest = true;
   delete state.drafts[target];
-  const hadTodayEntry = hasTodayEntry();
-  const skippedBeforeToday = skippedJournalDaysBeforeToday();
+  const hadTodayEntry = hasEntryForCurrentGardenDay();
+  if (state.mockDataEnabled) state.adminEntryDay = dayKey(startOfToday());
   state.entries.unshift({
     id: crypto.randomUUID(),
     date: new Date().toISOString(),
@@ -1368,11 +1349,7 @@ function saveEntry(text, moodlets, target) {
   renderEntries();
   renderPlant();
   return {
-    milestoneDay: hadTodayEntry
-      ? 0
-      : skippedBeforeToday >= 2
-        ? 1
-        : streakCount(startOfToday()),
+    milestoneDay: hadTodayEntry ? 0 : bloomyDisplayStage(),
   };
 }
 
@@ -1413,6 +1390,7 @@ function renderPlant() {
   normalizeBloomyState();
   const stage = bloomyDisplayStage();
   const bloomyImage = bloomyImageState();
+  setAttr(".plant-portrait", "aria-label", bloomyImage.className === "is-missed-two" ? "brokenPlant" : "bloomingPlant");
   [plant, profilePlant].forEach((item) => {
     if (!item) return;
     item.className = item.className
@@ -1441,8 +1419,8 @@ function bloomyImageState() {
   normalizeBloomyState();
   const stage = bloomyDisplayStage();
   const skippedDays = skippedJournalDaysBeforeToday();
-  if (!state.mockDataEnabled && hasTodayEntry()) return bloomyImageForStage(stage);
-  if (skippedDays >= 2) return { ...BLOOMY_ART, className: "is-missed-two" };
+  if (hasEntryForCurrentGardenDay()) return bloomyImageForStage(stage);
+  if (skippedDays >= 2) return { ...BLOOMY_ART, pot: BLOOMY_STAGES[5].pot, className: "is-missed-two" };
   if (skippedDays === 1) return { ...BLOOMY_ART, className: "is-missed-one" };
   return bloomyImageForStage(stage);
 }
@@ -1833,47 +1811,6 @@ function showGrowthMilestone(milestoneDay) {
   if (milestoneDay === 7) showStageSevenAfterDelay(MILESTONE_MODAL_DELAY);
 }
 
-function showMissedJournalModal() {
-  normalizeBloomyState();
-  const skippedDays = skippedJournalDaysBeforeToday();
-  if (!state.mockDataEnabled && hasTodayEntry()) return;
-  if (!missedModal || skippedDays === 0) return;
-  const image = bloomyImageState();
-  const isTwoDays = skippedDays >= 2;
-
-  missedModalFrame?.classList.toggle("is-missed-one", !isTwoDays);
-  missedModalFrame?.classList.toggle("is-missed-two", isTwoDays);
-  if (missedModalBg) missedModalBg.src = image.bg;
-  if (missedModalPot) missedModalPot.src = image.pot;
-  if (missedTitle) missedTitle.textContent = isTwoDays ? t("missed2Title") : t("missed1Title");
-  if (missedBody) {
-    missedBody.textContent = isTwoDays ? t("missed2Body") : t("missed1Body");
-  }
-  if (closeMissed) closeMissed.textContent = isTwoDays ? t("startOver") : t("okThanks");
-  missedModal.classList.add("is-open");
-  missedModal.setAttribute("aria-hidden", "false");
-}
-
-function closeMissedJournalModal() {
-  missedModal?.classList.remove("is-open");
-  missedModal?.setAttribute("aria-hidden", "true");
-}
-
-function handleMissedPrimaryAction() {
-  const shouldStartOver = skippedJournalDaysBeforeToday() >= 2;
-  closeMissedJournalModal();
-
-  if (!shouldStartOver) return;
-
-  state.adminVisitDay = 1;
-  state.skippedJournalDays = 0;
-  saveState();
-  renderWeeklyProgress();
-  renderEntries();
-  renderPlant();
-  renderAdminModal();
-}
-
 function renderAdminModal() {
   if (!adminDayGrid || !adminSkipOptions || !adminSummary) return;
   const mockEnabled = state.mockDataEnabled !== false;
@@ -1924,7 +1861,6 @@ function setMockDataEnabled(enabled) {
   adminDraftVisitDay = state.adminVisitDay;
   adminDraftSkippedDays = state.skippedJournalDays;
   saveState();
-  closeMissedJournalModal();
   stageTwoModal?.classList.remove("is-open");
   stageTwoModal?.setAttribute("aria-hidden", "true");
   stageThreeModal?.classList.remove("is-open");
@@ -1950,7 +1886,6 @@ function logOut() {
   closeAdminModal();
   closeProfileEditModals();
   closeDeleteConfirmModal();
-  closeMissedJournalModal();
   onboardingModal?.classList.remove("is-open");
   onboardingModal?.setAttribute("aria-hidden", "true");
   congratsModal?.classList.remove("is-open");
@@ -1993,7 +1928,6 @@ function deleteAccount() {
   closeAdminModal();
   closeProfileEditModals();
   closeDeleteConfirmModal();
-  closeMissedJournalModal();
   congratsModal?.classList.remove("is-open");
   congratsModal?.setAttribute("aria-hidden", "true");
   stageTwoModal?.classList.remove("is-open");
@@ -2360,12 +2294,6 @@ closeStageSeven?.addEventListener("click", () => {
   stageSevenModal?.setAttribute("aria-hidden", "true");
 });
 
-closeMissed?.addEventListener("click", handleMissedPrimaryAction);
-
-missedModal?.addEventListener("click", (event) => {
-  if (event.target === missedModal) closeMissedJournalModal();
-});
-
 stageTwoModal?.addEventListener("click", (event) => {
   if (event.target === stageTwoModal) {
     stageTwoModal.classList.remove("is-open");
@@ -2443,13 +2371,13 @@ adminSave?.addEventListener("click", () => {
   state.adminVisitDay = adminDraftVisitDay;
   state.skippedJournalDays = adminDraftSkippedDays;
   state.mockDataEnabled = true;
-  const shouldShowMissedModal = journalView?.classList.contains("is-active") && skippedJournalDaysBeforeToday() > 0;
+  state.demoPreferenceSet = true;
+  state.adminEntryDay = null;
   saveState();
   renderWeeklyProgress();
   renderEntries();
   renderPlant();
   closeAdminModal();
-  if (shouldShowMissedModal) showMissedJournalModal();
 });
 
 adminModal?.addEventListener("click", (event) => {

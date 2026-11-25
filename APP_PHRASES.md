@@ -81,11 +81,6 @@ This document lists the user-facing phrases currently used in the app in English
 | Day 7 modal title | Bloomy is in full bloom | Блумі розквітнув |
 | Day 7 modal body | You’ve journaled for seven days in a row. | Уже сім днів зі щоденником поспіль. |
 | Modal button | Got it | Зрозуміло |
-| Missed 1 day title | Welcome back | З поверненням |
-| Missed 1 day body | Pick up whenever you’re ready. A few words about today are enough. | Пиши, коли захочеш. Кількох слів про сьогодні достатньо. |
-| Missed 2 days title | Good to see you again | Раді знову бачити тебе |
-| Missed 2 days body | Take a moment to write about today whenever you feel ready. | Можеш написати кілька слів про сьогодні, коли захочеш. |
-| Missed 2 days button | Continue | Продовжити |
 | Journal missed state | No entry that day | Цього дня немає записів |
 | Journal missed body | Your journal is here whenever you want to write again. | Повертайся до щоденника, коли захочеш написати. |
 | Empty state | No entries yet | Записів ще немає |
