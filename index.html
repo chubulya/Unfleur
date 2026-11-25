@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=local-journal-17" />
+    <link rel="stylesheet" href="styles.css?v=local-journal-18" />
   </head>
   <body>
     <main class="phone-shell" aria-live="polite">
@@ -197,16 +197,18 @@
         </section>
 
         <section class="view view-journal" data-view="journal">
-          <div class="plant-card">
-            <div class="plant-portrait" aria-label="Your blooming plant">
-              <div class="figma-pot-frame" id="plant">
-                <img class="figma-pot-bg" src="assets/journal-main-image.png" alt="" />
-                <img class="figma-pot-image" src="assets/journal-pot-image.png" alt="" />
+          <div class="journal-overview">
+            <div class="plant-card">
+              <div class="plant-portrait" aria-label="Your blooming plant">
+                <div class="figma-pot-frame" id="plant">
+                  <img class="figma-pot-bg" src="assets/journal-main-image.png" alt="" />
+                  <img class="figma-pot-image" src="assets/journal-pot-image.png" alt="" />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="weekly-progress" id="weekly-progress"></div>
+            <div class="weekly-progress" id="weekly-progress"></div>
+          </div>
 
           <div class="entry-list" id="home-entry-list"></div>
         </section>
@@ -473,7 +475,7 @@
           <div class="profile-edit-sheet" role="dialog" aria-modal="true" aria-labelledby="profile-name-title">
             <div class="sheet-handle" aria-hidden="true"></div>
             <header class="profile-edit-header">
-              <h2 id="profile-name-title">Edit name</h2>
+              <h2 id="profile-name-title">Edit your name</h2>
             </header>
             <label class="register-field profile-edit-field">
               <span>Name</span>
@@ -566,6 +568,6 @@
       </dialog>
     </main>
 
-    <script src="app.js?v=local-journal-15"></script>
+    <script src="app.js?v=local-journal-18"></script>
   </body>
 </html>

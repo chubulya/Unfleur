@@ -2348,28 +2348,22 @@ button {
   transform: translateY(0);
 }
 
+.journal-overview {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding-bottom: 20px;
+  background: var(--bg);
+}
+
+.view-journal.is-scrolled .journal-overview {
+  box-shadow: 0 8px 18px rgba(58, 97, 167, 0.08);
+}
+
 .plant-card {
   display: grid;
   place-items: center;
-  max-height: 172px;
   padding-top: 12px;
-  overflow: hidden;
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  transform-origin: top center;
-  transition:
-    max-height 260ms cubic-bezier(0.16, 1, 0.3, 1),
-    padding-top 260ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 180ms ease,
-    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.view-journal.is-scrolled .plant-card {
-  max-height: 0;
-  padding-top: 0;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-56px) scale(0.86);
 }
 
 .plant-portrait {
@@ -2609,22 +2603,11 @@ button {
 .plant-stage-7 .flower { opacity: 1; transform: scale(1); }
 
 .weekly-progress {
-  position: sticky;
-  top: 0;
-  z-index: 6;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  margin: 4px 0 20px;
+  margin-top: 4px;
   padding: 0 var(--page-x) 8px;
-  background: #fff;
-  overflow: visible;
-  transition: box-shadow 180ms ease, margin-top 260ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.view-journal.is-scrolled .weekly-progress {
-  margin-top: 0;
-  box-shadow: 0 12px 18px rgba(58, 97, 167, 0.08);
 }
 
 .day-progress {
@@ -3322,9 +3305,6 @@ textarea {
     padding-top: 36px;
   }
 
-  .plant-card {
-    padding-top: 12px;
-  }
 }
 
 @media (max-width: 480px) {
