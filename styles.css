@@ -1721,10 +1721,10 @@ button {
   inset-inline: var(--page-x);
   height: var(--app-header-height);
   display: grid;
-  grid-template-columns: var(--header-control-size) minmax(0, 1fr) var(--header-control-size);
+  grid-template-columns: minmax(0, 1fr) var(--header-control-size);
   align-items: center;
   gap: 8px;
-  text-align: center;
+  text-align: left;
 }
 
 .app-header h2 {

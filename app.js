@@ -299,7 +299,6 @@ const copy = {
     myJournal: "My Journal",
     myProfile: "My Profile",
     hello: "Hello",
-    openCalendar: "Open calendar",
     addEntry: "Add entry",
     openAdmin: "Open admin controls",
     bloomingPlant: "Your blooming plant",
@@ -444,7 +443,6 @@ const copy = {
     myJournal: "Мій щоденник",
     myProfile: "Мій профіль",
     hello: "Привіт",
-    openCalendar: "Відкрити календар",
     addEntry: "Додати запис",
     openAdmin: "Відкрити адмін-панель",
     bloomingPlant: "Твоя квітуча рослина",
@@ -1015,7 +1013,6 @@ function applyLanguage() {
   setAttr("#edit-moodlets, #home-edit-moodlets, #app-edit-moodlets", "aria-label", "editMoodlets");
   setAttr('[data-action="open-admin-modal"]', "aria-label", "openAdmin");
   setAttr('[data-action="open-note-modal"]', "aria-label", "addEntry");
-  setAttr(".app-header .round-button[data-icon='calendar']", "aria-label", "openCalendar");
   setAttr(".plant-portrait", "aria-label", "bloomingPlant");
   setAttr(".profile-settings", "aria-label", "profileSettings");
   setAttr('.profile-edit-button[data-profile-edit="name"]', "aria-label", "editName");
