@@ -16,6 +16,8 @@
   --phone-width: min(100vw, 393px);
   --page-x: clamp(16px, 6.1vw, 24px);
   --header-top: 16px;
+  --app-header-height: 64px;
+  --header-control-size: 44px;
   --bottom-safe: env(safe-area-inset-bottom, 0px);
   --tab-bottom: max(16px, calc(16px + var(--bottom-safe)));
   font-family: "DM Sans", system-ui, sans-serif;
@@ -373,17 +375,19 @@ button {
 .figma-welcome-copy h1 {
   margin: 0;
   font-family: "Cormorant Garamond", serif;
-  font-size: 32px;
+  font-size: clamp(31px, 9vw, 36px);
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.32px;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  text-wrap: balance;
 }
 
 .figma-welcome-copy p {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
 .figma-note-flow {
@@ -1714,11 +1718,12 @@ button {
   position: absolute;
   z-index: 4;
   top: var(--header-top);
-  left: 0;
-  right: 0;
-  height: 75px;
-  display: block;
-  padding: 0;
+  inset-inline: var(--page-x);
+  height: var(--app-header-height);
+  display: grid;
+  grid-template-columns: var(--header-control-size) minmax(0, 1fr) var(--header-control-size);
+  align-items: center;
+  gap: 8px;
   text-align: center;
 }
 
@@ -1726,32 +1731,31 @@ button {
   margin: 0;
   width: 100%;
   font-family: "Cormorant Garamond", serif;
-  color: #000;
-  font-size: 20px;
+  color: var(--ink-strong);
+  font-size: 29px;
   font-weight: 700;
-  line-height: normal;
+  line-height: 1.05;
 }
 
 .app-header p {
   margin: 0;
   width: 100%;
-  color: var(--ink);
-  font-size: 16px;
-  font-weight: 400;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
 }
 
 .app-header > div {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 124px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 3px;
   align-items: center;
   justify-content: center;
-  transform: translate(-50%, -50%);
 }
 
 .screen-app.is-home-view .app-header {
@@ -1770,23 +1774,15 @@ button {
 }
 
 .app-header .round-button {
-  position: absolute;
-  top: 8px;
-  width: 56px;
-  height: 56px;
-}
-
-.app-header .round-button:first-child {
-  left: var(--page-x);
-}
-
-.app-header .round-button:last-child {
-  right: var(--page-x);
+  width: var(--header-control-size);
+  height: var(--header-control-size);
+  padding: 0;
+  background: var(--panel);
 }
 
 .app-header [data-icon]::before {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
 }
 
 [data-icon]::before {
@@ -1870,16 +1866,16 @@ button {
   z-index: 7;
   top: calc(var(--header-top) + 8px);
   left: var(--page-x);
-  width: 56px;
-  height: 56px;
+  width: var(--header-control-size);
+  height: var(--header-control-size);
   color: var(--accent);
-  background: rgba(42, 58, 83, 0.05);
+  background: var(--panel);
 }
 
 .register-back-button::before {
   content: "";
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: block;
   background: currentColor;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m14 6-6 6 6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
@@ -1918,8 +1914,9 @@ button {
 
 .register-welcome-copy p {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.4;
+  font-size: 14px;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
 .register-panel {
@@ -2077,7 +2074,7 @@ button {
 
 .view {
   position: absolute;
-  inset: calc(var(--header-top) + 75px) 0 0;
+  inset: calc(var(--header-top) + var(--app-header-height)) 0 0;
   display: none;
   padding-bottom: calc(142px + var(--bottom-safe));
   overflow: auto;
@@ -2162,22 +2159,19 @@ button {
   z-index: 1;
   top: 8px;
   right: var(--page-x);
-  width: 56px;
-  height: 56px;
+  width: var(--header-control-size);
+  height: var(--header-control-size);
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 32px;
   color: var(--accent);
   background: var(--accent-soft);
-  box-shadow: 0 0 18px rgba(58, 97, 167, 0.18);
-  backdrop-filter: blur(45px);
-  -webkit-backdrop-filter: blur(45px);
   overflow: hidden;
 }
 
 .home-admin-button::before {
-  width: 32px;
-  height: 32px;
+  width: 21px;
+  height: 21px;
   background: currentColor;
   -webkit-mask: url("assets/settings-rounded-home.svg") center / contain no-repeat;
   mask: url("assets/settings-rounded-home.svg") center / contain no-repeat;
@@ -2204,17 +2198,19 @@ button {
 .home-welcome-copy h1 {
   margin: 0;
   font-family: "Cormorant Garamond", serif;
-  font-size: 32px;
+  font-size: clamp(31px, 9vw, 36px);
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.32px;
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  text-wrap: balance;
 }
 
 .home-welcome-copy p {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
 .home-note-card {
@@ -2717,10 +2713,10 @@ button {
 .entry-card {
   display: grid;
   gap: 12px;
-  padding: 14px 16px 16px;
+  padding: 14px 16px;
   border: 1px solid var(--panel-line);
   border-radius: var(--radius-lg);
-  background: var(--panel);
+  background: #fff;
 }
 
 .entry-card header {
@@ -2736,11 +2732,10 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 12px;
+  padding: 0;
   border-radius: 999px;
-  color: var(--accent);
-  background: var(--button-soft);
-  font-size: 14px;
+  color: var(--muted);
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -2794,14 +2789,18 @@ button {
 
 .entry-card .entry-text {
   display: -webkit-box;
-  min-height: 66px;
   margin: 0;
   overflow: hidden;
   color: var(--ink);
   font-size: 16px;
-  line-height: 1.4;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+}
+
+.entry-card .moodlets:not(:has(.moodlet-swatch)) {
+  display: none;
 }
 
 .entry-card.is-expanded .entry-text {
@@ -2812,11 +2811,12 @@ button {
 }
 
 .read-more {
-  width: 100%;
+  justify-self: start;
+  padding: 0;
   min-height: 32px;
   border: 0;
   border-radius: 999px;
-  color: var(--ink);
+  color: var(--accent);
   background: transparent;
   font-weight: 600;
 }
@@ -2834,8 +2834,17 @@ button {
   background: var(--panel);
 }
 
-.past-empty-state {
-  opacity: 0.58;
+.empty-state strong {
+  color: var(--ink-strong);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.empty-state p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .journal-copy {
@@ -2920,27 +2929,30 @@ textarea {
 
 .view-profile {
   padding: 24px var(--page-x) calc(170px + var(--bottom-safe));
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .profile-settings {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
+  border: 1px solid var(--panel-line);
+  border-radius: 20px;
+  background: #fff;
 }
 
 .profile-setting-item {
   width: 100%;
-  height: 72px;
-  flex: 0 0 72px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   gap: 4px;
   padding: 12px 16px;
-  border: 1px solid rgba(42, 58, 83, 0.05);
-  border-radius: 16px;
-  background: #fff;
+}
+
+.profile-setting-item + .profile-setting-item {
+  border-top: 1px solid var(--panel-line);
 }
 
 .profile-setting-copy {
@@ -2956,10 +2968,15 @@ textarea {
 }
 
 .profile-setting-copy span {
-  font-weight: 400;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .profile-setting-copy strong {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -3061,8 +3078,8 @@ textarea {
   border: 1px solid rgba(36, 78, 144, 0.03);
   border-radius: 1000000px;
   background: rgba(255, 255, 255, 0.9);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(45px);
+  box-shadow: 0 4px 16px rgba(34, 44, 64, 0.08);
+  backdrop-filter: blur(16px);
   overflow: hidden;
   isolation: isolate;
   --tab-indicator-x: 0px;
@@ -3156,8 +3173,7 @@ textarea {
   height: 72px;
   padding: 12px;
   border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 18px rgba(58, 97, 167, 0.18);
+  background: rgba(255, 255, 255, 0.88);
 }
 
 .screen-app.is-home-view .tab-bar button {
