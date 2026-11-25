@@ -5,6 +5,8 @@
   --accent: #1859e8;
   --accent-soft: #e8f0ff;
   --on-accent: #fff;
+  --interaction-duration: 150ms;
+  --interaction-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
   --muted: #5d687b;
   --panel: #f3f6fb;
   --panel-line: rgba(42, 58, 83, 0.06);
@@ -3362,4 +3364,91 @@ textarea {
   border: 0;
   background: transparent;
   text-decoration: underline;
+}
+
+.round-button,
+.figma-mic,
+.figma-continue-button,
+.app-primary-button,
+.add-moodlets-button,
+.profile-edit-button,
+.profile-action-button,
+.moodlet-option .moodlet-swatch {
+  transition: scale var(--interaction-duration) var(--interaction-ease),
+    box-shadow var(--interaction-duration) ease;
+}
+
+.home-continue-button {
+  transition: opacity 180ms ease, transform 180ms ease,
+    scale var(--interaction-duration) var(--interaction-ease);
+}
+
+:is(.round-button, .figma-mic, .figma-continue-button, .home-continue-button,
+    .app-primary-button, .add-moodlets-button, .profile-edit-button,
+    .profile-action-button):active:not(:disabled),
+.moodlet-option:active:not(.is-disabled) .moodlet-swatch {
+  scale: 0.96;
+}
+
+.tab-bar button {
+  transition: color var(--interaction-duration) ease;
+}
+
+.tab-bar .tab-icon {
+  transition: scale var(--interaction-duration) var(--interaction-ease);
+}
+
+.tab-bar button:active .tab-icon {
+  scale: 0.9;
+}
+
+.day-progress.is-selected .day-dot::after {
+  animation: selection-settle var(--interaction-duration) var(--interaction-ease);
+}
+
+.view-journal.is-active .empty-state,
+.view-profile.is-active .profile-settings,
+.view-profile.is-active .profile-account-actions {
+  animation: content-reveal 180ms ease-out;
+}
+
+.view-journal.is-active .entry-card {
+  animation: content-reveal var(--interaction-duration) ease-out;
+}
+
+@keyframes selection-settle {
+  from { scale: 0.88; }
+  to { scale: 1; }
+}
+
+@keyframes content-reveal {
+  from { opacity: 0.75; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --interaction-duration: 0ms;
+  }
+
+  .home-continue-button,
+  .tab-bar::before {
+    transition: none;
+  }
+
+  .view-journal.is-active .empty-state,
+  .view-journal.is-active .entry-card,
+  .view-profile.is-active .profile-settings,
+  .view-profile.is-active .profile-account-actions,
+  .day-progress.is-selected .day-dot::after {
+    animation: none;
+  }
+
+  :is(.round-button, .figma-mic, .figma-continue-button, .home-continue-button,
+      .app-primary-button, .add-moodlets-button, .profile-edit-button,
+      .profile-action-button):active:not(:disabled),
+  .moodlet-option:active .moodlet-swatch,
+  .tab-bar button:active .tab-icon {
+    scale: 1;
+  }
 }

@@ -2019,20 +2019,25 @@ function renderMoodletGrid() {
     : activeMoodletTarget === "home"
       ? homeSelectedMoodlets
       : selectedMoodlets;
-  moodletGrid.innerHTML = "";
-  moodlets.forEach((moodlet) => {
-    const selected = targetMoodlets.includes(moodlet.name);
+  if (!moodletGrid.childElementCount) {
+    moodlets.forEach((moodlet) => {
+      const button = document.createElement("button");
+      button.className = "moodlet-option";
+      button.type = "button";
+      button.dataset.moodlet = moodlet.name;
+      button.innerHTML = `<span class="moodlet-swatch" style="${moodletStyle(moodlet.name)}"></span><span>${moodlet.name}</span>`;
+      moodletGrid.append(button);
+    });
+  }
+
+  for (const button of moodletGrid.children) {
+    const selected = targetMoodlets.includes(button.dataset.moodlet);
     const disabled = !selected && targetMoodlets.length >= 3;
-    const button = document.createElement("button");
-    button.className = `moodlet-option ${selected ? "is-selected" : ""} ${disabled ? "is-disabled" : ""}`;
-    button.type = "button";
-    button.dataset.moodlet = moodlet.name;
+    button.classList.toggle("is-selected", selected);
+    button.classList.toggle("is-disabled", disabled);
     button.setAttribute("aria-pressed", String(selected));
     button.setAttribute("aria-disabled", String(disabled));
-    button.innerHTML = `<span class="moodlet-swatch" style="${moodletStyle(moodlet.name)}"></span><span>${moodlet.name}</span>`;
-    moodletGrid.append(button);
-  });
-
+  }
 }
 
 function renderSelectedMoodlets() {
@@ -2251,7 +2256,7 @@ moodletGrid?.addEventListener("click", (event) => {
   }
   rememberDraft(activeMoodletTarget);
   renderMoodletGrid();
-  moodletGrid.querySelector(`[data-moodlet="${CSS.escape(name)}"]`)?.focus();
+  option.focus();
 });
 
 moodletContinue?.addEventListener("click", () => {
@@ -2504,8 +2509,13 @@ homeEntryList?.addEventListener("click", (event) => {
 });
 
 function selectWeeklyDay(day) {
+  if (day === selectedDayKey) return;
   selectedDayKey = day;
-  renderWeeklyProgress();
+  for (const item of weeklyProgress.children) {
+    const selected = item.dataset.day === day;
+    item.classList.toggle("is-selected", selected);
+    item.ariaPressed = String(selected);
+  }
   renderEntries();
 }
 
