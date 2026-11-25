@@ -1195,6 +1195,7 @@ function updateJournalScrollState() {
 
 function renderWeeklyProgress() {
   const today = startOfToday();
+  const todayKey = dayKey(today);
   const start = new Date(today);
   start.setDate(today.getDate() - 4);
   const journal = mockJournalModel();
@@ -1205,17 +1206,19 @@ function renderWeeklyProgress() {
     const date = new Date(start);
     date.setDate(start.getDate() + index);
     const key = dayKey(date);
+    const isToday = key === todayKey;
     const isMissed = journal.missed.has(key);
     const isComplete = journal.completed.has(key) && !isMissed;
     const item = document.createElement("div");
-    item.className = `day-progress ${isComplete ? "is-complete" : ""} ${isMissed ? "is-missed" : ""} ${key === selectedDayKey ? "is-selected" : ""}`;
+    item.className = `day-progress ${isComplete ? "is-complete" : ""} ${isMissed ? "is-missed" : ""} ${key === selectedDayKey ? "is-selected" : ""}${isToday ? " is-today" : ""}`;
     item.dataset.day = key;
     item.role = "button";
     item.tabIndex = 0;
     item.ariaPressed = String(key === selectedDayKey);
+    if (isToday) item.setAttribute("aria-current", "date");
     item.ariaLabel = date.toLocaleDateString(locale(), { weekday: "long", month: "long", day: "numeric" });
     item.innerHTML = `
-      <strong>${date.toLocaleDateString(locale(), { weekday: "short" }).toUpperCase()}</strong>
+      <strong>${isToday ? t("today") : date.toLocaleDateString(locale(), { weekday: "short" }).toUpperCase()}</strong>
       <div class="day-dot"></div>
       <span>${date.getDate()}</span>
     `;

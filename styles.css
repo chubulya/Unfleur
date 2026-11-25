@@ -2651,6 +2651,21 @@ button {
   color: var(--ink);
 }
 
+.day-progress.is-today {
+  border-radius: 16px;
+  background: var(--accent-soft);
+}
+
+.day-progress.is-today strong,
+.day-progress.is-today > span {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.day-progress.is-today strong {
+  font-size: clamp(9px, 2.7vw, 11px);
+}
+
 .day-dot {
   position: relative;
   width: 30px;
