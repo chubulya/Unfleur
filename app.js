@@ -54,6 +54,7 @@ const defaults = {
   entries: [],
   adminVisitDay: 1,
   adminEntryDay: null,
+  brokenBloomyDismissedFor: null,
   skippedJournalDays: 0,
   mockDataEnabled: false,
   demoPreferenceSet: false,
@@ -74,6 +75,7 @@ const journalOverview = document.querySelector(".journal-overview");
 const weeklyProgress = document.querySelector("#weekly-progress");
 const homeEntryList = document.querySelector("#home-entry-list");
 const potSheet = document.querySelector("#pot-sheet");
+const brokenBloomyDialog = document.querySelector("#broken-bloomy-dialog");
 const plant = document.querySelector("#plant");
 const profilePlant = document.querySelector("#profile-plant");
 const profileSummary = document.querySelector("#profile-summary");
@@ -293,6 +295,10 @@ const copy = {
     openAdmin: "Open admin controls",
     bloomingPlant: "Your Bloomy plant",
     brokenPlant: "Bloomy is wilted and the pot is cracked",
+    brokenBloomyTitle: "Bloomy needs a fresh start",
+    brokenBloomyBody: "Save a new journal entry to plant a seed and start growing again.",
+    brokenBloomyWrite: "Write an entry",
+    brokenBloomyDismiss: "Not now",
     profileSettings: "Profile settings",
     editName: "Edit your name",
     editPlan: "Edit plan",
@@ -430,6 +436,10 @@ const copy = {
     openAdmin: "Відкрити адмін-панель",
     bloomingPlant: "Твоя рослина Блумі",
     brokenPlant: "Блумі зів’яв, а горщик тріснув",
+    brokenBloomyTitle: "Блумі потрібен новий початок",
+    brokenBloomyBody: "Збережи новий запис, щоб посадити насінину й почати знову.",
+    brokenBloomyWrite: "Написати запис",
+    brokenBloomyDismiss: "Не зараз",
     profileSettings: "Налаштування профілю",
     editName: "Зміни своє ім’я",
     editPlan: "Редагувати план",
@@ -1057,6 +1067,11 @@ function applyLanguage() {
   setText("#moodlet-title", "moodletTitle");
   setText(".moodlet-header p", "moodletBody");
   setText("#moodlet-continue", "saveNote");
+  setAttr("#broken-bloomy-dialog img", "alt", "brokenPlant");
+  setText("#broken-bloomy-title", "brokenBloomyTitle");
+  setText("#broken-bloomy-description", "brokenBloomyBody");
+  setText('#broken-bloomy-dialog [value="write"]', "brokenBloomyWrite");
+  setText('#broken-bloomy-dialog [value="dismiss"]', "brokenBloomyDismiss");
   setText(".pot-sheet h2", "choosePot");
   setText(".pot-sheet p", "potBody");
   setText(".pot-sheet .primary-button", "done");
@@ -1133,6 +1148,7 @@ function setView(name) {
   if (name === "journal") {
     focusJournalOnToday();
     updateJournalScrollState();
+    showBrokenBloomyDialog();
   }
   if (name === "home") {
     if (!homeEntrancePlayed) {
@@ -1424,6 +1440,28 @@ function bloomyImageState() {
   if (skippedDays === 1) return { ...BLOOMY_ART, className: "is-missed-one" };
   return bloomyImageForStage(stage);
 }
+
+function showBrokenBloomyDialog() {
+  if (!journalView.classList.contains("is-active") || brokenBloomyDialog.open ||
+      hasEntryForCurrentGardenDay() || skippedJournalDaysBeforeToday() < 2) return;
+
+  const lastEntryDay = state.entries.reduce((latest, entry) => {
+    const day = dayKey(entry.date);
+    return day > latest ? day : latest;
+  }, "");
+  const missedStretch = state.mockDataEnabled ? "sample" : `journal:${lastEntryDay}`;
+  if (state.brokenBloomyDismissedFor === missedStretch) return;
+
+  brokenBloomyDialog.dataset.missedStretch = missedStretch;
+  brokenBloomyDialog.returnValue = "";
+  brokenBloomyDialog.showModal();
+}
+
+brokenBloomyDialog.addEventListener("close", () => {
+  state.brokenBloomyDismissedFor = brokenBloomyDialog.dataset.missedStretch;
+  saveState();
+  if (brokenBloomyDialog.returnValue === "write") openAppNoteModal();
+});
 
 function normalizeBloomyState() {
   state.adminVisitDay = Math.min(Math.max(Number(state.adminVisitDay) || 1, 1), 7);
@@ -2373,11 +2411,13 @@ adminSave?.addEventListener("click", () => {
   state.mockDataEnabled = true;
   state.demoPreferenceSet = true;
   state.adminEntryDay = null;
+  if (state.brokenBloomyDismissedFor === "sample") state.brokenBloomyDismissedFor = null;
   saveState();
   renderWeeklyProgress();
   renderEntries();
   renderPlant();
   closeAdminModal();
+  showBrokenBloomyDialog();
 });
 
 adminModal?.addEventListener("click", (event) => {

@@ -3171,6 +3171,7 @@ textarea {
   backdrop-filter: none;
 }
 
+.broken-bloomy-dialog,
 .pot-sheet {
   width: var(--phone-width);
   max-width: var(--phone-width);
@@ -3182,6 +3183,7 @@ textarea {
   background: #fff;
 }
 
+.broken-bloomy-dialog::backdrop,
 .pot-sheet::backdrop {
   background: rgba(10, 15, 24, 0.35);
 }
@@ -3200,6 +3202,7 @@ textarea {
   background: rgba(42, 58, 83, 0.18);
 }
 
+.broken-bloomy-dialog h2,
 .pot-sheet h2 {
   margin: 6px 0 0;
   font-family: "Cormorant Garamond", serif;
@@ -3207,9 +3210,36 @@ textarea {
   color: #000;
 }
 
+.broken-bloomy-dialog p,
 .pot-sheet p {
   margin: 0;
   line-height: 1.4;
+}
+
+.broken-bloomy-dialog {
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  text-align: center;
+}
+
+.broken-bloomy-dialog form {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 24px var(--page-x) max(24px, var(--bottom-safe));
+}
+
+.broken-bloomy-dialog img {
+  border-radius: 30px;
+}
+
+.broken-bloomy-dialog :is(.primary-button, .secondary-button) {
+  width: 100%;
+}
+
+.broken-bloomy-dialog .secondary-button {
+  min-height: 44px;
 }
 
 .pot-options {

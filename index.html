@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=local-journal-26" />
+    <link rel="stylesheet" href="styles.css?v=local-journal-27" />
   </head>
   <body>
     <main class="phone-shell" aria-live="polite">
@@ -530,6 +530,17 @@
         </div>
       </div>
 
+      <dialog class="broken-bloomy-dialog" id="broken-bloomy-dialog" aria-labelledby="broken-bloomy-title" aria-describedby="broken-bloomy-description">
+        <form method="dialog">
+          <div class="sheet-handle" aria-hidden="true"></div>
+          <img src="assets/bloomy/Flower Pot Image-broken.png" width="160" height="160" alt="Bloomy is wilted and the pot is cracked" />
+          <h2 id="broken-bloomy-title">Bloomy needs a fresh start</h2>
+          <p id="broken-bloomy-description">Save a new journal entry to plant a seed and start growing again.</p>
+          <button class="primary-button" value="write">Write an entry</button>
+          <button class="secondary-button" value="dismiss">Not now</button>
+        </form>
+      </dialog>
+
       <dialog class="pot-sheet" id="pot-sheet">
         <form method="dialog">
           <div class="sheet-handle" aria-hidden="true"></div>
@@ -545,6 +556,6 @@
       </dialog>
     </main>
 
-    <script src="app.js?v=local-journal-26"></script>
+    <script src="app.js?v=local-journal-27"></script>
   </body>
 </html>
