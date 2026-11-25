@@ -2749,13 +2749,13 @@ button {
 .entry-card header {
   min-height: 32px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 }
 
 .tag {
-  min-height: 32px;
+  margin-top: 4px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
