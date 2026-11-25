@@ -51,6 +51,11 @@ textarea {
   font: inherit;
 }
 
+:is(input, textarea)::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+
 button {
   cursor: pointer;
 }
@@ -648,11 +653,6 @@ button {
 .figma-textarea-card textarea::-webkit-scrollbar-thumb {
   border-radius: 1000px;
   background: rgba(255, 255, 255, 0.8);
-}
-
-.figma-textarea-card textarea::placeholder {
-  color: #766e8d;
-  opacity: 1;
 }
 
 .textarea-footer {
@@ -1345,11 +1345,6 @@ button {
   background: rgba(42, 58, 83, 0.2);
 }
 
-.app-note-card textarea::placeholder {
-  color: #766e8d;
-  opacity: 1;
-}
-
 .app-note-card .textarea-footer {
   flex: 1 0 0;
   align-items: flex-end;
@@ -2009,10 +2004,6 @@ button {
   font: inherit;
 }
 
-.register-field input::placeholder {
-  color: #766e8d;
-}
-
 .purpose-options {
   display: grid;
   gap: 10px;
@@ -2304,11 +2295,6 @@ button {
 .home-note-card textarea::-webkit-scrollbar-thumb {
   border-radius: 1000px;
   background: rgba(42, 58, 83, 0.2);
-}
-
-.home-note-card textarea::placeholder {
-  color: #766e8d;
-  opacity: 1;
 }
 
 .home-selected-moodlets-bar {
