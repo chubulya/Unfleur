@@ -1,14 +1,15 @@
 :root {
   --bg: #ffffff;
-  --ink: #2a3a53;
-  --ink-strong: #0b1018;
-  --accent: #244e90;
-  --accent-soft: rgba(36, 78, 144, 0.1);
-  --panel: #f3f3f5;
+  --ink: #29253a;
+  --ink-strong: #1d172c;
+  --accent: #6339e8;
+  --accent-soft: #eee8ff;
+  --on-accent: #fff;
+  --muted: #625d70;
+  --panel: #f5f2fb;
   --panel-line: rgba(42, 58, 83, 0.06);
   --button-soft: rgba(42, 58, 83, 0.05);
   --progress-line: rgba(42, 58, 83, 0.12);
-  --tab-selected: #e8eef8;
   --shadow: 0 0 18px rgba(101, 75, 162, 0.18);
   --radius-lg: 24px;
   --radius-md: 16px;
@@ -19,7 +20,7 @@
   --tab-bottom: max(16px, calc(16px + var(--bottom-safe)));
   font-family: "DM Sans", system-ui, sans-serif;
   color: var(--ink);
-  background: #edf0f6;
+  background: #f1ecfb;
 }
 
 * {
@@ -37,8 +38,8 @@ body {
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at top left, rgba(88, 143, 174, 0.28), transparent 32rem),
-    linear-gradient(135deg, #f7f8fb, #dde4ed);
+    radial-gradient(circle at top left, rgba(162, 126, 234, 0.22), transparent 32rem),
+    linear-gradient(135deg, #fbf9ff, #eae3f7);
 }
 
 button,
@@ -48,6 +49,11 @@ textarea {
 
 button {
   cursor: pointer;
+}
+
+:where(button, input, textarea):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .language-switcher {
@@ -88,8 +94,8 @@ button {
 }
 
 .language-switcher button.is-active {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+  color: var(--on-accent);
+  background: var(--accent);
   font-weight: 700;
 }
 
@@ -300,7 +306,7 @@ button {
 
 .screen-intro {
   color: #fff;
-  background: #365bcd;
+  background: #5740a8;
 }
 
 .figma-bg {
@@ -318,8 +324,8 @@ button {
   inset: 0;
   background: linear-gradient(
     180deg,
-    #284ecb 0%,
-    rgba(64, 96, 204, 0.87) 37.362%,
+    #49319a 0%,
+    rgba(88, 64, 169, 0.87) 37.362%,
     rgba(217, 217, 217, 0) 100%
   );
 }
@@ -487,7 +493,7 @@ button {
   justify-content: center;
   gap: 4px;
   padding-bottom: 4px;
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .tutorial-copy h2 {
@@ -541,7 +547,7 @@ button {
   justify-content: center;
   padding: 4px 12px;
   border-radius: 1000px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(255, 255, 255, 0.3);
   font-size: 14px;
   font-weight: 500;
@@ -582,7 +588,7 @@ button {
   place-items: center;
   border: 0;
   border-radius: 100000px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(255, 255, 255, 0.3);
 }
 
@@ -616,7 +622,7 @@ button {
   max-height: 203px;
   padding-right: 8px;
   overflow-y: auto;
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .screen-intro.review-state .figma-textarea-card textarea {
@@ -659,7 +665,7 @@ button {
   flex-direction: column;
   justify-content: flex-end;
   min-width: 0;
-  color: #244e90;
+  color: var(--accent);
   font-size: 12px;
   font-weight: 400;
   line-height: normal;
@@ -684,8 +690,8 @@ button {
 }
 
 .figma-mic.is-listening {
-  outline: 2px solid #575df6;
-  box-shadow: 0 0 0 5px rgba(87, 93, 246, 0.16);
+  outline: 2px solid var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-soft);
 }
 
 .figma-continue-button {
@@ -701,8 +707,8 @@ button {
   padding: 10px;
   border: 0;
   border-radius: 1000000px;
-  color: #2a3a53;
-  background: #fff;
+  color: var(--on-accent);
+  background: var(--accent);
   box-shadow: 0 0 9px rgba(101, 75, 162, 0.18);
   font-size: 16px;
   font-weight: 600;
@@ -822,7 +828,7 @@ button {
   display: grid;
   gap: 12px;
   text-align: center;
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .moodlet-header h2,
@@ -879,7 +885,7 @@ button {
   gap: 10px;
   padding: 0;
   border: 0;
-  color: #2a3a53;
+  color: var(--ink);
   background: transparent;
   font-size: 12px;
   line-height: 1;
@@ -906,7 +912,7 @@ button {
 }
 
 .moodlet-option.is-selected .moodlet-swatch {
-  box-shadow: inset 0 0 14.5px #fff, 0 0 0 2px #657cfa;
+  box-shadow: inset 0 0 14.5px #fff, 0 0 0 2px var(--accent);
 }
 
 .moodlet-option.is-disabled {
@@ -931,8 +937,8 @@ button {
   height: 56px;
   border: 0;
   border-radius: 1000000px;
-  color: #fff;
-  background: #575df6;
+  color: var(--on-accent);
+  background: var(--accent);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
@@ -985,7 +991,7 @@ button {
   gap: 20px;
   padding: 32px var(--page-x) max(129px, calc(96px + var(--bottom-safe)));
   text-align: center;
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .onboarding-sheet {
@@ -998,7 +1004,7 @@ button {
   padding: 32px var(--page-x) max(53px, calc(32px + var(--bottom-safe)));
   overflow: hidden;
   text-align: center;
-  color: #2a3a53;
+  color: var(--ink);
   touch-action: pan-y;
   user-select: none;
 }
@@ -1112,7 +1118,7 @@ button {
 
 .onboarding-dots button.is-active {
   width: 18px;
-  background: #26579a;
+  background: var(--accent);
 }
 
 .onboarding-dots button:active {
@@ -1125,8 +1131,8 @@ button {
   flex: 0 0 auto;
   border: 0;
   border-radius: 1000000px;
-  color: #fff;
-  background: #575df6;
+  color: var(--on-accent);
+  background: var(--accent);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
@@ -1153,7 +1159,7 @@ button {
   gap: 20px;
   padding: 32px var(--page-x) max(53px, calc(32px + var(--bottom-safe)));
   text-align: center;
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .congrats-plant {
@@ -1191,7 +1197,7 @@ button {
 .stage-seven-copy {
   display: grid;
   gap: 12px;
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .missed-copy h2 {
@@ -1220,8 +1226,8 @@ button {
   height: 56px;
   border: 0;
   border-radius: 1000000px;
-  color: #fff;
-  background: #575df6;
+  color: var(--on-accent);
+  background: var(--accent);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
@@ -1247,8 +1253,8 @@ button {
   padding: 14px 16px 16px;
   border: 1px solid rgba(42, 58, 83, 0.05);
   border-radius: 24px;
-  color: #2a3a53;
-  background: #f3f3f5;
+  color: var(--ink);
+  background: var(--panel);
   overflow: hidden;
   transition: height 160ms ease;
 }
@@ -1271,7 +1277,7 @@ button {
   justify-content: center;
   padding: 4px 12px;
   border-radius: 1000px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(42, 58, 83, 0.05);
   font-size: 14px;
   font-weight: 500;
@@ -1307,7 +1313,7 @@ button {
   height: var(--text-height, 112px);
   max-height: 250px;
   padding-right: 8px;
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .app-note-card.has-moodlets textarea {
@@ -1361,8 +1367,8 @@ button {
 }
 
 .app-primary-button {
-  color: #fff;
-  background: #575df6;
+  color: var(--on-accent);
+  background: var(--accent);
 }
 
 .app-primary-button:disabled {
@@ -1371,7 +1377,7 @@ button {
 }
 
 .app-secondary-button {
-  color: #2a3a53;
+  color: var(--ink);
   background: transparent;
   box-shadow: none;
 }
@@ -1381,7 +1387,7 @@ button {
   display: grid;
   gap: 18px;
   padding: 32px var(--page-x) max(32px, calc(32px + var(--bottom-safe)));
-  color: #2a3a53;
+  color: var(--ink);
   overflow: hidden;
 }
 
@@ -1400,7 +1406,7 @@ button {
 
 .admin-header p {
   margin: 0;
-  color: #4c6080;
+  color: var(--muted);
   font-size: 14px;
   line-height: 1.35;
 }
@@ -1420,7 +1426,7 @@ button {
 }
 
 .admin-data-toggle span {
-  color: #244e90;
+  color: var(--accent);
   font-size: 15px;
   font-weight: 700;
 }
@@ -1455,7 +1461,7 @@ button {
 }
 
 .admin-data-toggle input:checked + i {
-  background: #244e90;
+  background: var(--accent);
 }
 
 .admin-data-toggle input:checked + i::after {
@@ -1482,7 +1488,7 @@ button {
 }
 
 .admin-field > span {
-  color: #244e90;
+  color: var(--accent);
   font-size: 14px;
   font-weight: 600;
 }
@@ -1507,7 +1513,7 @@ button {
   height: 44px;
   border: 1px solid rgba(36, 78, 144, 0.06);
   border-radius: 999px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(42, 58, 83, 0.05);
   font-size: 14px;
   font-weight: 600;
@@ -1515,8 +1521,8 @@ button {
 
 .admin-day-grid button.is-selected,
 .admin-segmented button.is-selected {
-  color: #fff;
-  background: #244e90;
+  color: var(--on-accent);
+  background: var(--accent);
   box-shadow: 0 0 18px rgba(101, 75, 162, 0.18);
 }
 
@@ -1526,7 +1532,7 @@ button {
   align-items: center;
   padding: 12px 14px;
   border-radius: 18px;
-  color: #4c6080;
+  color: var(--muted);
   background: rgba(42, 58, 83, 0.05);
   font-size: 14px;
   line-height: 1.35;
@@ -1543,7 +1549,7 @@ button {
   display: grid;
   gap: 20px;
   padding: 32px var(--page-x) max(32px, calc(32px + var(--bottom-safe)));
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .profile-edit-header {
@@ -1580,7 +1586,7 @@ button {
   align-items: center;
   gap: 20px;
   padding: 32px var(--page-x) max(53px, calc(53px + var(--bottom-safe)));
-  color: #2a3a53;
+  color: var(--ink);
   text-align: center;
   overflow: hidden;
 }
@@ -1685,7 +1691,7 @@ button {
 }
 
 .primary-button {
-  color: #fff;
+  color: var(--on-accent);
   background: var(--accent);
 }
 
@@ -1728,7 +1734,7 @@ button {
 .app-header p {
   margin: 0;
   width: 100%;
-  color: #2a3a53;
+  color: var(--ink);
   font-size: 16px;
   font-weight: 400;
   line-height: 1.4;
@@ -1799,7 +1805,7 @@ button {
 [data-icon="delete"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 21a2 2 0 0 1-2-2V8h14v11a2 2 0 0 1-2 2H7ZM9 4h6l1 2h4v2H4V6h4l1-2Z'/%3E%3C/svg%3E"); }
 
 .screen-register {
-  color: #2a3a53;
+  color: var(--ink);
   background: #fff;
 }
 
@@ -1812,7 +1818,7 @@ button {
 .register-blue-fade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #284ecb 0%, rgba(64, 96, 204, 0.87) 37.362%, rgba(217, 217, 217, 0) 100%);
+  background: linear-gradient(180deg, #49319a 0%, rgba(88, 64, 169, 0.87) 37.362%, rgba(217, 217, 217, 0) 100%);
 }
 
 .screen-register:not(.is-welcome-step) .register-flower-bg,
@@ -1822,25 +1828,20 @@ button {
 
 .screen-register.is-welcome-step {
   color: #fff;
-  background: #365bcd;
+  background: #5740a8;
 }
 
 .screen-register.is-welcome-step .register-back-button {
   display: none;
 }
 
-.screen-register:not(.is-welcome-step) .language-switcher button {
-  color: #2a3a53;
+.screen-register:not(.is-welcome-step) .language-switcher button:not(.is-active) {
+  color: var(--ink);
 }
 
 .screen-register:not(.is-welcome-step) .language-switcher {
   background: rgba(42, 58, 83, 0.04);
   box-shadow: none;
-}
-
-.screen-register:not(.is-welcome-step) .language-switcher button.is-active {
-  color: #2a3a53;
-  background: rgba(42, 58, 83, 0.05);
 }
 
 .register-logo {
@@ -1860,7 +1861,7 @@ button {
 }
 
 .screen-register:not(.is-welcome-step) .register-logo {
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .register-back-button {
@@ -1870,7 +1871,7 @@ button {
   left: var(--page-x);
   width: 56px;
   height: 56px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(42, 58, 83, 0.05);
 }
 
@@ -1932,7 +1933,7 @@ button {
   padding: 0;
   border: 0;
   border-radius: 0;
-  color: #2a3a53;
+  color: var(--ink);
   background: transparent;
   box-shadow: none;
   backdrop-filter: none;
@@ -1952,7 +1953,7 @@ button {
   height: 6px;
   overflow: hidden;
   border-radius: 100000px;
-  background: #f3f3f5;
+  background: var(--panel);
 }
 
 .funnel-progress::after {
@@ -1961,7 +1962,7 @@ button {
   inset: 0 auto 0 0;
   width: 25%;
   border-radius: 100000px;
-  background: #244e90;
+  background: var(--accent);
 }
 
 [data-register-step="2"] .funnel-progress::after {
@@ -1978,7 +1979,7 @@ button {
 
 .register-copy p {
   margin: 0;
-  color: #2a3a53;
+  color: var(--ink);
   font-size: 16px;
   line-height: 1.4;
 }
@@ -2002,8 +2003,8 @@ button {
   border-radius: 24px;
   padding: 0 16px;
   outline: 0;
-  color: #2a3a53;
-  background: #f3f3f5;
+  color: var(--ink);
+  background: var(--panel);
   font: inherit;
 }
 
@@ -2020,15 +2021,15 @@ button {
   min-height: 52px;
   border: 1px solid rgba(36, 78, 144, 0.06);
   border-radius: 24px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(255, 255, 255, 0.76);
   font-size: 14px;
   font-weight: 600;
 }
 
 .purpose-options button.is-selected {
-  color: #fff;
-  background: #244e90;
+  color: var(--on-accent);
+  background: var(--accent);
 }
 
 .register-primary-button {
@@ -2036,8 +2037,8 @@ button {
   height: 56px;
   border: 0;
   border-radius: 1000000px;
-  color: #2a3a53;
-  background: #fff;
+  color: var(--on-accent);
+  background: var(--accent);
   box-shadow: 0 0 9px rgba(101, 75, 162, 0.18);
   font-size: 16px;
   font-weight: 600;
@@ -2069,8 +2070,8 @@ button {
   position: static;
   margin-top: auto;
   width: 100%;
-  color: #fff;
-  background: #575df6;
+  color: var(--on-accent);
+  background: var(--accent);
 }
 
 .view {
@@ -2095,7 +2096,7 @@ button {
   padding-bottom: 0;
   overflow: hidden;
   color: #fff;
-  background: #365bcd;
+  background: #5740a8;
 }
 
 .home-flower-bg {
@@ -2113,8 +2114,8 @@ button {
   inset: 0;
   background: linear-gradient(
     180deg,
-    #284ecb 0%,
-    rgba(64, 96, 204, 0.87) 37.362%,
+    #49319a 0%,
+    rgba(88, 64, 169, 0.87) 37.362%,
     rgba(217, 217, 217, 0) 100%
   );
 }
@@ -2165,7 +2166,7 @@ button {
   padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 32px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 18px rgba(101, 75, 162, 0.18);
   backdrop-filter: blur(45px);
@@ -2229,7 +2230,7 @@ button {
   padding: 14px 16px 16px;
   border: 1px solid rgba(42, 58, 83, 0.05);
   border-radius: 24px;
-  background: #f3f3f5;
+  background: var(--panel);
   overflow: hidden;
   transition: height 160ms ease;
 }
@@ -2259,7 +2260,7 @@ button {
   justify-content: center;
   padding: 4px 12px;
   border-radius: 1000px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(42, 58, 83, 0.05);
   font-size: 14px;
   font-weight: 500;
@@ -2291,7 +2292,7 @@ button {
   height: var(--text-height, 44px);
   max-height: 203px;
   padding-right: 8px;
-  color: #2a3a53;
+  color: var(--ink);
 }
 
 .home-note-card textarea::-webkit-scrollbar {
@@ -2337,8 +2338,8 @@ button {
   justify-content: center;
   border: 0;
   border-radius: 1000000px;
-  color: #fff;
-  background: #575df6;
+  color: var(--on-accent);
+  background: var(--accent);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
@@ -2590,7 +2591,7 @@ button {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #244e90;
+  background: var(--accent);
 }
 
 .plant-stage-1 .stem { height: 18px; }
@@ -2647,10 +2648,6 @@ button {
   overflow: visible;
 }
 
-.day-progress:focus {
-  outline: none;
-}
-
 .day-progress strong,
 .day-progress span {
   font-size: 12px;
@@ -2672,7 +2669,7 @@ button {
 
 .day-progress.is-complete .day-dot {
   border: 0;
-  background: #fff url("assets/day-complete.svg") center / contain no-repeat;
+  background: var(--accent) url("assets/day-complete.svg?v=2") center / contain no-repeat;
   box-shadow: none;
 }
 
@@ -2697,7 +2694,7 @@ button {
   content: "";
   position: absolute;
   inset: -5px;
-  border: 2px solid #4c6080;
+  border: 2px solid var(--accent);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -2956,7 +2953,7 @@ textarea {
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
-  color: #2a3a53;
+  color: var(--ink);
   font-size: 16px;
   line-height: 1.4;
 }
@@ -2978,7 +2975,7 @@ textarea {
   padding: 0;
   border: 0;
   border-radius: 100000px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(42, 58, 83, 0.05);
 }
 
@@ -3005,15 +3002,16 @@ textarea {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #244e90;
+  background: #8d849d;
   transition: transform 180ms ease, background 180ms ease;
 }
 
 .profile-toggle.is-on {
-  background: rgba(36, 78, 144, 0.12);
+  background: var(--accent-soft);
 }
 
 .profile-toggle.is-on span {
+  background: var(--accent);
   transform: translateX(24px);
 }
 
@@ -3028,7 +3026,7 @@ textarea {
   height: 56px;
   border: 0;
   border-radius: 1000000px;
-  color: #244e90;
+  color: var(--accent);
   background: rgba(42, 58, 83, 0.05);
   font-size: 16px;
   font-weight: 600;
@@ -3089,7 +3087,7 @@ textarea {
   justify-content: center;
   gap: 1px;
   padding: 4px 8px;
-  color: #4c6080;
+  color: var(--muted);
   background: transparent;
   font-size: 12px;
   box-shadow: none;
@@ -3099,11 +3097,6 @@ textarea {
   width: 24px;
   height: 24px;
   flex: 0 0 24px;
-  color: #704cf7;
-}
-
-.tab-bar button.is-active .tab-icon {
-  color: #5229e8;
 }
 
 .tab-bar .tab-icon,
@@ -3135,7 +3128,7 @@ textarea {
   height: 48px;
   border: 1px solid rgba(36, 78, 144, 0.03);
   border-radius: 10000px;
-  background: var(--tab-selected);
+  background: var(--accent-soft);
   backdrop-filter: blur(24.4px);
   -webkit-backdrop-filter: blur(24.4px);
   transform: translateX(var(--tab-indicator-x));
@@ -3171,11 +3164,11 @@ textarea {
 }
 
 .screen-app.is-home-view .tab-bar button {
-  color: #4c6080;
+  color: var(--muted);
 }
 
 .screen-app.is-home-view .tab-bar button.is-active {
-  color: #244e90;
+  color: var(--accent);
   border: 1px solid transparent;
   background: transparent;
   backdrop-filter: none;
@@ -3321,8 +3314,8 @@ textarea {
   padding: 6px 8px;
   border: 0;
   border-radius: 12px;
-  background: #edeaff;
-  color: #373285;
+  background: var(--accent-soft);
+  color: var(--accent);
   font: inherit;
   font-size: 12px;
   font-weight: 700;
