@@ -2655,8 +2655,17 @@ button {
 }
 
 .day-progress.is-today {
+  isolation: isolate;
+}
+
+.day-progress.is-today::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 8px -4px 6px;
   border-radius: 16px;
   background: var(--accent-soft);
+  pointer-events: none;
 }
 
 .day-progress.is-today strong,
