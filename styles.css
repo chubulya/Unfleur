@@ -2661,8 +2661,8 @@ button {
 }
 
 .day-progress.is-missed .day-dot {
-  border: 1px solid #f0babb;
-  background: #fff1f1 url("assets/day-missed.svg?v=2") center / 18px 18px no-repeat;
+  border: 0;
+  background: #c33939 url("assets/day-missed.svg?v=3") center / 21px 21px no-repeat;
   box-shadow: none;
 }
 
