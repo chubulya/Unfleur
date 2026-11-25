@@ -2662,7 +2662,11 @@ button {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: 8px -4px 6px;
+  top: 50%;
+  left: 50%;
+  width: 52px;
+  height: 102px;
+  transform: translate(-50%, -50%);
   border-radius: 16px;
   background: var(--accent-soft);
   pointer-events: none;
