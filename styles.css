@@ -3099,6 +3099,11 @@ textarea {
   width: 24px;
   height: 24px;
   flex: 0 0 24px;
+  color: #704cf7;
+}
+
+.tab-bar button.is-active .tab-icon {
+  color: #5229e8;
 }
 
 .tab-bar .tab-icon,
