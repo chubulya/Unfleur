@@ -69,6 +69,7 @@ const tabs = document.querySelectorAll("[data-tab]");
 const title = document.querySelector("#view-title");
 const subtitle = document.querySelector("#view-subtitle");
 const journalView = document.querySelector(".view-journal");
+const journalOverview = document.querySelector(".journal-overview");
 const weeklyProgress = document.querySelector("#weekly-progress");
 const homeEntryList = document.querySelector("#home-entry-list");
 const potSheet = document.querySelector("#pot-sheet");
@@ -260,7 +261,6 @@ const copy = {
     continue: "Continue",
     save: "Save",
     saveNote: "Save entry",
-    addMoodlets: "Add moodlets",
     localJournal: "Your entries are saved in this browser.",
     accountOptions: "Account demo",
     useLocalJournal: "Back to local journal",
@@ -403,7 +403,6 @@ const copy = {
     continue: "Продовжити",
     save: "Зберегти",
     saveNote: "Зберегти запис",
-    addMoodlets: "Додати мудлети",
     localJournal: "Твої записи зберігаються в цьому браузері.",
     accountOptions: "Демо облікового запису",
     useLocalJournal: "Назад до локального щоденника",
@@ -541,6 +540,8 @@ let selectedMoodlets = [];
 let homeSelectedMoodlets = [];
 let appSelectedMoodlets = [];
 let activeMoodletTarget = "welcome";
+let moodletSavePending = false;
+let moodletOpener = null;
 let recognition;
 let isListening = false;
 let voiceTarget = null;
@@ -970,7 +971,6 @@ function applyLanguage() {
   setHTML(".figma-welcome-copy p", "introBody");
   setText(".register-welcome [data-register-next]", "startJournaling");
   setText("[data-register-login]", "logIn");
-  setText("[data-add-moodlets]", "addMoodlets");
   setText("#local-journal-note", "localJournal");
   setText("#account-demo", "accountOptions");
   setText("#back-to-local-journal", "useLocalJournal");
@@ -1080,7 +1080,7 @@ function applyLanguage() {
   if (noteToastText && !noteToast.classList.contains("is-visible")) noteToastText.textContent = t("noteSaved");
   setText("#moodlet-title", "moodletTitle");
   setText(".moodlet-header p", "moodletBody");
-  setText("#moodlet-continue", "done");
+  setText("#moodlet-continue", moodletSavePending ? "saveNote" : "done");
   setText(".pot-sheet h2", "choosePot");
   setText(".pot-sheet p", "potBody");
   setText(".pot-sheet .primary-button", "done");
@@ -1184,8 +1184,19 @@ function focusJournalOnToday() {
 }
 
 function updateJournalScrollState() {
-  if (!journalView) return;
-  journalView.classList.toggle("is-scrolled", journalView.scrollTop > 8);
+  if (!journalView?.clientHeight) return;
+  const scrollThreshold = 8;
+  const scrolled = journalView.scrollTop > scrollThreshold;
+  const viewStyle = getComputedStyle(journalView);
+  const overviewStyle = getComputedStyle(journalOverview);
+  const calendarStyle = getComputedStyle(weeklyProgress);
+  // Measure what would remain after Bloomy collapses, independent of the current animation.
+  const collapsedHeight = homeEntryList.offsetHeight + weeklyProgress.offsetHeight
+    + parseFloat(calendarStyle.marginTop) + parseFloat(overviewStyle.paddingBottom)
+    + parseFloat(viewStyle.paddingBottom);
+  const canCollapse = collapsedHeight - journalView.clientHeight > scrollThreshold;
+  journalView.classList.toggle("is-scrolled", scrolled);
+  journalView.classList.toggle("is-bloomy-collapsed", scrolled && canCollapse);
 }
 
 function renderWeeklyProgress() {
@@ -1583,12 +1594,11 @@ function updateWelcomeNote() {
   const length = welcomeNote.value.length;
   const hasText = Boolean(welcomeNote.value.trim());
   const hasMoodlets = hasText && selectedMoodlets.length > 0;
-  welcomeNoteCard.querySelector("[data-add-moodlets]").hidden = !hasText;
   selectedMoodletsBar.hidden = !hasMoodlets;
   welcomeNoteFlow.classList.toggle("has-text", hasText);
   welcomeContinue?.classList.toggle("is-visible", hasText);
   welcomeScreen?.classList.toggle("review-state", hasMoodlets);
-  if (welcomeContinue) welcomeContinue.textContent = t("saveNote");
+  if (welcomeContinue) welcomeContinue.textContent = t("continue");
   const introTitle = welcomeScreen?.querySelector(".figma-welcome-copy h1");
   const introBody = welcomeScreen?.querySelector(".figma-welcome-copy p");
   if (introTitle && introBody) {
@@ -1622,13 +1632,12 @@ function updateHomeNote() {
   const length = homeNote.value.length;
   const hasText = Boolean(homeNote.value.trim());
   const hasMoodlets = hasText && homeSelectedMoodlets.length > 0;
-  homeNoteCard.querySelector("[data-add-moodlets]").hidden = !hasText;
   homeSelectedMoodletsBar.hidden = !hasMoodlets;
   homeCounter.textContent = `${length}/500 ${t("symbols")}`;
   homeNoteShell.classList.toggle("has-text", hasText);
   homeNoteCard.classList.toggle("has-text", hasText);
   homeNoteCard.classList.toggle("has-moodlets", hasMoodlets);
-  if (homeContinue) homeContinue.textContent = t("saveNote");
+  if (homeContinue) homeContinue.textContent = t("continue");
 
   homeNote.style.height = "44px";
   homeNote.style.overflowY = "hidden";
@@ -1691,13 +1700,12 @@ function updateAppNote() {
   const length = appNote.value.length;
   const hasText = Boolean(appNote.value.trim());
   const hasMoodlets = hasText && appSelectedMoodlets.length > 0;
-  appNoteCard.querySelector("[data-add-moodlets]").hidden = !hasText;
   appSelectedMoodletsBar.hidden = !hasMoodlets;
   appCounter.textContent = `${length}/500 ${t("symbols")}`;
   appNoteCard.classList.toggle("has-text", hasText);
   appNoteCard.classList.toggle("has-moodlets", hasMoodlets);
   appNotePrimary.disabled = !hasText;
-  appNotePrimary.textContent = t("saveNote");
+  appNotePrimary.textContent = t("continue");
   if (appNoteCancel) appNoteCancel.textContent = t("cancel");
 
   appNote.style.height = "44px";
@@ -1720,6 +1728,7 @@ function showNoteToast(messageKey = "noteSaved") {
   if (!noteToast) return;
   window.clearTimeout(toastTimer);
   if (noteToastText) noteToastText.textContent = t(messageKey);
+  noteToast.classList.toggle("is-deleted", messageKey === "noteDeleted");
   noteToast.classList.add("is-visible");
   toastTimer = window.setTimeout(() => {
     noteToast.classList.remove("is-visible");
@@ -2061,20 +2070,59 @@ function renderHomeSelectedMoodlets() {
     .join("");
 }
 
-function openMoodletModal(target = "welcome") {
+function openMoodletModal(target = "welcome", saveOnConfirm = false) {
   const entry = { welcome: welcomeNote, home: homeNote, app: appNote }[target];
   if (!entry?.value.trim()) return;
 
   activeMoodletTarget = target;
+  moodletSavePending = saveOnConfirm;
+  moodletOpener = document.activeElement;
+  moodletContinue.textContent = t(saveOnConfirm ? "saveNote" : "done");
   renderMoodletGrid();
   moodletModal?.classList.add("is-open");
   moodletModal?.setAttribute("aria-hidden", "false");
-  moodletGrid.querySelector("button")?.focus();
+  moodletGrid.scrollTop = 0;
+  moodletGrid.querySelector("button")?.focus({ preventScroll: true });
 }
 
 function closeMoodletModal() {
   moodletModal?.classList.remove("is-open");
   moodletModal?.setAttribute("aria-hidden", "true");
+  moodletSavePending = false;
+  const refreshComposer = {
+    app: [renderAppSelectedMoodlets, updateAppNote],
+    home: [renderHomeSelectedMoodlets, updateHomeNote],
+    welcome: [renderSelectedMoodlets, updateWelcomeNote],
+  };
+  refreshComposer[activeMoodletTarget].forEach((refresh) => refresh());
+  moodletOpener?.focus();
+  moodletOpener = null;
+}
+
+function saveComposerEntry(target) {
+  const field = { app: appNote, home: homeNote, welcome: welcomeNote }[target];
+  const picked = { app: appSelectedMoodlets, home: homeSelectedMoodlets, welcome: selectedMoodlets }[target];
+  const text = field.value.trim();
+  if (!text) return;
+
+  const isEditing = target === "app" && editingEntryId;
+  const savedEntry = isEditing ? updateEntry(editingEntryId, text, picked) : saveEntry(text, picked, target);
+  field.value = "";
+  if (target === "app") {
+    closeAppNoteModal();
+  } else if (target === "home") {
+    homeSelectedMoodlets = [];
+    renderHomeSelectedMoodlets();
+    updateHomeNote();
+  } else {
+    selectedMoodlets = [];
+    renderSelectedMoodlets();
+    updateWelcomeNote();
+  }
+  setScreen("app");
+  setView("journal");
+  showNoteToast();
+  if (savedEntry) showGrowthMilestone(savedEntry.milestoneDay);
 }
 
 function startVoiceInput(target = "welcome") {
@@ -2135,9 +2183,6 @@ function startVoiceInput(target = "welcome") {
     });
   });
 
-document.querySelectorAll("[data-add-moodlets]").forEach((button) => {
-  button.addEventListener("click", () => openMoodletModal(button.dataset.addMoodlets));
-});
 document.querySelector("#account-demo")?.addEventListener("click", () => {
   setScreen("register");
   setRegisterStep(0);
@@ -2210,23 +2255,7 @@ onboardingSheet?.addEventListener("pointermove", moveOnboardingGesture);
 onboardingSheet?.addEventListener("pointerup", endOnboardingGesture);
 onboardingSheet?.addEventListener("pointercancel", endOnboardingGesture);
 
-welcomeContinue?.addEventListener("click", () => {
-  const text = welcomeNote.value.trim();
-  if (!text) {
-    welcomeNote.focus();
-    return;
-  }
-
-  const savedEntry = saveEntry(text, selectedMoodlets, "welcome");
-  welcomeNote.value = "";
-  selectedMoodlets = [];
-  renderSelectedMoodlets();
-  updateWelcomeNote();
-  setScreen("app");
-  setView("journal");
-  showNoteToast();
-  showGrowthMilestone(savedEntry.milestoneDay);
-});
+welcomeContinue?.addEventListener("click", () => openMoodletModal("welcome", true));
 
 micButton?.addEventListener("click", () => startVoiceInput("welcome"));
 homeMicButton?.addEventListener("click", () => startVoiceInput("home"));
@@ -2260,18 +2289,9 @@ moodletGrid?.addEventListener("click", (event) => {
 });
 
 moodletContinue?.addEventListener("click", () => {
+  const shouldSave = moodletSavePending;
   closeMoodletModal();
-  document.querySelector(`[data-add-moodlets="${activeMoodletTarget}"]`)?.focus();
-  if (activeMoodletTarget === "app") {
-    renderAppSelectedMoodlets();
-    updateAppNote();
-  } else if (activeMoodletTarget === "home") {
-    renderHomeSelectedMoodlets();
-    updateHomeNote();
-  } else {
-    renderSelectedMoodlets();
-    updateWelcomeNote();
-  }
+  if (shouldSave) saveComposerEntry(activeMoodletTarget);
 });
 
 editMoodlets?.addEventListener("click", (event) => {
@@ -2323,12 +2343,12 @@ deleteConfirmModal?.addEventListener("click", (event) => {
 moodletModal?.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     event.preventDefault();
-    moodletContinue.click();
+    closeMoodletModal();
   }
 });
 
 moodletModal?.addEventListener("click", (event) => {
-  if (event.target === moodletModal) moodletContinue.click();
+  if (event.target === moodletModal) closeMoodletModal();
 });
 
 closeCongrats?.addEventListener("click", () => {
@@ -2414,47 +2434,9 @@ stageSevenModal?.addEventListener("click", (event) => {
   }
 });
 
-appNotePrimary?.addEventListener("click", () => {
-  const text = appNote.value.trim();
-  if (!text) {
-    appNote.focus();
-    return;
-  }
+appNotePrimary?.addEventListener("click", () => openMoodletModal("app", true));
 
-  if (editingEntryId) {
-    updateEntry(editingEntryId, text, appSelectedMoodlets);
-    closeAppNoteModal();
-    setScreen("app");
-    setView("journal");
-    showNoteToast();
-    return;
-  }
-
-  const savedEntry = saveEntry(text, appSelectedMoodlets, "app");
-  closeAppNoteModal();
-  setScreen("app");
-  setView("journal");
-  showNoteToast();
-  showGrowthMilestone(savedEntry.milestoneDay);
-});
-
-homeContinue?.addEventListener("click", () => {
-  const text = homeNote.value.trim();
-  if (!text) {
-    homeNote.focus();
-    return;
-  }
-
-  const savedEntry = saveEntry(text, homeSelectedMoodlets, "home");
-  homeNote.value = "";
-  homeSelectedMoodlets = [];
-  renderHomeSelectedMoodlets();
-  updateHomeNote();
-  setScreen("app");
-  setView("journal");
-  showNoteToast();
-  showGrowthMilestone(savedEntry.milestoneDay);
-});
+homeContinue?.addEventListener("click", () => openMoodletModal("home", true));
 
 appNoteCancel?.addEventListener("click", closeAppNoteModal);
 
@@ -2534,6 +2516,10 @@ weeklyProgress?.addEventListener("keydown", (event) => {
 });
 
 journalView?.addEventListener("scroll", updateJournalScrollState, { passive: true });
+if (journalView && typeof ResizeObserver === "function") {
+  const journalResizeObserver = new ResizeObserver(updateJournalScrollState);
+  [journalView, weeklyProgress, homeEntryList].forEach((element) => journalResizeObserver.observe(element));
+}
 window.addEventListener("resize", updateTabIndicator);
 
 welcomeNote.value = state.drafts.welcome?.text || "";

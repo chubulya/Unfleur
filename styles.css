@@ -879,7 +879,8 @@ button {
   column-gap: 9px;
   row-gap: 12px;
   overflow-y: auto;
-  padding-bottom: 124px;
+  padding: 6px 4px 124px;
+  scroll-padding-top: 6px;
   scrollbar-width: none;
 }
 
@@ -1634,8 +1635,8 @@ button {
   padding: 31px 16px 25px;
   border: 0;
   border-radius: 16px;
-  color: #fff;
-  background: #68698e;
+  color: var(--ink-strong);
+  background: var(--accent-soft);
   box-shadow: 0 0 18px rgba(58, 97, 167, 0.18);
   text-align: center;
   font-size: 16px;
@@ -1648,11 +1649,16 @@ button {
 }
 
 .toast-check {
+  color: var(--accent);
   width: 36px;
   height: 36px;
   display: block;
   background: currentColor;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.toast.is-deleted .toast-check {
+  mask: var(--icon) center / 28px 28px no-repeat;
 }
 
 .toast.is-visible {
@@ -1797,7 +1803,7 @@ button {
 [data-icon="mic"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15a4 4 0 0 0 4-4V6a4 4 0 1 0-8 0v5a4 4 0 0 0 4 4Zm7-4a7 7 0 0 1-6 6.92V21h-2v-3.08A7 7 0 0 1 5 11h2a5 5 0 0 0 10 0h2Z'/%3E%3C/svg%3E"); }
 [data-icon="admin"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 7a3 3 0 1 1 5.83 1H21v2H9.83A3 3 0 0 1 4 7Zm3-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm8 11a3 3 0 0 1-2.83-2H3v-2h9.17A3 3 0 1 1 15 17Zm0-1a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z'/%3E%3C/svg%3E"); }
 [data-icon="edit"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m4 17.25 9.9-9.9 2.75 2.75-9.9 9.9H4v-2.75ZM18.7 8.05 15.95 5.3l1.1-1.1a1 1 0 0 1 1.4 0l1.35 1.35a1 1 0 0 1 0 1.4l-1.1 1.1Z'/%3E%3C/svg%3E"); }
-[data-icon="delete"] { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 21a2 2 0 0 1-2-2V8h14v11a2 2 0 0 1-2 2H7ZM9 4h6l1 2h4v2H4V6h4l1-2Z'/%3E%3C/svg%3E"); }
+:is([data-icon="delete"], .toast.is-deleted .toast-check) { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 21a2 2 0 0 1-2-2V8h14v11a2 2 0 0 1-2 2H7ZM9 4h6l1 2h4v2H4V6h4l1-2Z'/%3E%3C/svg%3E"); }
 
 .screen-register {
   color: var(--ink);
@@ -2348,10 +2354,30 @@ button {
   box-shadow: 0 8px 18px rgba(58, 97, 167, 0.08);
 }
 
+.view-journal {
+  overflow-anchor: none;
+}
+
 .plant-card {
   display: grid;
   place-items: center;
+  max-height: 172px;
   padding-top: 12px;
+  overflow: hidden;
+  transition: max-height 260ms var(--interaction-ease),
+    padding-top 260ms var(--interaction-ease), opacity 180ms ease;
+}
+
+.view-journal.is-bloomy-collapsed .plant-card {
+  max-height: 0;
+  padding-top: 0;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plant-card {
+    transition: none;
+  }
 }
 
 .plant-portrait {
@@ -3317,18 +3343,6 @@ textarea {
   }
 }
 
-.add-moodlets-button {
-  margin-inline-start: auto;
-  padding: 6px 8px;
-  border: 0;
-  border-radius: 12px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-}
-
 #local-journal-note,
 #account-demo {
   position: absolute;
@@ -3356,7 +3370,6 @@ textarea {
 .figma-mic,
 .figma-continue-button,
 .app-primary-button,
-.add-moodlets-button,
 .profile-edit-button,
 .profile-action-button,
 .moodlet-option .moodlet-swatch {
@@ -3370,7 +3383,7 @@ textarea {
 }
 
 :is(.round-button, .figma-mic, .figma-continue-button, .home-continue-button,
-    .app-primary-button, .add-moodlets-button, .profile-edit-button,
+    .app-primary-button, .profile-edit-button,
     .profile-action-button):active:not(:disabled),
 .moodlet-option:active:not(.is-disabled) .moodlet-swatch {
   scale: 0.96;
@@ -3431,7 +3444,7 @@ textarea {
   }
 
   :is(.round-button, .figma-mic, .figma-continue-button, .home-continue-button,
-      .app-primary-button, .add-moodlets-button, .profile-edit-button,
+      .app-primary-button, .profile-edit-button,
       .profile-action-button):active:not(:disabled),
   .moodlet-option:active .moodlet-swatch,
   .tab-bar button:active .tab-icon {
