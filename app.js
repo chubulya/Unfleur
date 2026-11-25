@@ -101,7 +101,6 @@ const moodletGrid = document.querySelector("#moodlet-grid");
 const moodletContinue = document.querySelector("#moodlet-continue");
 const selectedMoodletsBar = document.querySelector("#selected-moodlets-bar");
 const selectedMoodletsNode = document.querySelector("#selected-moodlets");
-const editMoodlets = document.querySelector("#edit-moodlets");
 const congratsModal = document.querySelector("#congrats-modal");
 const closeCongrats = document.querySelector("#close-congrats");
 const onboardingModal = document.querySelector("#onboarding-modal");
@@ -136,7 +135,6 @@ const homeContinue = document.querySelector("#home-continue");
 const homeMicButton = document.querySelector(".home-mic");
 const homeSelectedMoodletsBar = document.querySelector("#home-selected-moodlets-bar");
 const homeSelectedMoodletsNode = document.querySelector("#home-selected-moodlets");
-const homeEditMoodlets = document.querySelector("#home-edit-moodlets");
 const appNoteModal = document.querySelector("#app-note-modal");
 const appNoteCard = document.querySelector("#app-note-card");
 const appNote = document.querySelector("#app-note");
@@ -146,7 +144,6 @@ const appNoteCancel = document.querySelector("#app-note-cancel");
 const appMicButton = document.querySelector(".app-mic");
 const appSelectedMoodletsBar = document.querySelector("#app-selected-moodlets-bar");
 const appSelectedMoodletsNode = document.querySelector("#app-selected-moodlets");
-const appEditMoodlets = document.querySelector("#app-edit-moodlets");
 const noteToast = document.querySelector("#note-toast");
 const noteToastText = noteToast?.querySelector("span:last-child");
 const deleteConfirmModal = document.querySelector("#delete-confirm-modal");
@@ -270,7 +267,6 @@ const copy = {
     notePlaceholder: "Write a few words about your day…",
     symbols: "characters",
     voiceNote: "Dictate entry",
-    editMoodlets: "Edit moodlets",
     step1: "Step 1 of 4",
     step2: "Step 2 of 4",
     step3: "Step 3 of 4",
@@ -412,7 +408,6 @@ const copy = {
     notePlaceholder: "Напиши кілька слів про свій день…",
     symbols: "символів",
     voiceNote: "Продиктувати запис",
-    editMoodlets: "Змінити мудлети",
     step1: "Крок 1 з 4",
     step2: "Крок 2 з 4",
     step3: "Крок 3 з 4",
@@ -540,7 +535,6 @@ let selectedMoodlets = [];
 let homeSelectedMoodlets = [];
 let appSelectedMoodlets = [];
 let activeMoodletTarget = "welcome";
-let moodletSavePending = false;
 let moodletOpener = null;
 let recognition;
 let isListening = false;
@@ -1008,7 +1002,6 @@ function applyLanguage() {
   setAttr("#welcome-note, #home-note, #app-note", "aria-label", "notePrompt");
   setAttr("#welcome-note, #home-note, #app-note", "placeholder", "notePlaceholder");
   setAttr(".figma-mic, .home-mic, .app-mic", "aria-label", "voiceNote");
-  setAttr("#edit-moodlets, #home-edit-moodlets, #app-edit-moodlets", "aria-label", "editMoodlets");
   setAttr('[data-action="open-admin-modal"]', "aria-label", "openAdmin");
   setAttr('[data-action="open-note-modal"]', "aria-label", "addEntry");
   setAttr(".plant-portrait", "aria-label", "bloomingPlant");
@@ -1080,7 +1073,7 @@ function applyLanguage() {
   if (noteToastText && !noteToast.classList.contains("is-visible")) noteToastText.textContent = t("noteSaved");
   setText("#moodlet-title", "moodletTitle");
   setText(".moodlet-header p", "moodletBody");
-  setText("#moodlet-continue", moodletSavePending ? "saveNote" : "done");
+  setText("#moodlet-continue", "saveNote");
   setText(".pot-sheet h2", "choosePot");
   setText(".pot-sheet p", "potBody");
   setText(".pot-sheet .primary-button", "done");
@@ -2070,14 +2063,12 @@ function renderHomeSelectedMoodlets() {
     .join("");
 }
 
-function openMoodletModal(target = "welcome", saveOnConfirm = false) {
+function openMoodletModal(target) {
   const entry = { welcome: welcomeNote, home: homeNote, app: appNote }[target];
   if (!entry?.value.trim()) return;
 
   activeMoodletTarget = target;
-  moodletSavePending = saveOnConfirm;
   moodletOpener = document.activeElement;
-  moodletContinue.textContent = t(saveOnConfirm ? "saveNote" : "done");
   renderMoodletGrid();
   moodletModal?.classList.add("is-open");
   moodletModal?.setAttribute("aria-hidden", "false");
@@ -2088,7 +2079,6 @@ function openMoodletModal(target = "welcome", saveOnConfirm = false) {
 function closeMoodletModal() {
   moodletModal?.classList.remove("is-open");
   moodletModal?.setAttribute("aria-hidden", "true");
-  moodletSavePending = false;
   const refreshComposer = {
     app: [renderAppSelectedMoodlets, updateAppNote],
     home: [renderHomeSelectedMoodlets, updateHomeNote],
@@ -2255,7 +2245,7 @@ onboardingSheet?.addEventListener("pointermove", moveOnboardingGesture);
 onboardingSheet?.addEventListener("pointerup", endOnboardingGesture);
 onboardingSheet?.addEventListener("pointercancel", endOnboardingGesture);
 
-welcomeContinue?.addEventListener("click", () => openMoodletModal("welcome", true));
+welcomeContinue?.addEventListener("click", () => openMoodletModal("welcome"));
 
 micButton?.addEventListener("click", () => startVoiceInput("welcome"));
 homeMicButton?.addEventListener("click", () => startVoiceInput("home"));
@@ -2289,24 +2279,8 @@ moodletGrid?.addEventListener("click", (event) => {
 });
 
 moodletContinue?.addEventListener("click", () => {
-  const shouldSave = moodletSavePending;
   closeMoodletModal();
-  if (shouldSave) saveComposerEntry(activeMoodletTarget);
-});
-
-editMoodlets?.addEventListener("click", (event) => {
-  event.preventDefault();
-  openMoodletModal("welcome");
-});
-
-appEditMoodlets?.addEventListener("click", (event) => {
-  event.preventDefault();
-  openMoodletModal("app");
-});
-
-homeEditMoodlets?.addEventListener("click", (event) => {
-  event.preventDefault();
-  openMoodletModal("home");
+  saveComposerEntry(activeMoodletTarget);
 });
 
 profilePurposeOptions?.addEventListener("click", (event) => {
@@ -2434,9 +2408,9 @@ stageSevenModal?.addEventListener("click", (event) => {
   }
 });
 
-appNotePrimary?.addEventListener("click", () => openMoodletModal("app", true));
+appNotePrimary?.addEventListener("click", () => openMoodletModal("app"));
 
-homeContinue?.addEventListener("click", () => openMoodletModal("home", true));
+homeContinue?.addEventListener("click", () => openMoodletModal("home"));
 
 appNoteCancel?.addEventListener("click", closeAppNoteModal);
 

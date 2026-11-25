@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Poppins:wght@600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=local-journal-22" />
+    <link rel="stylesheet" href="styles.css?v=local-journal-23" />
   </head>
   <body>
     <main class="phone-shell" aria-live="polite">
@@ -31,7 +31,6 @@
             <span data-node-id="16:632">How’s your day going?</span>
             <div class="selected-moodlets-bar" id="selected-moodlets-bar" hidden>
               <div class="selected-moodlets" id="selected-moodlets"></div>
-              <button class="moodlets-edit-button" id="edit-moodlets" type="button" aria-label="Edit moodlets" data-icon="edit"></button>
             </div>
             <textarea id="welcome-note" maxlength="500" aria-label="How’s your day going?" placeholder="Write a few words about your day…"></textarea>
             <div class="textarea-footer">
@@ -182,7 +181,6 @@
               <span>How’s your day going?</span>
               <div class="selected-moodlets-bar home-selected-moodlets-bar" id="home-selected-moodlets-bar" hidden>
                 <div class="selected-moodlets" id="home-selected-moodlets"></div>
-                <button class="moodlets-edit-button" id="home-edit-moodlets" type="button" aria-label="Edit moodlets" data-icon="edit"></button>
               </div>
               <textarea id="home-note" maxlength="500" aria-label="How’s your day going?" placeholder="Write a few words about your day…"></textarea>
               <div class="textarea-footer">
@@ -420,7 +418,6 @@
               <span id="app-note-title">How’s your day going?</span>
               <div class="selected-moodlets-bar app-selected-moodlets-bar" id="app-selected-moodlets-bar" hidden>
                 <div class="selected-moodlets" id="app-selected-moodlets"></div>
-                <button class="moodlets-edit-button" id="app-edit-moodlets" type="button" aria-label="Edit moodlets" data-icon="edit"></button>
               </div>
               <textarea id="app-note" maxlength="500" aria-label="How’s your day going?" placeholder="Write a few words about your day…"></textarea>
               <div class="textarea-footer">
@@ -546,7 +543,7 @@
           </header>
           <div class="moodlet-grid" id="moodlet-grid"></div>
           <div class="moodlet-bottom-fade" aria-hidden="true"></div>
-          <button class="moodlet-continue" id="moodlet-continue" type="button">Continue</button>
+          <button class="moodlet-continue" id="moodlet-continue" type="button">Save entry</button>
         </div>
       </div>
 
@@ -565,6 +562,6 @@
       </dialog>
     </main>
 
-    <script src="app.js?v=local-journal-22"></script>
+    <script src="app.js?v=local-journal-23"></script>
   </body>
 </html>
