@@ -3054,13 +3054,13 @@ textarea {
 
 .profile-account-actions {
   display: grid;
-  gap: 12px;
-  padding-top: 8px;
+  gap: 8px;
+  margin-top: 20px;
 }
 
 .profile-action-button {
   width: 100%;
-  height: 56px;
+  min-height: 44px;
   border: 0;
   border-radius: 1000000px;
   color: var(--accent);
@@ -3071,7 +3071,7 @@ textarea {
 
 .profile-action-button.danger {
   color: #c33939;
-  background: rgba(195, 57, 57, 0.08);
+  background: transparent;
 }
 
 .bottom-fade {
@@ -3378,8 +3378,4 @@ textarea {
   border: 0;
   background: transparent;
   text-decoration: underline;
-}
-
-.profile-action-button[hidden] {
-  display: none;
 }

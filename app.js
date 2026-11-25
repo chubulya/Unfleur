@@ -384,9 +384,7 @@ const copy = {
     done: "Done",
     today: "Today",
     voiceUnavailable: "Voice input is not available in this browser",
-    placeholderName: "[Name]",
-    placeholderEmail: "[email]",
-    placeholderPurpose: "[purpose]",
+    profileUnset: "Not set",
   },
   ua: {
     appName: "UNFLEUR",
@@ -528,9 +526,7 @@ const copy = {
     done: "Готово",
     today: "Сьогодні",
     voiceUnavailable: "Голосове введення недоступне в цьому браузері",
-    placeholderName: "[Ім’я]",
-    placeholderEmail: "[email]",
-    placeholderPurpose: "[мета]",
+    profileUnset: "Не вказано",
   },
 };
 
@@ -1151,7 +1147,7 @@ function setView(name) {
   const labels = {
     home: [t("myJournal"), formatMonth()],
     journal: [t("myJournal"), formatMonth()],
-    profile: [t("myProfile"), `${t("hello")}, ${state.profile?.name || t("placeholderName")}!`],
+    profile: [t("myProfile"), `${t("hello")}${state.profile?.name ? `, ${state.profile.name}` : ""}!`],
   };
 
   title.textContent = labels[name][0];
@@ -1225,9 +1221,9 @@ function renderWeeklyProgress() {
 
 function renderProfile() {
   ensureProfileState();
-  if (profileName) profileName.textContent = state.profile.name || t("placeholderName");
-  if (profileEmail) profileEmail.textContent = state.profile.email || t("placeholderEmail");
-  if (profilePurpose) profilePurpose.textContent = state.profile.purpose ? purposeLabel(state.profile.purpose) : t("placeholderPurpose");
+  if (profileName) profileName.textContent = state.profile.name || t("profileUnset");
+  if (profileEmail) profileEmail.textContent = state.profile.email || t("profileUnset");
+  if (profilePurpose) profilePurpose.textContent = state.profile.purpose ? purposeLabel(state.profile.purpose) : t("profileUnset");
   if (profileNotifications) profileNotifications.textContent = state.profile.notificationsEnabled ? t("allowed") : t("off");
   if (profileToggle) {
     profileToggle.classList.toggle("is-on", state.profile.notificationsEnabled);
@@ -1289,7 +1285,7 @@ function saveProfileField(type) {
   renderRegisterPurpose();
   closeProfileEditModals();
   if (document.querySelector(".view-profile.is-active")) {
-    subtitle.textContent = `${t("hello")}, ${state.profile?.name || t("placeholderName")}!`;
+    subtitle.textContent = `${t("hello")}${state.profile?.name ? `, ${state.profile.name}` : ""}!`;
   }
 }
 
@@ -1466,7 +1462,6 @@ function render() {
   } else {
     setScreen("intro");
   }
-  document.querySelector('[data-action="logout"]').hidden = !state.registered;
   normalizeBloomyState();
   renderWeeklyProgress();
   renderEntries();
