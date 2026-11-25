@@ -6,37 +6,37 @@ This document lists the user-facing phrases currently used in the app in English
 | --- | --- | --- |
 | Brand | UNFLEUR | UNFLEUR |
 | Welcome | Welcome to Unfleur | Вітаємо в Unfleur |
-| Welcome intro | Your safe place to share your thoughts that actually grow something. | Твій безпечний простір, щоб ділитися думками, з яких справді щось виростає. |
-| Registration welcome intro | Your safe place to plant your thoughts and actually grow something. | Твій безпечний простір, щоб садити думки й справді вирощувати щось живе. |
-| Home title | Capture your life journey | Закарбовуй свій життєвий шлях |
-| Home intro | Unfleur is your safe place to plant your thoughts that actually grow something. | Unfleur — твій безпечний простір, щоб садити думки, з яких справді виростає щось живе. |
-| Review title | Glad you’re having a good day so far | Раді, що твій день поки складається добре |
-| Review body | Take a moment to review your note, then save it or make any necessary changes. | Переглянь нотатку й збережи її або внеси потрібні зміни. |
+| Welcome intro | A little space to reflect and watch Bloomy grow. | Трохи часу для себе. Подивись, як росте Блумі. |
+| Registration welcome intro | A journal for your thoughts, with a little plant to grow along the way. | Щоденник для твоїх думок і маленька рослина, що ростиме разом із тобою. |
+| Home title | Take a moment for yourself | Знайди хвилинку для себе |
+| Home intro | Write about your day and watch Bloomy grow as you come back. | Пиши про свій день і спостерігай, як росте Блумі. |
+| Review title | Make it yours | Збережи те, що важливо |
+| Review body | Add anything you’d like to remember, then save your entry. | Додай усе, що хочеш запам’ятати, і збережи запис. |
 | Primary CTA | Create account | Створити акаунт |
 | Secondary CTA | Log in | Увійти |
-| Login helper | Enter any credentials to continue for now. | Введи будь-які дані, щоб продовжити. |
+| Login helper | Use sample credentials to try the demo. | Для входу в демо використай тестові дані. |
 | Button | Continue | Продовжити |
 | Button | Save | Зберегти |
-| Button | Save Note | Зберегти нотатку |
+| Button | Save entry | Зберегти запис |
 | Button | Discard | Скасувати зміни |
 | Button | Cancel | Скасувати |
-| Note prompt | How was your day so far? | Як пройшов твій день? |
-| Note placeholder | Type or say something about your day... | Напиши або скажи щось про свій день... |
-| Counter label | symbols | символів |
-| Voice | Voice note | Голосова нотатка |
-| Moodlets | Edit moodlets | Редагувати Moodlets |
+| Entry prompt | How’s your day going? | Як минає твій день? |
+| Entry placeholder | Write a few words about your day… | Напиши кілька слів про свій день… |
+| Counter label | characters | символів |
+| Voice | Dictate entry | Продиктувати запис |
+| Moodlets | Edit moodlets | Змінити мудлети |
 | Registration | Step 1 of 4 | Крок 1 з 4 |
 | Registration | Step 2 of 4 | Крок 2 з 4 |
 | Registration | Step 3 of 4 | Крок 3 з 4 |
 | Registration | Step 4 of 4 | Крок 4 з 4 |
 | Registration | What is your name? | Як тебе звати? |
-| Registration | What is your current purpose of journaling? | Яка твоя поточна мета ведення щоденника? |
+| Registration | What brings you to journaling? | Чому ти хочеш вести щоденник? |
 | Registration | Enter your email | Введи email |
 | Registration | Create your password | Створи пароль |
 | Registration helper | Type your name below. | Введи своє ім’я нижче. |
 | Registration helper | Choose what feels most true today. | Обери те, що зараз відгукується найбільше. |
-| Registration helper | We’ll use it to keep your account safe. | Ми використаємо його, щоб захистити акаунт. |
-| Registration helper | Make it something only you know. | Нехай це буде щось, що знаєш лише ти. |
+| Registration helper | Use a sample email for this demo. | Для демо підійде тестова адреса. |
+| Registration helper | Use a sample password for this demo. | Для демо підійде тестовий пароль. |
 | Registration action | Back | Назад |
 | Registration field | Name | Ім’я |
 | Registration field | Email | Email |
@@ -64,48 +64,48 @@ This document lists the user-facing phrases currently used in the app in English
 | Profile empty | [Name] | [Ім’я] |
 | Profile empty | [email] | [email] |
 | Profile empty | [purpose] | [мета] |
-| Bloomy summary | {stage} of 7 bloom stages grown. Keep the daily notes coming. | {stage} із 7 етапів росту пройдено. Продовжуй щоденні нотатки. |
-| Day 1 modal title | Congratulations! | Вітаємо! |
-| Day 1 modal body | You’ve just planted your first flower—excited to see what blooms? Keep up with your journaling for a full week to help your plant thrive! | Ти щойно посадив свою першу квітку. Цікаво, що розквітне? Веди щоденник цілий тиждень, щоб допомогти рослині рости! |
-| Day 1 modal button | Ok, Let’s GO! | Гаразд, почнімо! |
-| Day 2 modal title | Well, hello Bloomy! | Привіт, Блумі! |
-| Day 2 modal body | You did a great job journaling your day yesterday, keep going to see the next stages of Bloomy’s growth! | Ти чудово впорався з учорашнім записом. Продовжуй, щоб побачити наступні етапи росту Блумі! |
-| Day 3 modal title | Do you see what we see? | Бачиш те, що бачимо ми? |
-| Day 3 modal body | Awesome work journaling three days straight! Bloomy is safe and sound, keep going. | Класна робота: три дні щоденника поспіль! Блумі в безпеці, продовжуй. |
-| Day 4 modal title | What a caring parent you are! | Який турботливий догляд! |
-| Day 4 modal body | Bloomy is in his teenage stage and is on the brink of adulthood. You did a fantastic job! | Блумі вже підліток і майже дорослий. Ти чудово впорався! |
-| Day 5 modal title | You must be proud of yourself now | Ти точно можеш пишатися собою |
-| Day 5 modal body | Bloomy is in his teenage stage and is on the brink of adulthood. You did a fantastic job! | Блумі вже підліток і майже дорослий. Ти чудово впорався! |
-| Day 6 modal title | Look! He’s about to bloom | Дивись! Він от-от розквітне |
-| Day 6 modal body | Thanks to your journaling, Bloomy has been thriving for nearly a week! Come back tomorrow to see Bloomy in all its glory! | Завдяки твоєму щоденнику Блумі росте майже цілий тиждень! Повернися завтра, щоб побачити його у всій красі! |
-| Day 7 modal title | Unbelievable! You finished a 7-day streak | Неймовірно! Ти завершив 7-денну серію |
-| Day 7 modal body | Bloomy’s at his prime, but don’t stop journaling to keep Bloomy watered and cleaned. | Блумі у найкращій формі, але не зупиняйся: продовжуй писати, щоб поливати й доглядати його. |
-| Modal button | Ok, thanks! | Гаразд, дякую! |
-| Missed 1 day title | Oh no! | О ні! |
-| Missed 1 day body | Looks like you missed journaling yesterday! No worries, just jot down a note about your day today, and we’ll take care of watering and cleaning Bloomy for you. | Схоже, ти пропустив щоденник учора. Нічого страшного: просто напиши нотатку про сьогоднішній день, а ми подбаємо про полив і догляд за Блумі. |
-| Missed 2 days title | Sorry to break it to you... | Маємо неприємну новину... |
-| Missed 2 days body | You missed two days in a row, and poor Bloomy was left all alone! The good news is that you can start journaling today to kick off a fresh adventure with Bloomy in his next life. | Ти пропустив два дні поспіль, і бідний Блумі залишився сам. Але є добра новина: можеш почати писати сьогодні й розпочати нову пригоду з Блумі в його наступному житті. |
-| Missed 2 days button | Start over | Почати знову |
-| Journal missed state | Journaling skipped | Щоденник пропущено |
-| Journal missed body | Bloomy missed a note on this day. | Цього дня Блумі не отримав нотатку. |
+| Bloomy summary | Bloomy is at growth stage {stage} of 7. | Етап росту Блумі: {stage} із 7. |
+| Day 1 modal title | You planted a seed! | Насінину посаджено! |
+| Day 1 modal body | Your first entry planted Bloomy’s seed. Come back whenever you’d like to write again. | З першого запису починає рости Блумі. Повертайся, коли захочеш знову написати. |
+| Day 1 modal button | Back to journal | До щоденника |
+| Day 2 modal title | Bloomy has sprouted | Блумі проростає |
+| Day 2 modal body | You made time to reflect two days in a row. | Ти знаходиш час для записів уже два дні поспіль. |
+| Day 3 modal title | Bloomy is growing | Блумі росте |
+| Day 3 modal body | That’s three days of journaling in a row. | Уже три дні зі щоденником поспіль. |
+| Day 4 modal title | Four days of reflection | Чотири дні зі щоденником |
+| Day 4 modal body | Bloomy is growing right alongside your journaling habit. | Блумі росте разом із твоєю звичкою писати. |
+| Day 5 modal title | Bloomy has a bud | У Блумі з’явився бутон |
+| Day 5 modal body | Bloomy is growing right alongside your journaling habit. | Блумі росте разом із твоєю звичкою писати. |
+| Day 6 modal title | Bloomy is almost ready to bloom | Блумі ось-ось розквітне |
+| Day 6 modal body | Six days in a row. Come back tomorrow to see what opens up. | Шість днів поспіль. Завітай завтра, щоб побачити, що розквітне. |
+| Day 7 modal title | Bloomy is in full bloom | Блумі розквітнув |
+| Day 7 modal body | You’ve journaled for seven days in a row. | Уже сім днів зі щоденником поспіль. |
+| Modal button | Got it | Зрозуміло |
+| Missed 1 day title | Welcome back | З поверненням |
+| Missed 1 day body | Pick up whenever you’re ready. A few words about today are enough. | Пиши, коли захочеш. Кількох слів про сьогодні достатньо. |
+| Missed 2 days title | Good to see you again | Раді знову бачити тебе |
+| Missed 2 days body | Take a moment to write about today whenever you feel ready. | Можеш написати кілька слів про сьогодні, коли захочеш. |
+| Missed 2 days button | Continue | Продовжити |
+| Journal missed state | No entry that day | Цього дня немає записів |
+| Journal missed body | Your journal is here whenever you want to write again. | Повертайся до щоденника, коли захочеш написати. |
 | Empty state | No entries yet | Записів ще немає |
-| Empty body | No notes for this day yet. | Для цього дня ще немає нотаток. |
-| Past empty state | Nothing’s here | Тут нічого немає |
-| Past empty body | You didn’t journal anything that day. | Того дня ти нічого не записала. |
+| Empty body | Your entries for today will appear here. | Тут з’являться твої записи за сьогодні. |
+| Past empty state | No entry that day | Цього дня немає записів |
+| Past empty body | There’s nothing saved for this date. | За цією датою нічого не збережено. |
 | Entry action | Edit entry | Редагувати запис |
 | Entry action | Delete entry | Видалити запис |
 | Entry action | Show more | Показати більше |
 | Entry action | Show less | Показати менше |
-| Toast | The note is saved | Нотатку збережено |
-| Delete confirmation title | Are you sure you want to delete this note? | Ти впевнена, що хочеш видалити цю нотатку? |
+| Toast | Entry saved | Запис збережено |
+| Delete confirmation title | Delete this entry? | Видалити цей запис? |
 | Delete confirmation body | This action can’t be undone. | Цю дію не можна скасувати. |
-| Delete confirmation button | Yes, Delete | Так, видалити |
-| Delete confirmation button | No, Cancel | Ні, скасувати |
-| Toast | The note is deleted | Нотатку видалено |
-| Moodlet modal title | Choose up to 3 Moodlets | Обери до 3 Moodlets |
-| Moodlet modal body | The Moodlets should reflect how you felt throughout the day. | Moodlets мають відображати, як ти почувався протягом дня. |
+| Delete confirmation button | Delete entry | Видалити запис |
+| Delete confirmation button | Cancel | Скасувати |
+| Toast | Entry deleted | Запис видалено |
+| Moodlet modal title | Choose up to 3 moodlets | Обери до трьох мудлетів |
+| Moodlet modal body | Pick what matches how you felt today. | Обери ті, які передають твій сьогоднішній настрій. |
 | Pot modal title | Choose your pot | Обери горщик |
-| Pot modal body | The flower will keep growing with every daily note. | Квітка ростиме з кожною щоденною нотаткою. |
+| Pot modal body | Pick a pot for Bloomy. | Обери горщик для Блумі. |
 | Pot button | Done | Готово |
 | Admin title | Bloomy admin | Адмінка Блумі |
 | Admin body | Set Bloomy’s current streak and recent skipped days. | Налаштуй поточну серію Блумі та нещодавні пропущені дні. |
@@ -116,7 +116,7 @@ This document lists the user-facing phrases currently used in the app in English
 | Admin option | 2 days | 2 дні |
 | Admin button | Apply | Застосувати |
 | Admin button | Clear mock data | Очистити мок-дані |
-| Admin summary | Bloomy will appear on visit day {day} of 7 with {skipped} skipped day(s). Today’s note grows Bloomy to stage {growthDay}. | Блумі буде на {day}-му дні з 7 і з {skipped} пропущеними днями. Сьогоднішня нотатка виростить Блумі до етапу {growthDay}. |
-| Admin cleared | Mock data is cleared. Journal is using real notes saved locally. | Мок-дані очищено. Щоденник використовує реальні локально збережені нотатки. |
+| Sample garden on | Sample garden is on. Previous streak: {day} days. Skipped days: {skipped}. | Демо-сад увімкнено. Попередня серія: {day} дн. Пропущено: {skipped} дн. |
+| Sample garden off | Sample garden is off. You’re viewing your own journal. | Демо-сад вимкнено. Ти переглядаєш свій щоденник. |
 | Date label | Today | Сьогодні |
 | Browser support | Voice input is not available in this browser | Голосове введення недоступне в цьому браузері |

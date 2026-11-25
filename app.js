@@ -1,55 +1,20 @@
 const STORAGE_KEY = "unfleur-state";
 const NOTE_TOAST_DURATION = 850;
 const MILESTONE_MODAL_DELAY = 1100;
-const CHECKED_DAY_MARKER = "https://www.figma.com/api/mcp/asset/11dfd974-923e-4656-826b-aafd34554552";
-const MISSED_DAY_MARKER = "https://www.figma.com/api/mcp/asset/9bb56a09-d123-4371-b554-9208b045871c";
-const BLOOMY_IMAGES = {
-  healthy: {
-    bg: "assets/journal-main-image.png",
-    pot: "assets/journal-pot-image.png",
-    className: "",
-  },
-  stage2: {
-    bg: "https://www.figma.com/api/mcp/asset/85f5d200-b3fa-4686-813c-8789bb140ae3",
-    pot: "https://www.figma.com/api/mcp/asset/5806b550-934c-4b52-a183-5bc6f608a0ff",
-    className: "is-stage-two",
-  },
-  stage3: {
-    bg: "https://www.figma.com/api/mcp/asset/5b916960-8803-4564-9d37-caff80f61246",
-    pot: "https://www.figma.com/api/mcp/asset/3605d52c-0042-44a5-b4b8-64d9424ce2e0",
-    className: "is-stage-three",
-  },
-  stage4: {
-    bg: "https://www.figma.com/api/mcp/asset/0dd1c82c-8bac-4fdf-acfa-474bac12e468",
-    pot: "https://www.figma.com/api/mcp/asset/3daa1b28-35c5-414e-aeb3-23133cd6a2ee",
-    className: "is-stage-four",
-  },
-  stage5: {
-    bg: "https://www.figma.com/api/mcp/asset/d593b05c-e1ad-4044-b0cf-1596b1b44c5e",
-    pot: "https://www.figma.com/api/mcp/asset/1e502d37-edb6-4f67-a3c9-d01086a59652",
-    className: "is-stage-five",
-  },
-  stage6: {
-    bg: "https://www.figma.com/api/mcp/asset/530b8841-b27e-4172-8958-e7c87d1bd172",
-    pot: "https://www.figma.com/api/mcp/asset/c0ecef2c-f304-4f2c-b2c5-4cf3e1684bd2",
-    className: "is-stage-six",
-  },
-  stage7: {
-    bg: "https://www.figma.com/api/mcp/asset/094561e5-456d-4f38-8060-9203f8fcf501",
-    pot: "https://www.figma.com/api/mcp/asset/daa2d209-f736-47b3-bfb3-a7a5278462ab",
-    className: "is-stage-seven",
-  },
-  missed1: {
-    bg: "https://www.figma.com/api/mcp/asset/39b4356f-1248-4f92-a81a-c6ddbfac8787",
-    pot: "https://www.figma.com/api/mcp/asset/b5443258-1038-4740-94da-c492e30ee9ea",
-    className: "is-missed-one",
-  },
-  missed2: {
-    bg: "https://www.figma.com/api/mcp/asset/884bf21c-7576-44ae-8e2b-139bc480a8f7",
-    pot: "https://www.figma.com/api/mcp/asset/894ce4b5-bc55-4a7b-ae7c-d58e2059851e",
-    className: "is-missed-two",
-  },
+const BLOOMY_ART = {
+  bg: "assets/journal-main-image.png",
+  pot: "assets/journal-pot-image.png",
 };
+
+const BLOOMY_STAGES = [
+  { pot: BLOOMY_ART.pot, className: "" },
+  { pot: "assets/bloomy/Flower Pot Image.png", className: "is-stage-two" },
+  { pot: "assets/bloomy/Flower Pot Image-1.png", className: "is-stage-three" },
+  { pot: "assets/bloomy/Flower Pot Image-2.png", className: "is-stage-four" },
+  { pot: "assets/bloomy/Flower Pot Image-3.png", className: "is-stage-five" },
+  { pot: "assets/bloomy/Flower Pot Image-4.png", className: "is-stage-six" },
+  { pot: "assets/bloomy/Flower Pot Image-4.png", className: "is-stage-seven" },
+];
 
 const ONBOARDING_SLIDES = [
   {
@@ -77,6 +42,8 @@ const ONBOARDING_SLIDES = [
 const defaults = {
   onboarded: true,
   registered: false,
+  guest: false,
+  drafts: {},
   profile: {
     name: "",
     purpose: "",
@@ -87,7 +54,8 @@ const defaults = {
   entries: [],
   adminVisitDay: 1,
   skippedJournalDays: 0,
-  mockDataEnabled: true,
+  mockDataEnabled: false,
+  demoPreferenceSet: false,
   language: "en",
 };
 
@@ -279,38 +247,42 @@ const copy = {
   en: {
     appName: "UNFLEUR",
     welcomeTitle: "Welcome to Unfleur",
-    homeTitle: "Capture your life journey",
-    introBody: "Your safe place to share<br />your thoughts that actually grow<br />something.",
-    introBodyCompact: "Your safe place to share<br />your thoughts that actually grow something.",
-    homeBody: "Unfleur is your safe place to plant your thoughts that actually grow something.",
-    welcomeBody: "Your safe place to plant your thoughts and actually grow something.",
-    reviewTitle: "Glad you’re having<br />a good day so far",
-    reviewBody: "Take a moment to review your note, then save it or make any necessary changes.",
+    homeTitle: "Take a moment for yourself",
+    introBody: "A little space to reflect<br />and watch Bloomy grow.",
+    introBodyCompact: "A little space to reflect and watch Bloomy grow.",
+    homeBody: "Write about your day and watch Bloomy grow as you come back.",
+    welcomeBody: "A journal for your thoughts, with a little plant to grow along the way.",
+    reviewTitle: "Make it yours",
+    reviewBody: "Add anything you’d like to remember, then save your entry.",
     startJournaling: "Create account",
     logIn: "Log in",
-    loginBody: "Enter any credentials to continue for now.",
+    loginBody: "Use sample credentials to try the demo.",
     continue: "Continue",
     save: "Save",
-    saveNote: "Save Note",
+    saveNote: "Save entry",
+    addMoodlets: "Add moodlets",
+    localJournal: "Your entries are saved in this browser.",
+    accountOptions: "Account demo",
+    useLocalJournal: "Back to local journal",
     discard: "Discard",
     cancel: "Cancel",
-    notePrompt: "How was your day so far?",
-    notePlaceholder: "Type or say something about your day...",
-    symbols: "symbols",
-    voiceNote: "Voice note",
+    notePrompt: "How’s your day going?",
+    notePlaceholder: "Write a few words about your day…",
+    symbols: "characters",
+    voiceNote: "Dictate entry",
     editMoodlets: "Edit moodlets",
     step1: "Step 1 of 4",
     step2: "Step 2 of 4",
     step3: "Step 3 of 4",
     step4: "Step 4 of 4",
     questionName: "What is your name?",
-    questionPurpose: "What is your current purpose of journaling?",
+    questionPurpose: "What brings you to journaling?",
     questionEmail: "Enter your email",
     questionPassword: "Create your password",
     nameTagline: "Type your name below.",
     purposeTagline: "Choose what feels most true today.",
-    emailTagline: "We’ll use it to keep your account safe.",
-    passwordTagline: "Make it something only you know.",
+    emailTagline: "Use a sample email for this demo.",
+    passwordTagline: "Use a sample password for this demo.",
     back: "Back",
     name: "Name",
     email: "Email",
@@ -347,69 +319,69 @@ const copy = {
     home: "Home",
     journal: "Journal",
     profile: "Profile",
-    congratsTitle: "Congratulations!",
-    congratsBody: "You’ve just planted your first flower—excited to see what blooms? Keep up with your journaling for a full week to help your plant thrive!",
-    congratsButton: "Ok, Let’s GO!",
+    congratsTitle: "You planted a seed!",
+    congratsBody: "Your first entry planted Bloomy’s seed. Come back whenever you’d like to write again.",
+    congratsButton: "Back to journal",
     onboardingKicker: "How it works",
     onboardingTitle1: "Describe your day",
     onboardingBody1: "Write what happened, what felt heavy, or what made you smile. A few honest lines are enough.",
-    onboardingTitle2: "Add Moodlets",
-    onboardingBody2: "Choose the feelings that shaped your day so your notes become easier to revisit and understand.",
+    onboardingTitle2: "Add moodlets",
+    onboardingBody2: "Pick up to three moodlets to capture how you felt. You can also save an entry without them.",
     onboardingTitle3: "Plant the first seed",
-    onboardingBody3: "Your first saved note starts Bloomy’s growth. Every return gives that tiny habit more life.",
+    onboardingBody3: "Your first entry plants Bloomy’s seed.",
     onboardingTitle4: "Watch Bloomy thrive",
-    onboardingBody4: "Keep journaling through the week to water, care for, and grow Bloomy one day at a time.",
+    onboardingBody4: "Come back to write and see how Bloomy grows.",
     startJournalingButton: "Start Journaling",
-    stage2Title: "Well, hello Bloomy!",
-    stage2Body: "You did a great job journaling your day yesterday, keep going to see the next stages of Bloomy’s growth!",
-    stage3Title: "Do you see what we see?",
-    stage3Body: "Awesome work journaling three days straight! Bloomy is safe and sound, keep going.",
-    stage4Title: "What a caring parent you are!",
-    stage4Body: "Bloomy is in his teenage stage and is on the brink of adulthood. You did a fantastic job!",
-    stage5Title: "You must be proud of yourself now",
-    stage5Body: "Bloomy is in his teenage stage and is on the brink of adulthood. You did a fantastic job!",
-    stage6Title: "Look! He’s about to bloom",
-    stage6Body: "Thanks to your journaling, Bloomy has been thriving for nearly a week! Come back tomorrow to see Bloomy in all its glory!",
-    stage7Title: "Unbelievable! You finished a 7-day streak",
-    stage7Body: "Bloomy’s at his prime, but don’t stop journaling to keep Bloomy watered and cleaned.",
-    okThanks: "Ok, thanks!",
-    missed1Title: "Oh no!",
-    missed1Body: "Looks like you missed journaling yesterday! No worries, just jot down a note about your day today, and we’ll take care of watering and cleaning Bloomy for you.",
-    missed2Title: "Sorry to break it to you...",
-    missed2Body: "You missed two days in a row, and poor Bloomy was left all alone! The good news is that you can start journaling today to kick off a fresh adventure with Bloomy in his next life.",
-    startOver: "Start over",
+    stage2Title: "Bloomy has sprouted",
+    stage2Body: "You made time to reflect two days in a row.",
+    stage3Title: "Bloomy is growing",
+    stage3Body: "That’s three days of journaling in a row.",
+    stage4Title: "Four days of reflection",
+    stage4Body: "Bloomy is growing right alongside your journaling habit.",
+    stage5Title: "Bloomy has a bud",
+    stage5Body: "You’ve made time to write five days in a row.",
+    stage6Title: "Bloomy is almost ready to bloom",
+    stage6Body: "Six days in a row. Come back tomorrow to see what opens up.",
+    stage7Title: "Bloomy is in full bloom",
+    stage7Body: "You’ve journaled for seven days in a row.",
+    okThanks: "Got it",
+    missed1Title: "Welcome back",
+    missed1Body: "Pick up whenever you’re ready. A few words about today are enough.",
+    missed2Title: "Good to see you again",
+    missed2Body: "Take a moment to write about today whenever you feel ready.",
+    startOver: "Continue",
     adminTitle: "Bloomy admin",
     adminBody: "Set Bloomy’s current streak and recent skipped days.",
-    mockData: "Mock data",
+    mockData: "Show sample garden",
     dayInRow: "Days in a streak before the current one",
     skippedBeforeToday: "Skipped days before today",
     none: "None",
     oneDay: "1 day",
     twoDays: "2 days",
     apply: "Apply",
-    mockActive: "Mock mode is active. Bloomy uses {day} previous streak day(s), {skipped} skipped day(s), and hides real notes until you switch back.",
-    mockCleared: "Real data is active. Admin controls are locked and the journal shows your saved notes.",
-    skippedTitle: "Journaling skipped",
-    skippedBody: "Bloomy missed a note on this day.",
+    mockActive: "Sample garden is on. Previous streak: {day} days. Skipped days: {skipped}.",
+    mockCleared: "Sample garden is off. You’re viewing your own journal.",
+    skippedTitle: "No entry that day",
+    skippedBody: "Your journal is here whenever you want to write again.",
     noEntriesTitle: "No entries yet",
-    noEntriesBody: "No notes for this day yet.",
-    pastNoEntriesTitle: "Nothing’s here",
-    pastNoEntriesBody: "You didn’t journal anything that day.",
+    noEntriesBody: "Your entries for today will appear here.",
+    pastNoEntriesTitle: "No entry that day",
+    pastNoEntriesBody: "There’s nothing saved for this date.",
     editEntry: "Edit entry",
     deleteEntry: "Delete entry",
     showMore: "Show more",
     showLess: "Show less",
-    profileSummary: "{stage} of 7 bloom stages grown. Keep the daily notes coming.",
-    noteSaved: "The note is saved",
-    noteDeleted: "The note is deleted",
-    deleteConfirmTitle: "Are you sure you want to delete this note?",
+    profileSummary: "Bloomy is at growth stage {stage} of 7.",
+    noteSaved: "Entry saved",
+    noteDeleted: "Entry deleted",
+    deleteConfirmTitle: "Delete this entry?",
     deleteConfirmBody: "This action can’t be undone.",
-    yesDelete: "Yes, Delete",
-    noCancel: "No, Cancel",
-    moodletTitle: "Choose up to 3 Moodlets",
-    moodletBody: "The Moodlets should reflect how you felt throughout the day.",
+    yesDelete: "Delete entry",
+    noCancel: "Cancel",
+    moodletTitle: "Choose up to 3 moodlets",
+    moodletBody: "Pick what matches how you felt today.",
     choosePot: "Choose your pot",
-    potBody: "The flower will keep growing with every daily note.",
+    potBody: "Pick a pot for Bloomy.",
     done: "Done",
     today: "Today",
     voiceUnavailable: "Voice input is not available in this browser",
@@ -420,38 +392,42 @@ const copy = {
   ua: {
     appName: "UNFLEUR",
     welcomeTitle: "Вітаємо в Unfleur",
-    homeTitle: "Закарбовуй свій життєвий шлях",
-    introBody: "Твій безпечний простір, щоб ділитися<br />думками, з яких справді<br />щось виростає.",
-    introBodyCompact: "Твій безпечний простір, щоб ділитися<br />думками, з яких справді щось виростає.",
-    homeBody: "Unfleur — твій безпечний простір, щоб садити думки, з яких справді виростає щось живе.",
-    welcomeBody: "Твій безпечний простір, щоб садити думки й справді вирощувати щось живе.",
-    reviewTitle: "Раді, що твій день<br />поки складається добре",
-    reviewBody: "Переглянь нотатку й збережи її або внеси потрібні зміни.",
+    homeTitle: "Знайди хвилинку для себе",
+    introBody: "Трохи часу для себе.<br />Подивись, як росте Блумі.",
+    introBodyCompact: "Трохи часу для себе. Подивись, як росте Блумі.",
+    homeBody: "Пиши про свій день і спостерігай, як росте Блумі.",
+    welcomeBody: "Щоденник для твоїх думок і маленька рослина, що ростиме разом із тобою.",
+    reviewTitle: "Збережи те, що важливо",
+    reviewBody: "Додай усе, що хочеш запам’ятати, і збережи запис.",
     startJournaling: "Створити акаунт",
     logIn: "Увійти",
-    loginBody: "Введи будь-які дані, щоб продовжити.",
+    loginBody: "Для входу в демо використай тестові дані.",
     continue: "Продовжити",
     save: "Зберегти",
-    saveNote: "Зберегти нотатку",
+    saveNote: "Зберегти запис",
+    addMoodlets: "Додати мудлети",
+    localJournal: "Твої записи зберігаються в цьому браузері.",
+    accountOptions: "Демо облікового запису",
+    useLocalJournal: "Назад до локального щоденника",
     discard: "Скасувати зміни",
     cancel: "Скасувати",
-    notePrompt: "Як пройшов твій день?",
-    notePlaceholder: "Напиши або скажи щось про свій день...",
+    notePrompt: "Як минає твій день?",
+    notePlaceholder: "Напиши кілька слів про свій день…",
     symbols: "символів",
-    voiceNote: "Голосова нотатка",
-    editMoodlets: "Редагувати Moodlets",
+    voiceNote: "Продиктувати запис",
+    editMoodlets: "Змінити мудлети",
     step1: "Крок 1 з 4",
     step2: "Крок 2 з 4",
     step3: "Крок 3 з 4",
     step4: "Крок 4 з 4",
     questionName: "Як тебе звати?",
-    questionPurpose: "Яка твоя поточна мета ведення щоденника?",
+    questionPurpose: "Чому ти хочеш вести щоденник?",
     questionEmail: "Введи email",
     questionPassword: "Створи пароль",
     nameTagline: "Введи своє ім’я нижче.",
     purposeTagline: "Обери те, що зараз відгукується найбільше.",
-    emailTagline: "Ми використаємо його, щоб захистити акаунт.",
-    passwordTagline: "Нехай це буде щось, що знаєш лише ти.",
+    emailTagline: "Для демо підійде тестова адреса.",
+    passwordTagline: "Для демо підійде тестовий пароль.",
     back: "Назад",
     name: "Ім’я",
     email: "Email",
@@ -488,69 +464,69 @@ const copy = {
     home: "Головна",
     journal: "Щоденник",
     profile: "Профіль",
-    congratsTitle: "Вітаємо!",
-    congratsBody: "Ти щойно посадив свою першу квітку. Цікаво, що розквітне? Веди щоденник цілий тиждень, щоб допомогти рослині рости!",
-    congratsButton: "Гаразд, почнімо!",
+    congratsTitle: "Насінину посаджено!",
+    congratsBody: "З першого запису починає рости Блумі. Повертайся, коли захочеш знову написати.",
+    congratsButton: "До щоденника",
     onboardingKicker: "Як це працює",
     onboardingTitle1: "Опиши свій день",
     onboardingBody1: "Запиши, що сталося, що було важким або що змусило усміхнутися. Кількох чесних рядків достатньо.",
-    onboardingTitle2: "Додай Moodlets",
-    onboardingBody2: "Обери почуття, які формували твій день, щоб пізніше легше повертатися до нотаток і розуміти себе.",
+    onboardingTitle2: "Додай мудлети",
+    onboardingBody2: "Обери до трьох мудлетів, які передають твій настрій. Запис можна зберегти й без них.",
     onboardingTitle3: "Посади перше зернятко",
-    onboardingBody3: "Перша збережена нотатка запускає ріст Блумі. Кожне повернення додає цій маленькій звичці життя.",
+    onboardingBody3: "Твій перший запис садить насінину Блумі.",
     onboardingTitle4: "Дивись, як Блумі росте",
-    onboardingBody4: "Пиши протягом тижня, щоб поливати, доглядати й вирощувати Блумі день за днем.",
+    onboardingBody4: "Повертайся до щоденника й дивись, як росте Блумі.",
     startJournalingButton: "Почати писати",
-    stage2Title: "Привіт, Блумі!",
-    stage2Body: "Ти чудово впорався з учорашнім записом. Продовжуй, щоб побачити наступні етапи росту Блумі!",
-    stage3Title: "Бачиш те, що бачимо ми?",
-    stage3Body: "Класна робота: три дні щоденника поспіль! Блумі в безпеці, продовжуй.",
-    stage4Title: "Який турботливий догляд!",
-    stage4Body: "Блумі вже підліток і майже дорослий. Ти чудово впорався!",
-    stage5Title: "Ти точно можеш пишатися собою",
-    stage5Body: "Блумі вже підліток і майже дорослий. Ти чудово впорався!",
-    stage6Title: "Дивись! Він от-от розквітне",
-    stage6Body: "Завдяки твоєму щоденнику Блумі росте майже цілий тиждень! Повернися завтра, щоб побачити його у всій красі!",
-    stage7Title: "Неймовірно! Ти завершив 7-денну серію",
-    stage7Body: "Блумі у найкращій формі, але не зупиняйся: продовжуй писати, щоб поливати й доглядати його.",
-    okThanks: "Гаразд, дякую!",
-    missed1Title: "О ні!",
-    missed1Body: "Схоже, ти пропустив щоденник учора. Нічого страшного: просто напиши нотатку про сьогоднішній день, а ми подбаємо про полив і догляд за Блумі.",
-    missed2Title: "Маємо неприємну новину...",
-    missed2Body: "Ти пропустив два дні поспіль, і бідний Блумі залишився сам. Але є добра новина: можеш почати писати сьогодні й розпочати нову пригоду з Блумі в його наступному житті.",
-    startOver: "Почати знову",
+    stage2Title: "Блумі проростає",
+    stage2Body: "Ти знаходиш час для записів уже два дні поспіль.",
+    stage3Title: "Блумі росте",
+    stage3Body: "Уже три дні зі щоденником поспіль.",
+    stage4Title: "Чотири дні зі щоденником",
+    stage4Body: "Блумі росте разом із твоєю звичкою писати.",
+    stage5Title: "У Блумі з’явився бутон",
+    stage5Body: "Ти знаходиш час для записів уже п’ять днів поспіль.",
+    stage6Title: "Блумі ось-ось розквітне",
+    stage6Body: "Шість днів поспіль. Завітай завтра, щоб побачити, що розквітне.",
+    stage7Title: "Блумі розквітнув",
+    stage7Body: "Уже сім днів зі щоденником поспіль.",
+    okThanks: "Зрозуміло",
+    missed1Title: "З поверненням",
+    missed1Body: "Пиши, коли захочеш. Кількох слів про сьогодні достатньо.",
+    missed2Title: "Раді знову бачити тебе",
+    missed2Body: "Можеш написати кілька слів про сьогодні, коли захочеш.",
+    startOver: "Продовжити",
     adminTitle: "Адмінка Блумі",
     adminBody: "Налаштуй поточну серію Блумі та нещодавні пропущені дні.",
-    mockData: "Мок-дані",
+    mockData: "Показати демо-сад",
     dayInRow: "Дні в серії перед поточним днем",
     skippedBeforeToday: "Пропущені дні перед сьогодні",
     none: "Немає",
     oneDay: "1 день",
     twoDays: "2 дні",
     apply: "Застосувати",
-    mockActive: "Мок-режим активний. Блумі використовує {day} днів попередньої серії та {skipped} пропущених днів, а реальні нотатки приховані до перемикання назад.",
-    mockCleared: "Активні реальні дані. Адмін-контроли заблоковані, а щоденник показує збережені нотатки.",
-    skippedTitle: "Щоденник пропущено",
-    skippedBody: "Цього дня Блумі не отримав нотатку.",
+    mockActive: "Демо-сад увімкнено. Попередня серія: {day} дн. Пропущено: {skipped} дн.",
+    mockCleared: "Демо-сад вимкнено. Ти переглядаєш свій щоденник.",
+    skippedTitle: "Цього дня немає записів",
+    skippedBody: "Повертайся до щоденника, коли захочеш написати.",
     noEntriesTitle: "Записів ще немає",
-    noEntriesBody: "Для цього дня ще немає нотаток.",
-    pastNoEntriesTitle: "Тут нічого немає",
-    pastNoEntriesBody: "Того дня ти нічого не записала.",
+    noEntriesBody: "Тут з’являться твої записи за сьогодні.",
+    pastNoEntriesTitle: "Цього дня немає записів",
+    pastNoEntriesBody: "За цією датою нічого не збережено.",
     editEntry: "Редагувати запис",
     deleteEntry: "Видалити запис",
     showMore: "Показати більше",
     showLess: "Показати менше",
-    profileSummary: "{stage} із 7 етапів росту пройдено. Продовжуй щоденні нотатки.",
-    noteSaved: "Нотатку збережено",
-    noteDeleted: "Нотатку видалено",
-    deleteConfirmTitle: "Ти впевнена, що хочеш видалити цю нотатку?",
+    profileSummary: "Етап росту Блумі: {stage} із 7.",
+    noteSaved: "Запис збережено",
+    noteDeleted: "Запис видалено",
+    deleteConfirmTitle: "Видалити цей запис?",
     deleteConfirmBody: "Цю дію не можна скасувати.",
-    yesDelete: "Так, видалити",
-    noCancel: "Ні, скасувати",
-    moodletTitle: "Обери до 3 Moodlets",
-    moodletBody: "Moodlets мають відображати, як ти почувався протягом дня.",
+    yesDelete: "Видалити запис",
+    noCancel: "Скасувати",
+    moodletTitle: "Обери до трьох мудлетів",
+    moodletBody: "Обери ті, які передають твій сьогоднішній настрій.",
     choosePot: "Обери горщик",
-    potBody: "Квітка ростиме з кожною щоденною нотаткою.",
+    potBody: "Обери горщик для Блумі.",
     done: "Готово",
     today: "Сьогодні",
     voiceUnavailable: "Голосове введення недоступне в цьому браузері",
@@ -592,9 +568,15 @@ let welcomeEntrancePlayed = false;
 
 function loadState() {
   try {
-    return { ...defaults, ...JSON.parse(localStorage.getItem(STORAGE_KEY)) };
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return {
+      ...defaults,
+      ...saved,
+      drafts: saved?.drafts || {},
+      mockDataEnabled: saved?.demoPreferenceSet === true && saved.mockDataEnabled === true,
+    };
   } catch {
-    return defaults;
+    return { ...defaults, drafts: {} };
   }
 }
 
@@ -729,19 +711,8 @@ function bloomyDisplayStage() {
   return Math.max(1, realGrowthDay() || streakCount(streakEnd));
 }
 
-function mockGrowthDayAfterToday() {
-  normalizeBloomyState();
-  return Math.min(Math.max(state.adminVisitDay + 1, 1), 7);
-}
-
 function bloomyImageForStage(stage) {
-  if (stage >= 7) return BLOOMY_IMAGES.stage7;
-  if (stage === 6) return BLOOMY_IMAGES.stage6;
-  if (stage === 5) return BLOOMY_IMAGES.stage5;
-  if (stage === 4) return BLOOMY_IMAGES.stage4;
-  if (stage >= 3) return BLOOMY_IMAGES.stage3;
-  if (stage === 2) return BLOOMY_IMAGES.stage2;
-  return BLOOMY_IMAGES.healthy;
+  return { bg: BLOOMY_ART.bg, ...BLOOMY_STAGES[stage - 1] };
 }
 
 function mockJournalModel() {
@@ -1003,6 +974,10 @@ function applyLanguage() {
   setHTML(".figma-welcome-copy p", "introBody");
   setText(".register-welcome [data-register-next]", "startJournaling");
   setText("[data-register-login]", "logIn");
+  setText("[data-add-moodlets]", "addMoodlets");
+  setText("#local-journal-note", "localJournal");
+  setText("#account-demo", "accountOptions");
+  setText("#back-to-local-journal", "useLocalJournal");
   setText('[data-register-step="1"] .register-copy h1', "questionName");
   setText('[data-register-step="2"] .register-copy h1', "questionPurpose");
   setText('[data-register-step="3"] .register-copy h1', "questionEmail");
@@ -1110,7 +1085,7 @@ function applyLanguage() {
   if (noteToastText && !noteToast.classList.contains("is-visible")) noteToastText.textContent = t("noteSaved");
   setText("#moodlet-title", "moodletTitle");
   setText(".moodlet-header p", "moodletBody");
-  setText("#moodlet-continue", "continue");
+  setText("#moodlet-continue", "done");
   setText(".pot-sheet h2", "choosePot");
   setText(".pot-sheet p", "potBody");
   setText(".pot-sheet .primary-button", "done");
@@ -1143,6 +1118,7 @@ function finishRegistration() {
   state.profile.purpose = registerPurpose;
   state.profile.email = registerEmail.value.trim();
   state.registered = true;
+  state.guest = false;
   state.onboarded = false;
   saveState();
   homeEntrancePlayed = false;
@@ -1153,6 +1129,7 @@ function finishRegistration() {
 
 function finishLogin() {
   state.registered = true;
+  state.guest = false;
   state.onboarded = true;
   ensureProfileState();
   if (loginEmail?.value.trim()) state.profile.email = loginEmail.value.trim();
@@ -1319,13 +1296,13 @@ function saveProfileField(type) {
 function renderEntries() {
   const journal = mockJournalModel();
   const mockEntries = journal.entriesByDay.get(selectedDayKey) || [];
-  const sourceEntries = state.mockDataEnabled ? mockEntries : state.entries;
+  const sourceEntries = state.mockDataEnabled ? [...state.entries, ...mockEntries] : state.entries;
   const entries = sourceEntries
     .filter((entry) => dayKey(entry.date) === selectedDayKey)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
   homeEntryList.innerHTML = "";
 
-  if (journal.missed.has(selectedDayKey)) {
+  if (!entries.length && journal.missed.has(selectedDayKey)) {
     homeEntryList.innerHTML = `
       <div class="empty-state missed-state">
         <strong>${t("skippedTitle")}</strong>
@@ -1370,7 +1347,11 @@ function renderEntries() {
   updateEntryExpanders();
 }
 
-function saveEntry(text, moodlets = []) {
+function saveEntry(text, moodlets, target) {
+  // Writing an entry returns to the personal journal from the sample garden.
+  state.mockDataEnabled = false;
+  if (!state.registered) state.guest = true;
+  delete state.drafts[target];
   const hadTodayEntry = hasTodayEntry();
   const skippedBeforeToday = skippedJournalDaysBeforeToday();
   state.entries.unshift({
@@ -1389,9 +1370,7 @@ function saveEntry(text, moodlets = []) {
       ? 0
       : skippedBeforeToday >= 2
         ? 1
-        : state.mockDataEnabled
-          ? mockGrowthDayAfterToday()
-          : streakCount(startOfToday()),
+        : streakCount(startOfToday()),
   };
 }
 
@@ -1454,8 +1433,6 @@ function renderPlant() {
   });
 
   if (profileSummary) profileSummary.textContent = t("profileSummary", { stage });
-  const isFirstStreakDay = state.mockDataEnabled ? state.adminVisitDay <= 1 : state.entries.length === 0;
-  journalView?.classList.toggle("no-real-entries", state.entries.length === 0 && isFirstStreakDay);
 }
 
 function bloomyImageState() {
@@ -1463,15 +1440,15 @@ function bloomyImageState() {
   const stage = bloomyDisplayStage();
   const skippedDays = skippedJournalDaysBeforeToday();
   if (!state.mockDataEnabled && hasTodayEntry()) return bloomyImageForStage(stage);
-  if (skippedDays >= 2) return BLOOMY_IMAGES.missed2;
-  if (skippedDays === 1) return BLOOMY_IMAGES.missed1;
+  if (skippedDays >= 2) return { ...BLOOMY_ART, className: "is-missed-two" };
+  if (skippedDays === 1) return { ...BLOOMY_ART, className: "is-missed-one" };
   return bloomyImageForStage(stage);
 }
 
 function normalizeBloomyState() {
   state.adminVisitDay = Math.min(Math.max(Number(state.adminVisitDay) || 1, 1), 7);
   state.skippedJournalDays = [0, 1, 2].includes(Number(state.skippedJournalDays)) ? Number(state.skippedJournalDays) : 0;
-  state.mockDataEnabled = state.mockDataEnabled !== false;
+  state.mockDataEnabled = state.mockDataEnabled === true;
 }
 
 function renderPotOptions() {
@@ -1483,13 +1460,13 @@ function renderPotOptions() {
 function render() {
   ensureProfileState();
   state.language = language();
-  if (state.registered) {
+  if (state.registered || state.guest) {
     setScreen("app");
-    setView("home");
+    setView(state.guest && !state.registered && !state.drafts.home ? "journal" : "home");
   } else {
-    setScreen("register");
-    setRegisterStep(registerStepIndex);
+    setScreen("intro");
   }
+  document.querySelector('[data-action="logout"]').hidden = !state.registered;
   normalizeBloomyState();
   renderWeeklyProgress();
   renderEntries();
@@ -1612,7 +1589,7 @@ function updateWelcomeNote() {
   welcomeNoteFlow.classList.toggle("has-text", hasText);
   welcomeContinue?.classList.toggle("is-visible", hasText);
   welcomeScreen?.classList.toggle("review-state", hasMoodlets);
-  if (welcomeContinue) welcomeContinue.textContent = hasMoodlets ? t("saveNote") : t("continue");
+  if (welcomeContinue) welcomeContinue.textContent = t("saveNote");
   const introTitle = welcomeScreen?.querySelector(".figma-welcome-copy h1");
   const introBody = welcomeScreen?.querySelector(".figma-welcome-copy p");
   if (introTitle && introBody) {
@@ -1650,7 +1627,7 @@ function updateHomeNote() {
   homeNoteShell.classList.toggle("has-text", hasText);
   homeNoteCard.classList.toggle("has-text", hasText);
   homeNoteCard.classList.toggle("has-moodlets", hasMoodlets);
-  if (homeContinue) homeContinue.textContent = hasMoodlets ? t("saveNote") : t("continue");
+  if (homeContinue) homeContinue.textContent = t("saveNote");
 
   homeNote.style.height = "44px";
   homeNote.style.overflowY = "hidden";
@@ -1665,6 +1642,18 @@ function updateHomeNote() {
   homeNoteCard.style.setProperty("--note-height", `${cardHeight}px`);
 }
 
+function rememberDraft(target) {
+  if (target === "app" && editingEntryId) return;
+  const textarea = { welcome: welcomeNote, home: homeNote, app: appNote }[target];
+  const moodlets = { welcome: selectedMoodlets, home: homeSelectedMoodlets, app: appSelectedMoodlets }[target];
+  if (textarea.value || moodlets.length) {
+    state.drafts[target] = { text: textarea.value, moodlets };
+  } else {
+    delete state.drafts[target];
+  }
+  saveState();
+}
+
 function resetAppNoteModal() {
   editingEntryId = null;
   appSelectedMoodlets = [];
@@ -1675,10 +1664,11 @@ function resetAppNoteModal() {
 
 function openAppNoteModal(entry = null) {
   resetAppNoteModal();
-  if (entry) {
-    editingEntryId = entry.id;
-    appSelectedMoodlets = [...(entry.moodlets || [])];
-    if (appNote) appNote.value = entry.text || "";
+  const note = entry || state.drafts.app;
+  if (note) {
+    editingEntryId = entry?.id || null;
+    appSelectedMoodlets = [...(note.moodlets || [])];
+    if (appNote) appNote.value = note.text || "";
     renderAppSelectedMoodlets();
     updateAppNote();
   }
@@ -1704,8 +1694,8 @@ function updateAppNote() {
   appNoteCard.classList.toggle("has-text", hasText);
   appNoteCard.classList.toggle("has-moodlets", hasMoodlets);
   appNotePrimary.disabled = !hasText;
-  appNotePrimary.textContent = editingEntryId || hasMoodlets ? t("saveNote") : hasText ? t("continue") : t("save");
-  if (appNoteCancel) appNoteCancel.textContent = hasText ? t("discard") : t("cancel");
+  appNotePrimary.textContent = t("saveNote");
+  if (appNoteCancel) appNoteCancel.textContent = t("cancel");
 
   appNote.style.height = "44px";
   appNote.style.overflowY = "hidden";
@@ -1872,7 +1862,6 @@ function handleMissedPrimaryAction() {
 
   state.adminVisitDay = 1;
   state.skippedJournalDays = 0;
-  state.mockDataEnabled = true;
   saveState();
   renderWeeklyProgress();
   renderEntries();
@@ -1922,6 +1911,7 @@ function closeAdminModal() {
 
 function setMockDataEnabled(enabled) {
   state.mockDataEnabled = enabled;
+  state.demoPreferenceSet = true;
   if (enabled) {
     state.adminVisitDay = adminDraftVisitDay;
     state.skippedJournalDays = adminDraftSkippedDays;
@@ -1950,6 +1940,7 @@ function setMockDataEnabled(enabled) {
 
 function logOut() {
   state.registered = false;
+  state.guest = false;
   saveState();
   closeAdminModal();
   closeProfileEditModals();
@@ -1980,8 +1971,12 @@ function deleteAccount() {
   state = {
     ...defaults,
     entries: [],
+    drafts: {},
     profile: { ...defaults.profile },
   };
+  welcomeNote.value = "";
+  homeNote.value = "";
+  appNote.value = "";
   selectedMoodlets = [];
   homeSelectedMoodlets = [];
   appSelectedMoodlets = [];
@@ -2029,10 +2024,12 @@ function renderMoodletGrid() {
     button.className = `moodlet-option ${selected ? "is-selected" : ""} ${disabled ? "is-disabled" : ""}`;
     button.type = "button";
     button.dataset.moodlet = moodlet.name;
+    button.setAttribute("aria-pressed", String(selected));
+    button.setAttribute("aria-disabled", String(disabled));
     button.innerHTML = `<span class="moodlet-swatch" style="${moodletStyle(moodlet.name)}"></span><span>${moodlet.name}</span>`;
     moodletGrid.append(button);
   });
-  if (moodletContinue) moodletContinue.disabled = targetMoodlets.length === 0;
+
 }
 
 function renderSelectedMoodlets() {
@@ -2064,6 +2061,7 @@ function openMoodletModal(target = "welcome") {
   renderMoodletGrid();
   moodletModal?.classList.add("is-open");
   moodletModal?.setAttribute("aria-hidden", "false");
+  moodletGrid.querySelector("button")?.focus();
 }
 
 function closeMoodletModal() {
@@ -2108,6 +2106,7 @@ function startVoiceInput(target = "welcome") {
       }
       activeTextArea.value = `${committed}${transcript}`.trimStart().slice(0, 500);
       activeUpdate();
+      rememberDraft(voiceTarget);
     };
   }
 
@@ -2120,9 +2119,24 @@ function startVoiceInput(target = "welcome") {
   }
 }
 
-welcomeNote?.addEventListener("input", updateWelcomeNote);
-homeNote?.addEventListener("input", updateHomeNote);
-appNote?.addEventListener("input", updateAppNote);
+[[welcomeNote, "welcome", updateWelcomeNote], [homeNote, "home", updateHomeNote], [appNote, "app", updateAppNote]]
+  .forEach(([textarea, target, update]) => {
+    textarea?.addEventListener("input", () => {
+      update();
+      rememberDraft(target);
+    });
+  });
+
+document.querySelectorAll("[data-add-moodlets]").forEach((button) => {
+  button.addEventListener("click", () => openMoodletModal(button.dataset.addMoodlets));
+});
+document.querySelector("#account-demo")?.addEventListener("click", () => {
+  setScreen("register");
+  setRegisterStep(0);
+});
+document.querySelector("#back-to-local-journal")?.addEventListener("click", () => {
+  render();
+});
 window.addEventListener("load", updateWelcomeNote);
 window.addEventListener("load", updateHomeNote);
 window.addEventListener("load", updateAppNote);
@@ -2195,12 +2209,11 @@ welcomeContinue?.addEventListener("click", () => {
     return;
   }
 
-  if (!selectedMoodlets.length) {
-    openMoodletModal("welcome");
-    return;
-  }
-
-  const savedEntry = saveEntry(text, selectedMoodlets);
+  const savedEntry = saveEntry(text, selectedMoodlets, "welcome");
+  welcomeNote.value = "";
+  selectedMoodlets = [];
+  renderSelectedMoodlets();
+  updateWelcomeNote();
   setScreen("app");
   setView("journal");
   showNoteToast();
@@ -2233,14 +2246,14 @@ moodletGrid?.addEventListener("click", (event) => {
   } else {
     selectedMoodlets = nextMoodlets;
   }
+  rememberDraft(activeMoodletTarget);
   renderMoodletGrid();
+  moodletGrid.querySelector(`[data-moodlet="${CSS.escape(name)}"]`)?.focus();
 });
 
 moodletContinue?.addEventListener("click", () => {
-  if (activeMoodletTarget === "app" && !appSelectedMoodlets.length) return;
-  if (activeMoodletTarget === "home" && !homeSelectedMoodlets.length) return;
-  if (activeMoodletTarget === "welcome" && !selectedMoodlets.length) return;
   closeMoodletModal();
+  document.querySelector(`[data-add-moodlets="${activeMoodletTarget}"]`)?.focus();
   if (activeMoodletTarget === "app") {
     renderAppSelectedMoodlets();
     updateAppNote();
@@ -2299,8 +2312,15 @@ deleteConfirmModal?.addEventListener("click", (event) => {
   if (event.target === deleteConfirmModal) closeDeleteConfirmModal();
 });
 
+moodletModal?.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    event.preventDefault();
+    moodletContinue.click();
+  }
+});
+
 moodletModal?.addEventListener("click", (event) => {
-  if (event.target === moodletModal) closeMoodletModal();
+  if (event.target === moodletModal) moodletContinue.click();
 });
 
 closeCongrats?.addEventListener("click", () => {
@@ -2402,12 +2422,7 @@ appNotePrimary?.addEventListener("click", () => {
     return;
   }
 
-  if (!appSelectedMoodlets.length) {
-    openMoodletModal("app");
-    return;
-  }
-
-  const savedEntry = saveEntry(text, appSelectedMoodlets);
+  const savedEntry = saveEntry(text, appSelectedMoodlets, "app");
   closeAppNoteModal();
   setScreen("app");
   setView("journal");
@@ -2422,12 +2437,7 @@ homeContinue?.addEventListener("click", () => {
     return;
   }
 
-  if (!homeSelectedMoodlets.length) {
-    openMoodletModal("home");
-    return;
-  }
-
-  const savedEntry = saveEntry(text, homeSelectedMoodlets);
+  const savedEntry = saveEntry(text, homeSelectedMoodlets, "home");
   homeNote.value = "";
   homeSelectedMoodlets = [];
   renderHomeSelectedMoodlets();
@@ -2513,6 +2523,10 @@ weeklyProgress?.addEventListener("keydown", (event) => {
 journalView?.addEventListener("scroll", updateJournalScrollState, { passive: true });
 window.addEventListener("resize", updateTabIndicator);
 
+welcomeNote.value = state.drafts.welcome?.text || "";
+selectedMoodlets = state.drafts.welcome?.moodlets || [];
+homeNote.value = state.drafts.home?.text || "";
+homeSelectedMoodlets = state.drafts.home?.moodlets || [];
 render();
 renderMoodletGrid();
 renderSelectedMoodlets();

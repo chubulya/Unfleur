@@ -1782,24 +1782,6 @@ button {
   height: 24px;
 }
 
-.app-header [data-icon="calendar"]::before {
-  background: transparent;
-  background-image: url("https://www.figma.com/api/mcp/asset/d6f136f5-18c7-4f34-854b-1b66526e5272");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
-}
-
-.app-header [data-icon="plus"]::before {
-  background: transparent;
-  background-image: url("https://www.figma.com/api/mcp/asset/2a7abdf5-a157-443a-b81c-782e1e0f2caa");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
-}
-
 [data-icon]::before {
   content: "";
   width: 20px;
@@ -1897,11 +1879,11 @@ button {
 
 .register-back-button::before {
   content: "";
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   display: block;
   background: currentColor;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m15.5 19-7-7 7-7 1.4 1.4-5.6 5.6 5.6 5.6L15.5 19Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m14 6-6 6 6 6' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
 }
 
 .register-step {
@@ -2398,14 +2380,6 @@ button {
   transform: translateY(-56px) scale(0.86);
 }
 
-.view-journal.no-real-entries .plant-card {
-  display: none;
-}
-
-.view-journal.no-real-entries .weekly-progress {
-  margin-top: 0;
-}
-
 .plant-portrait {
   width: 160px;
   height: 160px;
@@ -2460,54 +2434,15 @@ button {
   height: 115.62%;
 }
 
-.figma-pot-frame.is-stage-two .figma-pot-image {
-  top: -3.26%;
-  left: -3.19%;
-  width: 106.39%;
-  height: 106.39%;
+.figma-pot-frame:is(.is-stage-two, .is-stage-three, .is-stage-four, .is-stage-five, .is-stage-six, .is-stage-seven) .figma-pot-image {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-.figma-pot-frame.is-stage-three .figma-pot-image {
-  top: -15.62%;
-  left: -11.56%;
-  width: 123.13%;
-  height: 123.13%;
-}
-
-.figma-pot-frame.is-stage-four .figma-pot-image {
-  top: -7.83%;
-  left: -3.91%;
-  width: 107.83%;
-  height: 107.83%;
-}
-
-.figma-pot-frame.is-stage-five .figma-pot-image {
-  top: -7.92%;
-  left: -3.72%;
-  width: 107.74%;
-  height: 107.74%;
-}
-
-.figma-pot-frame.is-stage-six .figma-pot-image {
-  top: -5.94%;
-  left: -6.79%;
-  width: 109.07%;
-  height: 109.07%;
-}
-
-.figma-pot-frame.is-stage-seven .figma-pot-image {
-  top: -0.05%;
-  left: 2.12%;
-  width: 95.62%;
-  height: 95.62%;
-}
-
-.figma-pot-frame.is-stage-seven .figma-pot-bg {
+.figma-pot-frame:is(.is-stage-two, .is-stage-three, .is-stage-four, .is-stage-five, .is-stage-six, .is-stage-seven) .figma-pot-bg {
   display: none;
-}
-
-.figma-pot-frame.is-stage-seven {
-  background: #fafafb;
 }
 
 .plant {
@@ -2740,13 +2675,13 @@ button {
 
 .day-progress.is-complete .day-dot {
   border: 0;
-  background: #fff url("https://www.figma.com/api/mcp/asset/11dfd974-923e-4656-826b-aafd34554552") center / contain no-repeat;
+  background: #fff url("assets/day-complete.svg") center / contain no-repeat;
   box-shadow: none;
 }
 
 .day-progress.is-missed .day-dot {
   border: 1px solid var(--progress-line);
-  background: #fff url("https://www.figma.com/api/mcp/asset/9bb56a09-d123-4371-b554-9208b045871c") center / 24px 24px no-repeat;
+  background: #fff url("assets/day-missed.svg") center / 18px 18px no-repeat;
   box-shadow: none;
 }
 
@@ -2826,15 +2761,6 @@ button {
   mask: var(--icon) center / contain no-repeat;
 }
 
-.tag[data-icon="calendar"]::before {
-  background: transparent;
-  background-image: url("https://www.figma.com/api/mcp/asset/9bd25fe6-20eb-4a0a-a9d2-0830d5e33283");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
-}
-
 .entry-actions {
   display: flex;
   gap: 12px;
@@ -2853,24 +2779,6 @@ button {
   width: 18px;
   height: 18px;
   background-size: 18px 18px;
-}
-
-.entry-actions [data-icon="edit"]::before {
-  background: transparent;
-  background-image: url("https://www.figma.com/api/mcp/asset/6c5b7261-ce03-4b33-a613-4606b2263914");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
-}
-
-.entry-actions [data-icon="delete"]::before {
-  background: transparent;
-  background-image: url("https://www.figma.com/api/mcp/asset/e548e184-7419-4d17-9c5d-ce81358c6a1b");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
 }
 
 .moodlets {
@@ -3207,45 +3115,6 @@ textarea {
   height: 24px;
 }
 
-.tab-bar [data-icon="home"]::before {
-  background: transparent;
-  background-image: url("https://www.figma.com/api/mcp/asset/3351f105-20c2-4cca-a72a-7f8d24eec230");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
-}
-
-.tab-bar [data-icon="journal"]::before {
-  background: transparent;
-  background-image: url("https://www.figma.com/api/mcp/asset/d80e6281-6467-4a1a-bdbf-ef569965c8bd");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
-}
-
-.tab-bar [data-icon="profile"]::before {
-  background: transparent;
-  background-image: url("https://www.figma.com/api/mcp/asset/12438228-c970-4893-9a65-e1ae173a62a7");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  mask: none;
-}
-
-.tab-bar [data-tab="home"].is-active [data-icon="home"]::before {
-  background-image: url("https://www.figma.com/api/mcp/asset/002d0ca8-23c8-4e7c-89ec-0bbf6cc5d849");
-}
-
-.tab-bar [data-tab="journal"].is-active [data-icon="journal"]::before {
-  background-image: url("https://www.figma.com/api/mcp/asset/d896d4e4-b641-4530-9c11-d15b52646cbe");
-}
-
-.tab-bar [data-tab="profile"].is-active [data-icon="profile"]::before {
-  background-image: url("https://www.figma.com/api/mcp/asset/11d79778-06ff-45bd-b643-e469b2d51d57");
-}
-
 .tab-bar button.is-active {
   color: var(--accent);
   background: transparent;
@@ -3448,4 +3317,43 @@ textarea {
     border-radius: 0;
     box-shadow: none;
   }
+}
+
+.add-moodlets-button {
+  margin-inline-start: auto;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 12px;
+  background: #edeaff;
+  color: #373285;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#local-journal-note,
+#account-demo {
+  position: absolute;
+  z-index: 3;
+  inset-inline: var(--page-x);
+  margin: 0;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+}
+
+#local-journal-note {
+  bottom: calc(27px + var(--bottom-safe));
+}
+
+#account-demo {
+  bottom: var(--bottom-safe);
+  height: 26px;
+  border: 0;
+  background: transparent;
+  text-decoration: underline;
+}
+
+.profile-action-button[hidden] {
+  display: none;
 }
