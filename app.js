@@ -1215,7 +1215,7 @@ function renderWeeklyProgress() {
     if (isToday) item.setAttribute("aria-current", "date");
     item.ariaLabel = date.toLocaleDateString(locale(), { weekday: "long", month: "long", day: "numeric" });
     item.innerHTML = `
-      <strong>${isToday ? t("today") : date.toLocaleDateString(locale(), { weekday: "short" }).toUpperCase()}</strong>
+      <strong>${date.toLocaleDateString(locale(), { weekday: "short" }).toUpperCase()}</strong>
       <div class="day-dot"></div>
       <span>${date.getDate()}</span>
     `;
