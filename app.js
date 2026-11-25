@@ -1420,7 +1420,7 @@ function bloomyImageState() {
   const stage = bloomyDisplayStage();
   const skippedDays = skippedJournalDaysBeforeToday();
   if (hasEntryForCurrentGardenDay()) return bloomyImageForStage(stage);
-  if (skippedDays >= 2) return { ...BLOOMY_ART, pot: BLOOMY_STAGES[5].pot, className: "is-missed-two" };
+  if (skippedDays >= 2) return { ...BLOOMY_ART, pot: "assets/bloomy/Flower Pot Image-broken.png", className: "is-missed-two" };
   if (skippedDays === 1) return { ...BLOOMY_ART, className: "is-missed-one" };
   return bloomyImageForStage(stage);
 }
